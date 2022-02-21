@@ -136,7 +136,6 @@ router.get(`/store/advertisement/:id`, middleware.authJwt, all_advertisement.sin
 router.get(`/store/images`,middleware.authJwt,store_images.get_images)
 router.get(`/store/myPanel`,middleware.authJwt,panel.get_info)
 router.get(`/store/seller/:id`,middleware.authJwt,panel.show_info)
-router.get(`/store/payment`, middleware.authJwt,store_payment.get_payment)
 router.get(`/store/payments`, middleware.authJwt,store_payment.all_payment)
 router.get(`/store/payment/:id`, middleware.authJwt, store_payment.single_payment)
 router.get(`/store/payment_cancel/:id`,middleware.authJwt,store_payment.cancel_payment)
@@ -154,7 +153,7 @@ router.delete(`/store/product/:id`, middleware.authJwt, products.delete_product)
 router.put(`/store/product/:id`, middleware.authJwt, uploadImage.array('img',10), products.update_product)
 router.delete(`/store/advertisement/:id`, middleware.authJwt, all_advertisement.delete_advertisement);
 router.put(`/store/myPanel`,middleware.authJwt,panel.update_info);
-router.post(`/store/payment`,middleware.authJwt,store_payment.post_payment)
+router.post(`/store/payment`,middleware.authJwt,store_payment.store_date_payment)
 router.post(`/store/storie`,middleware.authJwt, uploadImage.single("img"),storeStory.add_story)
 router.delete(`/store/storie/:id`,middleware.authJwt,storeStory.delete_story);
 router.delete(`/store/images`,middleware.authJwt,store_images.delete_images)
