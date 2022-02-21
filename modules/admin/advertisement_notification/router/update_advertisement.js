@@ -1,9 +1,11 @@
 const Data = require('../../../store/advertisement/model')
 const storage = require("../../../../uploads/storeAds")
+const { iyzipay , Iyzipay} = require("../../../../utils/iyzipay")
+const { networkInterfaces } = require("os")
 
 const route = async (req, res) => {
   try { 
-    let { file , body , params } = req;
+    let { file , body , params , userData } = req;
     let { is_approved ,link, banner_story_time } = body;
     // Buraya video da eklenebilecek !!!!
     await Data.findOne({ _id: params.id }).lean().exec(async(err,data) => {
@@ -12,6 +14,16 @@ const route = async (req, res) => {
       if(data.is_approved === "wait"){
         if(is_approved === "no"){
           // magazanin odedigi parayi geri odeme sistemi olmali
+          iyzipay.refund.create({
+            locale: Iyzipay.LOCALE.TR,
+            conversationId: userData.id,
+            paymentTransactionId: '1',
+            price: '0.5',
+            currency: Iyzipay.CURRENCY.TRY,
+            ip: '85.34.78.112'
+        }, function (err, result) {
+            console.log(result);
+        });
           let n_data = await Data.findOneAndUpdate({ _id : params.id }, { $set: { is_approved: "no" }}, { new: true })
           // extra olarak reklam veri tabanindan da verileri silebiliriz.
           if(!n_data) 

@@ -13,54 +13,41 @@ const route = async (req, res) => {
 
         let {card_price,card_paid_price,card_installment,card_holder_name,card_number,
             card_expire_month,card_expire_year,card_cvc,card_register,buyerName,buyerSurname,
-            buyerNumber,buyerEmail,tcNo,buyerAddress,buyerCity,buyerCountry,zipCode,ship_name,
+            buyerNumber,buyerEmail,tcNo,buyerAddress,buyerCity,buyerCountry,ship_name,
             ship_city,ship_country,ship_address,ship_b_name,ship_b_city,ship_b_country,ship_b_address,
-            items,authCode,product_name
+            items,authCode,
         }= req.body;
         let request = await pay_form(basket_id,card_price,card_paid_price,card_installment,
             card_holder_name,card_number,card_expire_month,card_expire_year,card_cvc,
             card_register,buyer_id,buyerName,buyerSurname,buyerNumber,buyerEmail,tcNo,
-            buyerAddress,buyer_ip,buyerCity,buyerCountry,zipCode,ship_name,ship_city,
+            buyerAddress,buyer_ip,buyerCity,buyerCountry,ship_name,ship_city,
             ship_country,ship_address,ship_b_name,ship_b_city,ship_b_country,ship_b_address,items)
         
+        // ODEME
         await iyzipay.payment.create(request, async function(err,result) {
             if(err)
-                return res.status(500).send({ status: false, message: `Error ${err}`})
+                return res.status(500).send({ status: false, message: `Iyzipay Error : ${err}`})
             if(result.status === "failure")
                 return res.status(400).send({ status: false, message: result.errorMessage, code: result.errorCode})
             if(result.status === "success"){
-                let p_id = result.paymentId
                 let time = items.time
                 // burasina dogrulama kodu gelecek !!
+                // result.authCode === authCode
                 if(true){
                     let _data = await new Data({
                         author: buyer_id,
-                        product_name,
-                        card_paid_price,
-                        time,
                         basketId:basket_id,
-                        paymentId: p_id,
-
-                        buyerName,
-                        buyerSurname,
-                        buyerNumber,
-                        buyerEmail,
-                        buyerAddress,
-                        buyerCity,
-                        buyerCountry,
-                        ship_name,
-                        ship_city,
-                        ship_country,
-                        ship_address,
-                        ship_b_name,
-                        ship_b_city,
-                        ship_b_country,
-                        ship_b_address,
-                        items
+                        paymentId: result.paymentId,
                     })
                     if(!_data)
                         return res.status(400).send({ status: false, message: "Odeme Gerceklesti ama Veri Tabanina kaydedilmedi"})
-                    let _register = await Register.findOneAndUpdate({_id: buyer_id}, {$set:{ remain_date:time }}, { new: true })
+                    let _register = await Register.findOneAndUpdate({_id: buyer_id}, 
+                        {
+                            $set:{
+                                remain_date:time 
+                            }
+                        },
+                        { new: true })
                     if(!_register)
                         return res.status(400).send({ status: false, message: "Odeme Gerceklesti ama Kullanici Hesap suresi guncellenmedi"}) 
                     await _data.save();

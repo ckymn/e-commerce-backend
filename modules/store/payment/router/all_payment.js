@@ -1,15 +1,14 @@
-
+const  { iyzipay, Iyzipay } = require("../../../../utils/iyzipay")
 const Data = require("../model")
 
 const route = async (req,res,next) => {
     try {
-        let { id } = req.userData;
-
-        let _data = await Data.find({ author: id }, "author product_name card_paid_price time status basketId paymentId").lean();
-        if(!_data)
-            return res.status(404).send({ status: false, message: "You don't have any Oder"})
-        return res.status(200).send({ status: true, message: "The Orders were finded", data: _data })
-        
+        let { userData } = req;
+        await Data.find({ author: userData.id }).lean().exec((_,data) => {
+            if(!data)
+                return res.status(404).send({ status: false, message: "Couldn't find any data about you"})
+            return res.status(200).send({ status: false, message: "All Payment Success", data })
+        });
     } catch (error) {
         if(error){
             if(error.name === "MongoError" && error.code === 11000)
