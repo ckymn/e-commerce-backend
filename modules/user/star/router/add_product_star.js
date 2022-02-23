@@ -4,13 +4,16 @@ const Product = require("../../../store/products/model")
 const route = async( req,res,next) => {
     try {
         let { body ,kuserData , params} = req;
+        let store = await Product.findOne({ _id: params.id });
+        console.log(store.author)
         await Product_Star.findOne({ $and:[{product_id: params.id},{author: kuserData.id}] })
             .lean().exec(async(err,data) => {
                 if(!data){
                     await Product_Star.create({
                         rate: body.rate,
                         author: kuserData.id,
-                        product_id: params.id
+                        product_id: params.id,
+                        store_id: store.author,
                     },async (err,data) => {
                         if(err)
                             return res.status(400).send({ status: false, message: "Create Star Error !"})

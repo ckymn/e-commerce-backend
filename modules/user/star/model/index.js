@@ -1,6 +1,7 @@
 const { Schema, model } = require("mongoose")
 
 const Product_Star = new model("product_star", new Schema({
+    store_id: { type: Schema.Types.ObjectId, ref:"store"},
     product_id : { type: Schema.Types.ObjectId, ref: "product" },
     author: { type: Schema.Types.ObjectId, ref: "user" },
     rate: { type: Schema.Types.Number, enum: [1,2,3,4,5] }

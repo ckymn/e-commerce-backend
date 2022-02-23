@@ -4,7 +4,8 @@ const Product = require("../../../store/products/model")
 const route = async( req,res,next) => {
     try {
         let { body ,kuserData , params} = req;
-        await Product_Star.findOneAndRemove({ $and:[{ product_id: params.id }, { author: kuserData.id }] }).lean().exec(async(err,data) => {
+        await Product_Star.findOneAndRemove({ $and:[{ product_id: params.id }, { author: kuserData.id }] })
+        .lean().exec(async(err,data) => {
             if(err)
                 return res.status(400).send({ status: false, message: "Delete Star Error"})
             let p_data = await Product.updateOne({ _id: params.id },

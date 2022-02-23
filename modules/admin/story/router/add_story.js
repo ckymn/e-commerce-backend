@@ -20,7 +20,7 @@ const route = async (req, res, next) => {
             if(body.story_time === "1d"){
                 await _data.set({
                     img: str.publicUrl,
-                    story_time: new Date(+new Date()+24*60*60*1000)
+                    story_time: new Date(+new Date()+ 1*24*60*60*1000)
                 })
             }
             if(body.story_time === "5d"){
