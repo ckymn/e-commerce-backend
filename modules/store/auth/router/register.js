@@ -19,6 +19,8 @@ const route = async (req, res, next) => {
             location: {
                 coordinates: [ parseFloat(body.long),parseFloat(body.lat) ]
             },
+            store_open_hour: parseInt(body.store_open_hour),
+            store_close_hour: parseInt(body.store_close_hour),
             password : hash,
             storeimg: str.publicUrl
         });

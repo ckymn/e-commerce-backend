@@ -34,7 +34,9 @@ const route = async (req,res,next) => {
                 coordinates: [parseInt(query.long), parseInt(query.lat)],
               },
               spherical: true,
-              maxDistance: query.dst ? parseInt(query.dst)* 1609.34 : 900 * 1609.34,
+              maxDistance: query.dst
+                ? parseInt(query.dst) * 1609.34
+                : 900 * 1609.34,
               distanceMultiplier: 1 / 1609.34,
               distanceField: "ProductDst",
             },
@@ -43,32 +45,20 @@ const route = async (req,res,next) => {
           { $limit: parseInt(query.limit) },
           {
             $match: {
-              $expr: {
-                $and: [
-                  {
-                    country: _data.country,
-                    city: _data.city,
-                    language: _data.language,
+              $and: [
+                {
+                  country: _data.country,
+                  city: _data.city,
+                  language: _data.language,
+                  is_approved: "yes",
+                },
+                {
+                  price: {
+                    $gte: query.minPrc ? parseInt(query.minPrc) : 0,
+                    $lte: query.maxPrc ? parseInt(query.maxPrc) : 1000000,
                   },
-                  {
-                    $and: [
-                      {
-                        $gte: [
-                          "$price",
-                          query.minPrc ? parseInt(query.minPrc) : 0,
-                        ],
-                      },
-                      {
-                        $lte: [
-                          "$price",
-                          query.maxPrc ? parseInt(query.maxPrc) : 1000000,
-                        ],
-                      },
-                    ],
-                  },
-                  // { $is_approved: "yes" },
-                ],
-              },
+                },
+              ],
             },
           },
         ]);
