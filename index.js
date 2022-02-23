@@ -20,7 +20,7 @@ connectDB();
 //   callback(null, corsOptions) // callback expects two parameters: error and options
 // }
 //mid
-app.use(cors());
+app.use(cors({ origin: true }));
 app.use(morgan("dev"))
 app.use(express.static(__dirname + "/uploads/list"))
 app.use('uploads',express.static('uploads'))
