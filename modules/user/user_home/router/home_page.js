@@ -26,21 +26,12 @@ const route = async (req,res,next) => {
             return res.status(400).send({ status: false, message: "Active User Don't Find"})
         // search
         let _data = await Data.findOne({ _id: kuserData.id});
-        // urunler kullanicinin bulundugu konumun 10km capindaki olanlari getirmeli ve bunu manuel olarak ayarlanabilir olmasi gerekiyor
-       // ayrica urunler fiyat araligina gore de cekilebilmeli [50-300] araligi gibi 
-        // let product_data = await Products.find({ 
-        //     $and:[
-        //         { language: _data.language },
-        //         { country: _data.country },
-        //         { city: _data.city },
-        //     ]
-        // })
         let product_data = await Products.aggregate([
           {
             $geoNear: {
               near: {
                 type: "Point",
-                coordinates: [parseInt(query.lat), parseInt(query.long)],
+                coordinates: [parseInt(query.long), parseInt(query.lat)],
               },
               spherical: true,
               maxDistance: query.dst ? parseInt(query.dst)* 1609.34 : 900 * 1609.34,

@@ -12,13 +12,12 @@ const route = async (req, res, next) => {
         // storage
         let str = await storage.upload(file,username);
         if(str.status !== 200)
-            return res.status(500).send({ status: false, message : " Could not upload the file "})
+            return res.status(str.status).send({ status: false, message : str.message})
         const hash = await bcrypt.hashSync(password, 10);
         const _user = await new Data({
             ...body,
             location: {
-                type: body.location.type,
-                coordinates: body.location.coordinates
+                coordinates: [ parseFloat(body.long),parseFloat(body.lat) ]
             },
             password : hash,
             storeimg: str.publicUrl
@@ -26,6 +25,7 @@ const route = async (req, res, next) => {
         await _user.save();
         return res.status(200).send({ status: true, message: "user register success", data: _user })
     } catch (error) {
+        console.log(error)
         if(error){
             if(error.name === "MongoError" && error.code === 11000)
                 return res.status(500).send({ status: false, message: `File Already exists!  : ${error}` })

@@ -12,13 +12,11 @@ const store_register = new Schema({
 	role : { type: Schema.Types.String, require: true, default: "store" },
 	location: {
 		type: {
-			type: {
-				type: Schema.Types.String,
-				enum: ['Point'],
-			},
-		  	coordinates: {
-				type: [ Schema.Types.Number ],
-		 	},
+			type: Schema.Types.String,
+			default: "Point",
+		},
+		coordinates: {
+			type: [ Schema.Types.Number ],
 		},
 	},
 	storelanguage: { type: Schema.Types.String, required: true },

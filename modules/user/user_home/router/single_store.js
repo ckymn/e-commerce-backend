@@ -6,10 +6,16 @@ const route = async (req, res, next) => {
     try {
         let { kuserData ,params, query } = req; 
         let current_time = new Date();
+        
         let _product = await Product.find({ author: params.id }).lean().exec();
         if(!_product)
             return res.status(404).send({ status: false, message: "Not Found products of Single Store"})
-        let _store = await Store.findOneAndUpdate({ _id: params.id },{ $push: { view: { who: kuserData.id , date: current_time } }}).lean().exec();
+        let _store = await Store.findOneAndUpdate({ _id: params.id },
+            { 
+                $push: { 
+                    view: { who: kuserData.id , date: current_time } 
+                }
+            }).lean().exec();
         let s_lat = _store.location.coordinates[0]
         let s_long = _store.location.coordinates[1];
         let mesafe = turf.distance(

@@ -121,6 +121,7 @@ router.post(`/admin/app_notification`,middleware.authJwt, app_notification.add_n
 router.put(`/admin/app_notification/:id`,middleware.authJwt, app_notification.update_notificaiton)
 router.delete(`/admin/app_notification/:id`,middleware.authJwt, app_notification.delete_notification)
 router.post(`/admin/how_i_use`, middleware.authJwt, userPanel.how_i_use)
+
 //store_get
 router.get(`/store/store`, middleware.authJwt, store_home.store)
 router.get(`/store/register`, store_auth.get_register)
@@ -140,6 +141,7 @@ router.get(`/store/payments`, middleware.authJwt,store_payment.all_payment)
 router.get(`/store/payment/:id`, middleware.authJwt, store_payment.single_payment)
 router.get(`/store/payment_cancel/:id`,middleware.authJwt,store_payment.cancel_payment)
 router.get(`/store/stories`,middleware.authJwt ,storeStory.all_story)
+router.get(`/store/home_page`,middleware.authJwt ,store_home.home_page)
 
 //store_post
 router.post(`/store/register`,uploadImage.single("img"),store_auth.register)
