@@ -14,8 +14,7 @@ const route = async (req,res,next) => {
                 if(is_approved === "no"){
                     await Product_Comment.findOneAndDelete({ _id: params.id })
                     .lean().exec(async(err,data) => {
-                        console.log("delet admin/prodcut comment", data)
-                        if(!data)
+                        if(data.deletedCount === 0)
                             return res.status(400).send({ status: false, message: "Delete Product_Comment by Admin Failed"})
                             await Product.updateOne({ _id: data.product_id },
                                 {
@@ -26,7 +25,6 @@ const route = async (req,res,next) => {
                                     }
                                 }
                             ).lean().exec(async(err,data) =>{
-                                console.log(data)
                                 if(err)
                                     return res.status(400).send({ status: false, message: "Delete Comment of Product by Admin Failed"})
                             })

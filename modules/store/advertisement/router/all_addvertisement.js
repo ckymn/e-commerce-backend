@@ -18,7 +18,7 @@ const route = async (req,res,next) => {
             let n_d_y = await Data.find({"is_approved": { $in: "yes" }}).lean();
             let outdate_ads_id = outdate_ads.map(i => i._id);
             const str = await storage.MultipleDelete(userData.id,outdate_ads_id);
-            // burda zamani gecmis Ads'nin GCs silinmesi lazim
+            console.log(str)
             if(str.status !=200)
                 return res.status(str.status).send({ status: false,message:str.message})
             if(!n_d_w.length && !n_d_n.length && !n_d_y.length)

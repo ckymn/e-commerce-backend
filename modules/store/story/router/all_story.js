@@ -13,9 +13,9 @@ const route = async (req, res, next) => {
             let n_data = await Data.find({ author: userData.id });
             let outdate_story_id = outdate_storys.map(i => i._id)
             const str  = await storage.Delete(userData.sub,outdate_story_id);
-            // burda zamani gecmis storie'nin GCS silinmesi lazim
-            //if(str.status != 200)
-            //    return res.status(str.status).send({ status: false, message: str.message });
+            console.log(str)
+            if(str.status != 200)
+               return res.status(str.status).send({ status: false, message: str.message });
             return res.status(200).send({ status: true, message: "All Admin Storys success and Deleted Outdate storys", data: n_data })
         }else{
             return res.status(400).send({ status: true, message: "All Admin Story success and No Match Outdate sotrys", data: _data })

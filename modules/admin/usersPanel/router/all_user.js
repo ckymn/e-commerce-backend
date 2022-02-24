@@ -3,11 +3,10 @@ const Data = require("../../../user/auth/model")
 const route = async (req, res, next) => {
     try {
         let data = await Data.find({})
-            .populate({ path: "follow", select: 'username' })
+            .populate({ path: "follow", select: 'username -_id' })
             .populate({ path: "favorite_product"})
             .populate({ path: "store_comment"})
             .populate({ path: "product_comment"})
-            // burda populate kontrolleri yap . icindeki verilerin cikmasi lazim
             .lean().exec();
        
         if(!data)

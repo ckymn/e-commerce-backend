@@ -51,6 +51,10 @@ const route = async (req, res, next) => {
                             author: buyer_id,
                             basketId:basket_id,
                             paymentId: result.paymentId,
+                            price: card_price,
+                            paid_price: card_paid_price,
+                            ads_id: _data._id,
+                            paymentTransactionId: result.paymentTransactionId
                         })
                         return res.status(200).send({ status: true, message: "Add Advertisement data save success", data: result})
                     }
@@ -102,6 +106,10 @@ const route = async (req, res, next) => {
                             author: buyer_id,
                             basketId:basket_id,
                             paymentId: result.paymentId,
+                            price: card_price,
+                            paid_price: card_paid_price,
+                            ads_id: _data._id,
+                            paymentTransactionId: result.paymentTransactionId
                         })
                         return res.status(200).send({ status: true, message: "Add Advertisement data save success", data: result})
                     }
@@ -153,6 +161,10 @@ const route = async (req, res, next) => {
                             author: buyer_id,
                             basketId:basket_id,
                             paymentId: result.paymentId,
+                            price: card_price,
+                            paid_price: card_paid_price,
+                            ads_id: _data._id,
+                            paymentTransactionId: result.paymentTransactionId
                         })
                         return res.status(200).send({ status: true, message: "Add Advertisement data save success", data: result})
                     }
@@ -204,6 +216,10 @@ const route = async (req, res, next) => {
                             author: buyer_id,
                             basketId:basket_id,
                             paymentId: result.paymentId,
+                            price: card_price,
+                            paid_price: card_paid_price,
+                            ads_id: _data._id,
+                            paymentTransactionId: result.paymentTransactionId
                         })  
                         return res.status(200).send({ status: true, message: "Add Advertisement data save success", data: result})
                     }
@@ -256,6 +272,10 @@ const route = async (req, res, next) => {
                             author: buyer_id,
                             basketId:basket_id,
                             paymentId: result.paymentId,
+                            price: card_price,
+                            paid_price: card_paid_price,
+                            ads_id: _data._id,
+                            paymentTransactionId: result.paymentTransactionId
                         })
                         return res.status(200).send({ status: true, message: "Add Advertisement data save success", data: result })
                     }

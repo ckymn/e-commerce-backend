@@ -1,5 +1,6 @@
 const { Store_Comment } = require("../model")
 const Store = require("../../../store/auth/model")
+const User = require("../../auth/model")
 
 const route = async( req,res,next) => {
     try {
@@ -18,7 +19,15 @@ const route = async( req,res,next) => {
                 }
             }, { new: true })
         if(!p_data)
-            return res.status(400).send({ status: false, message: "Add Store Comment Data success but Update Store Comment error"})
+            return res.status(400).send({ status: false, message: "Add Store Comment Data to Store success but Update Store Comment error"})
+        let u_data = await User.findOneAndUpdate({ _id: kuserData.id }, 
+            {
+                $push: {
+                    "store_comment": _data._id
+                }
+            }, { new: true })
+        if(!u_data)
+            return res.status(400).send({ status: false, message: "Add Store Comment Data to User success but Update Store Comment error"})
         await _data.save();
         return res.status(200).send({ status: true, message: "User add Store Comment Success", data: _data })
     } catch (error) {

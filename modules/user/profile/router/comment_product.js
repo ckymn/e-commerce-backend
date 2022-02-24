@@ -3,14 +3,11 @@ const { Product_Comment } = require("../../comment/model")
 const route = async (req,res,next) => {
     try {
         let { kuserData } = req;
-        await Product_Comment.find({ author: kuserData.id })
+        await Product_Comment.find({ $and: [ {author: kuserData.id},{is_approved: "yes"} ] })
             .populate({ 
                 path: "product_id",
-                select: 'product_name',
-                options: { 
-                    // sadece is_approved degeri : true olanlari al
-                    lean: true
-                }
+                select: 'product_name -_id',
+                options: { lean: true }
             })
             .select("comment rate store_id")
             .lean().exec((err,data) => {

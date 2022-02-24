@@ -4,20 +4,20 @@ const bcrypt = require("bcryptjs")
 const route = async (req,res,next) => {
     try {
         let { adminData , params , body } = req;
-        let { password , role , menu_permissions } = body;
-        
+        let { password , menu_permissions } = body;
+
         let hash = await bcrypt.hash(password, 10);
         if(adminData.role[0] === "admin"){
            await Data.updateOne({  _id: params.id },
             {
                 $set: {
-                    role : role,
+                    ...body,
                     password: hash,
-                    menu_permissions
+                    menu_permissions: menu_permissions.map(i => i)
                 }
             }).lean().exec((err,data) => {
                     if(err)
-                        return res.status(400).send({ status: false, message: "Sub Admin Update by Admin failed"})
+                        return res.status(400).send({ status: false, message: `Sub Admin Update by Admin failed : ${err}`})
                     return res.status(200).send({ status: true, message: "Sub Admin Update by Admin is success "})
             })
         }else{

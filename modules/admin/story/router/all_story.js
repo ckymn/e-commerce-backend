@@ -9,13 +9,13 @@ const route = async (req, res, next) => {
         let _data = await Data.find({ author: adminData.id });
         let outdate_storys = await Data.find({ story_time: { $lte : current_time } });
         if(outdate_storys.length > 0){
-            await Data.deleteMany({ story_time: { $lte: current_time }});
+            let d_story = await Data.deleteMany({ story_time: { $lte: current_time }});
             let n_data = await Data.find({ author: adminData.id });
             let outdate_id = outdate_storys.map(i => i._id)
             const str  = await storage.Delete(adminData.sub,outdate_id);
             console.log(str)
-            //if(str.status != 200)
-            //    return res.status(str.status).send({ status: false, message: str.message });
+            if(str.status != 200)
+               return res.status(str.status).send({ status: false, message: str.message });
             return res.status(200).send({ status: true, message: "All Admin Storys success and Deleted Outdate storys", data: n_data })
         }else{
             return res.status(400).send({ status: true, message: "All Admin Story success and No Match Outdate sotrys", data: _data })

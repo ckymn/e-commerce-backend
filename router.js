@@ -84,6 +84,7 @@ router.get(`/admin/stories`, middleware.authJwt,adminStory.all_story)
 router.get(`/admin/partners`, middleware.authJwt,solutionPartner.all_partner)
 router.get(`/admin/app_notifications`, middleware.authJwt,app_notification.all_notification)
 router.get(`/admin/app_notification/:id`, middleware.authJwt,app_notification.single_notification)
+router.get(`/admin/logout`, middleware.authJwt,login.logout)
 
 //admin_post
 router.post(`/admin/register`,uploadImage.single("img"),login.register)
@@ -162,6 +163,7 @@ router.delete(`/store/images`,middleware.authJwt,store_images.delete_images)
 // users_get
 router.get(`/user/login`,user_auth.get_login)
 router.get(`/user/register`,user_auth.get_register)
+router.get(`/user/logout`, middleware.authJwt, user_auth.logout);
 router.get(`/user/home_page`, middleware.authJwt, middleware.active.active,user_home.home_page)
 router.get(`/user/user`, middleware.authJwt, user_home.store)
 router.get(`/user/storie/:id`, middleware.authJwt, user_home.single_store_story)
@@ -176,6 +178,7 @@ router.get(`/user/favorites`, middleware.authJwt, user_favorite.all_favorite)
 router.get(`/user/stores`, middleware.authJwt, user_home.stores)
 router.get(`/user/store/:id`, middleware.authJwt, user_home.single_store)
 router.get(`/user/how_i_use`, middleware.authJwt, userPanel.get_how_i_use);
+
  
 // user_post
 router.post(`/user/login`,user_auth.login)

@@ -20,7 +20,7 @@ var corsOptionsDelegate = function (req, callback) {
   callback(null, corsOptions) // callback expects two parameters: error and options
 }
 //mid
-app.use(cors(corsOptionsDelegate));
+app.use(cors());
 app.use(morgan("dev"))
 app.use(express.static(__dirname + "/uploads/list"))
 app.use('uploads',express.static('uploads'))

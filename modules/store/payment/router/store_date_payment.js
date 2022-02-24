@@ -38,6 +38,9 @@ const route = async (req, res) => {
                         author: buyer_id,
                         basketId:basket_id,
                         paymentId: result.paymentId,
+                        price: card_price,
+                        paid_price: card_paid_price,
+                        paymentTransactionId: result.paymentTransactionId
                     })
                     if(!_data)
                         return res.status(400).send({ status: false, message: "Odeme Gerceklesti ama Veri Tabanina kaydedilmedi"})

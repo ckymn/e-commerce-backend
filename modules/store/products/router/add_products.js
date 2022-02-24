@@ -5,12 +5,18 @@ const storage = require("../../../../uploads/products")
 const route = async (req, res, next) => {
     try {
         let { body, files , userData} = req;
-        // FAZLA URUN : birden fazla urun girerse body nasil donecek bana ?
+
         let _data = await Store.findOne({ _id: userData.id }).lean();
         let _pr = await new Data({
             ...body,
             location: {
                 coordinates: [ parseFloat(body.long),parseFloat(body.lat) ]
+            },
+            color:{
+                name: body.color,
+                barkod: body.barkod,
+                price: body.price,
+                stock: body.stock
             },
             country: _data.storecountry,
             city: _data.storecity,
@@ -23,8 +29,10 @@ const route = async (req, res, next) => {
         const imageUrl = await storage.Upload(files, userData.sub, _pr._id);
         let str = await Promise.all(imageUrl).then(d => d );
         await _pr.set({
-            images: str.map(i => i)
-        })
+          color: {
+            img: str.map(i => i),
+          },
+        });
         await _pr.save();
         return res.status(200).send({ status: true, message: "Add Product worked"})
     } catch (error) {

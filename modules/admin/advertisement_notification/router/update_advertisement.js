@@ -1,31 +1,32 @@
 const Data = require('../../../store/advertisement/model')
+const Payment = require("../../../store/payment/model")
 const storage = require("../../../../uploads/storeAds")
 const { iyzipay , Iyzipay} = require("../../../../utils/iyzipay")
 const { networkInterfaces } = require("os")
 
 const route = async (req, res) => {
   try { 
-    let { file , body , params , userData } = req;
+    let { file , body , params  } = req;
     let { is_approved ,link, banner_story_time } = body;
-    // Buraya video da eklenebilecek !!!!
+    let buyer_ip = networkInterfaces().en0[1].address
+
     await Data.findOne({ _id: params.id }).lean().exec(async(err,data) => {
       if(!data)
         return res.status(404).send({ status: false, message: "Not Found any Data"})
       if(data.is_approved === "wait"){
         if(is_approved === "no"){
-          // magazanin odedigi parayi geri odeme sistemi olmali
+          let _pay = await Payment.findOne({ $and: [{author: data.author}, {ads_id: data._id}] })
           iyzipay.refund.create({
             locale: Iyzipay.LOCALE.TR,
             conversationId: userData.id,
-            paymentTransactionId: '1',
-            price: '0.5',
+            paymentTransactionId: _pay.paymentTransactionId,
+            price: _pay.price,//burasi paid_price ta olabilir dikkat
             currency: Iyzipay.CURRENCY.TRY,
-            ip: '85.34.78.112'
+            ip: buyer_ip
         }, function (err, result) {
             console.log(result);
         });
           let n_data = await Data.findOneAndUpdate({ _id : params.id }, { $set: { is_approved: "no" }}, { new: true })
-          // extra olarak reklam veri tabanindan da verileri silebiliriz.
           if(!n_data) 
             return res.status(400).send({ status: false, message: "get single notification don't cahange to NO"})
           return res.status(200).send({ status: true, message: "get single notification change success NO"})
@@ -72,7 +73,18 @@ const route = async (req, res) => {
       }
       if(data.is_approved === "yes"){
         if(is_approved === "no"){
-          // magazanin odedigi parayi geri odeme sistemi
+          let _pay = await Payment.findOne({ $and: [{author: data.author}, {ads_id: data._id}] })
+          iyzipay.refund.create({
+            locale: Iyzipay.LOCALE.TR,
+            conversationId: userData.id,
+            paymentTransactionId: _pay.paymentTransactionId,
+            //burasi paid_price ta olabilir dikkat
+            price: _pay.price,
+            currency: Iyzipay.CURRENCY.TRY,
+            ip: buyer_ip
+        }, function (err, result) {
+            console.log(result);
+        });
           let n_data = await Data.findOneAndUpdate({ _id : params.id }, { $set: { is_approved: "no" }}, { new: true })
           if(!n_data) 
             return res.status(400).send({ status: false, message: "get single notification don't cahange to NO"})

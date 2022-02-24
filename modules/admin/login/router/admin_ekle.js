@@ -5,7 +5,7 @@ const route = async (req,res,next) => {
     try {
         let { adminData , body } = req;
         let { email, username, password , permission } = body;
-        console.log("menu permission : ",permission);
+
         let result = await Data.findOne({ $or: [ { email }, { username }] }).lean();
         if(result)
             return res.status(500).send({ status: false, message: "email or username already exists"})
@@ -13,6 +13,7 @@ const route = async (req,res,next) => {
         if(adminData.role[0] === "admin"){
             let _data = await new Data({
                 ...body,
+                role: "",
                 password: hash,
                 menu_permissions: permission.map(i => i)
             })

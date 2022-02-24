@@ -8,7 +8,6 @@ const user_login = new model("users", new Schema({
     country: { type: Schema.Types.String, require: true },
     city: { type: Schema.Types.String, require: true },
     district: { type: Schema.Types.String, require: true },
-    img: { type: Schema.Types.String, require: false },
     follow: [{ type: Schema.Types.ObjectId, ref: "stores" }],
     favorite_product: [{ type: Schema.Types.ObjectId, ref: "products" }],
     store_comment: [{ type: Schema.Types.ObjectId, ref:"store_comment" }],

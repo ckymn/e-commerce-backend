@@ -1,5 +1,6 @@
 const { Product_Comment } = require("../model")
 const Product = require("../../../store/products/model")
+const User = require("../../auth/model")
 
 const route = async( req,res,next) => {
     try {
@@ -18,7 +19,15 @@ const route = async( req,res,next) => {
                 }
             }, { new: true })
         if(!p_data)
-            return res.status(400).send({ status: false, message: "Add Product Comment Data success but Update Product Comment error"})
+            return res.status(400).send({ status: false, message: "Add Product Comment Data to Product success but Update Product Comment error"})
+        let u_data = await User.findOneAndUpdate({ _id: kuserData.id }, 
+            {
+                $push: {
+                    "product_comment": _data._id
+                }
+            }, { new: true })
+        if(!u_data)
+            return res.status(400).send({ status: false, message: "Add Product Comment Data to User success but Update Product Comment error"})
         await _data.save();
         return res.status(200).send({ status: true, message: "User to Product Comment Success", data: _data })
     } catch (error) {

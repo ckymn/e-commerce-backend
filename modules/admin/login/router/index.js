@@ -7,5 +7,6 @@ module.exports = {
     admin_all: require("./admin_all"),
     forgot_password: require("./forgot_password"),
     update_password: require("./update_password"),
-    reset_password: require("./reset_password")
+    reset_password: require("./reset_password"),
+    logout: require("./logout")
 }
