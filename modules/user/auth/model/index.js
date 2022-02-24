@@ -14,6 +14,7 @@ const user_login = new model("users", new Schema({
     store_comment: [{ type: Schema.Types.ObjectId, ref:"store_comment" }],
     product_comment: [{ type: Schema.Types.ObjectId, ref:"product_comment" }],
 	role : { type: Schema.Types.String, required: true, default: "user" },
+    code: { type: Schema.Types.String, default:"" },
 },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" }}
 ))

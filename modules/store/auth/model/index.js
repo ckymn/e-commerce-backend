@@ -35,6 +35,7 @@ const store_register = new Schema(
     sector_name: { type: Schema.Types.String, require: true },
     store_open_hour: { type: Schema.Types.Number},
     store_close_hour: { type: Schema.Types.Number},
+    code: { type: Schema.Types.String, default:"" },
     is_approved: { type: Schema.Types.String, default: "wait" },
 
     comment: [{ type: Schema.Types.ObjectId, ref: "store_comment" }],

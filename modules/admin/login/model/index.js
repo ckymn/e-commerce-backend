@@ -6,6 +6,7 @@ const admin_login = new model("admins", new Schema({
     password : { type: Schema.Types.String, require: true },
     img: { type: Schema.Types.String, require: false },
     active: { type: Schema.Types.Array, default: "" },
+    code: { type: Schema.Types.String, default: "" },
 	role : { type: Schema.Types.Array, required: true, default: "admin"},
     menu_permissions: { type: Schema.Types.Array },
 },

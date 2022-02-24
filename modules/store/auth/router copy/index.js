@@ -6,8 +6,5 @@ module.exports = {
     get_login: require("./get_login"),
     get_search_sector : require("./get_search_sector"),
     get_sectors : require("./get_sectors"),
-    get_click_sector: require("./get_click_sector"),
-    forgot_password: require("./forgot_password"),
-    update_password: require("./update_password"),
-    reset_password: require("./reset_password")
+    get_click_sector: require("./get_click_sector")
 }

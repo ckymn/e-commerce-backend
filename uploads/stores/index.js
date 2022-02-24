@@ -15,7 +15,6 @@ const upload = async (file , username) => {
 
     if(!file)
       return { status: 400, message: "Please upload a file!" }
-    // Create a new blob in the bucket and upload the file data.
     const blob = bucket.file(username+"/"+new Date().toISOString().replace(/:/g,"_") +"-" +file.originalname.replace(/:/g, "-"));
     const blobStream = blob.createWriteStream({
       resumable: false,
