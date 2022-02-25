@@ -158,7 +158,6 @@ router.put(`/store/myPanel`,middleware.authJwt,panel.update_info);
 router.post(`/store/payment`,middleware.authJwt,store_payment.store_date_payment)
 router.post(`/store/storie`,middleware.authJwt, uploadImage.single("img"),storeStory.add_story)
 router.delete(`/store/storie/:id`,middleware.authJwt,storeStory.delete_story);
-router.delete(`/store/images`,middleware.authJwt,store_images.delete_images)
 
 // users_get
 router.get(`/user/login`,user_auth.get_login)
@@ -167,6 +166,8 @@ router.get(`/user/logout`, middleware.authJwt, user_auth.logout);
 router.get(`/user/home_page`, middleware.authJwt, middleware.active.active,user_home.home_page)
 router.get(`/user/user`, middleware.authJwt, user_home.store)
 router.get(`/user/storie/:id`, middleware.authJwt, user_home.single_store_story)
+router.get(`/user/store_ads/:id`, middleware.authJwt, user_home.single_store_ads)
+router.get(`/user/admin_ads/:id`, middleware.authJwt, user_home.single_admin_ads)
 router.get(`/user/product/:id`, middleware.authJwt, user_home.single_product)
 router.get(`/user/comment_store`, middleware.authJwt, user_profile.comment_store)
 router.get(`/user/comment_product`, middleware.authJwt, user_profile.comment_product)

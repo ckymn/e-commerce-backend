@@ -12,7 +12,7 @@ const products = new mongoose.Schema(
     category_four: { type: String, require: false },
     category_five: { type: String, require: false },
 
-    product_name: { type: String, require: true, unique: true },
+    product_name: { type: String, required: true, unique: true },
     product_code: { type: ObjectId, default: ObjectId },
     product_brand: { type: String, required: false },
     description: { type: String, required: false },
@@ -82,6 +82,6 @@ const products = new mongoose.Schema(
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
-products.index({ location: "2dsphere"})
+products.index({ location: "2dsphere", product_name: "text" })
 module.exports = mongoose.model("products", products);
 

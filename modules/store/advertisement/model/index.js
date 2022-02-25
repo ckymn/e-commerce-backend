@@ -15,7 +15,8 @@ const ads = new model("store_ads", new Schema({
     district: { type: Schema.Types.String, require: true },
     language: { type: Schema.Types.String },
     is_approved: { type: Schema.Types.String, default: "wait" },
-    view: { type: Schema.Types.Array },
+    authCode: { type: Schema.Types.String, default: ""},
+    view: [{ type: Schema.Types.ObjectId, ref:"user" }],
 },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" }}
 ))

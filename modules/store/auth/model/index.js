@@ -28,7 +28,7 @@ const store_register = new Schema(
     storestreet: { type: Schema.Types.String, require: false },
     storebuildingnumber: { type: Schema.Types.String, require: true },
     storedoornumber: { type: Schema.Types.String, require: true },
-    storename: { type: Schema.Types.String, require: true },
+    storename: { type: Schema.Types.String, required: true , unique: true },
     instagram: { type: Schema.Types.String, require: false },
     experience: { type: Schema.Types.String, require: true },
     remain_date: { type: Schema.Types.Number, default: 0 },
@@ -55,5 +55,5 @@ const store_register = new Schema(
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
-store_register.index({ location: "2dsphere"});
+store_register.index({ location: "2dsphere", storename: "text" });
 module.exports = new model("stores", store_register)

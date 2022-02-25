@@ -17,7 +17,6 @@ const route = async (req, res, next) => {
     let total_product = await Product.find({}).count().lean().exec();
     let total_story = await Story.find({}).count().lean().exec();
     let total_user = await User.find({}).count().lean().exec();
-    //active kullanici sayilarini bul
     let active_user = await Admin.find({ role: { $in: "admin" } })
       .select("active -_id")
       .lean()

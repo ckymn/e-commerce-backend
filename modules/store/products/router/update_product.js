@@ -14,14 +14,19 @@ const route = async(req,res,next) => {
         let str = await Promise.all(imageUrl).then(d => d );
         let u_data = await _data.set({
             ...body,
-            images: str.map(i => i)
+            color:{
+                name: body.color,
+                barkod: body.barkod,
+                price: body.price,
+                stock: body.stock,
+                img: str.map(i => i)
+            }
         })
         if(!u_data)
             return res.status(400).send({ status: false, message: "Update Data set doesn't work"})
         await u_data.save();
         return res.status(200).send({ status: true, message: "Update Data Product Success", data: u_data})
     } catch (error) {
-        console.log(error);
         if(error){
             if(error.name === "MongoError" && error.code === 11000)
                 return res.status(500).send({ status: false, message: `File Already exists!  : ${error}` })

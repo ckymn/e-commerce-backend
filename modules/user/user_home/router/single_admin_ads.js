@@ -1,12 +1,12 @@
-const Stories = require("../../../store/story/model")
+const AdminAds = require("../../../admin/advertisement/model")
 
 const route = async (req,res,next) => {
     try {
         let { params, kuserData } = req;
-        await Stories.find({ $and: [ {_id: params.id}, { view: { $in : [ kuserData.id ]}}] })
+        await AdminAds.find({ $and: [ {_id: params.id}, { view: { $in : [ kuserData.id ]}}] })
             .lean().exec(async(err,data) => {
                 if(data.length === 0){
-                    let data = await Stories.findOneAndUpdate({ _id: params.id }, {
+                    let data = await AdminAds.findOneAndUpdate({ _id: params.id }, {
                         $push: { 
                             view: kuserData.id
                         }
