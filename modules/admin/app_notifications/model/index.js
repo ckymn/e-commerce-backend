@@ -1,13 +1,14 @@
 const { Schema , model } = require("mongoose")
 
-const route = model("app_notification", new Schema({
-    title: { type: Schema.Types.String, maxlength: 100 },
-    desc: { type: Schema.Types.String, required: true },
+const route = new Schema({
+    title: { type: Schema.Types.String, maxlength: 200 },
+    description: { type: Schema.Types.String, maxlength: 500 ,required: true },
     country: { type: Schema.Types.String, required: true },
     city: { type: Schema.Types.String, required: true },
-    district: { type: Schema.Types.String, required: true }
+    district: { type: Schema.Types.String, required: true },
+    language: { type: Schema.Types.String, required: true }
 },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at"}}
-));
-
-module.exports = route
+)
+route.index({ country: "text", city:"text", district:"text" , language: "text"})
+module.exports = model("app_notification", route);

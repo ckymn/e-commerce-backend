@@ -150,7 +150,7 @@ router.post(`/store/forgot_password`,middleware.authJwt,store_auth.forgot_passwo
 router.post(`/store/reset_password`,middleware.authJwt,store_auth.reset_password)
 router.put(`/store/update_password`,middleware.authJwt,store_auth.update_password)
 router.post(`/store/advertisement`, middleware.authJwt ,store_advertisement.add_advertisement)
-router.post(`/store/add_products`, middleware.authJwt, uploadImage.array('img',10),products.add_products)
+router.post(`/store/products`, middleware.authJwt, uploadImage.array('img',10),products.add_products)
 router.delete(`/store/product/:id`, middleware.authJwt, products.delete_product)
 router.put(`/store/product/:id`, middleware.authJwt, uploadImage.array('img',10), products.update_product)
 router.delete(`/store/advertisement/:id`, middleware.authJwt, all_advertisement.delete_advertisement);
@@ -171,7 +171,7 @@ router.get(`/user/admin_ads/:id`, middleware.authJwt, user_home.single_admin_ads
 router.get(`/user/product/:id`, middleware.authJwt, user_home.single_product)
 router.get(`/user/comment_store`, middleware.authJwt, user_profile.comment_store)
 router.get(`/user/comment_product`, middleware.authJwt, user_profile.comment_product)
-router.post(`/user/feed_back`, middleware.authJwt, user_profile.feed_back)
+router.post(`/user/feedback`, middleware.authJwt, user_profile.feed_back)
 router.get(`/user/help`, middleware.authJwt, user_profile.help)
 router.get(`/user/logout`, middleware.authJwt, user_profile.logout)
 router.get(`/user/my_account`, middleware.authJwt, user_profile.my_account)
@@ -201,7 +201,6 @@ router.put(`/user/product_star/:id`, middleware.authJwt, user_star.update_produc
 router.post(`/user/store_star/:id`, middleware.authJwt, user_star.add_store_star)
 router.delete(`/user/store_star/:id`, middleware.authJwt, user_star.delete_store_star)
 router.put(`/user/store_star/:id`, middleware.authJwt, user_star.update_store_star)
-router.post(`/user/product_favorite/:id`, middleware.authJwt, user_favorite.add_favorite)
-router.delete(`/user/product_favorite/:id`, middleware.authJwt, user_favorite.delete_favorite)
+router.post(`/user/product_favorite/:id`, middleware.authJwt, user_favorite.favorite)
 
 module.exports = router;    

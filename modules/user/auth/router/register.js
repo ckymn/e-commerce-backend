@@ -11,6 +11,9 @@ const route = async (req, res, next) => {
         const hash = await bcrypt.hash(password, 10);
         let _user = await new Data({
             ...body,
+            location: {
+                coordinates: [ parseFloat(body.long),parseFloat(body.lat) ]
+            },
             password:hash,
         });
         await _user.save();

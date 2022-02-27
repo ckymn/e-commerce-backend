@@ -1,10 +1,19 @@
 const { Schema, Mongoose, model } = require("mongoose")
 
-const user_login = new model("users", new Schema({
+const user_login = new Schema({
     email : { type: Schema.Types.String, require: true },
     username: { type: Schema.Types.String, require: true },
     password : { type: Schema.Types.String, require: true },
     language: { type: Schema.Types.String, require: true },
+    location: {
+        type: {
+          type: Schema.Types.String,
+          default: "Point",
+        },
+        coordinates: {
+          type: [Schema.Types.Number],
+        },
+      },
     country: { type: Schema.Types.String, require: true },
     city: { type: Schema.Types.String, require: true },
     district: { type: Schema.Types.String, require: true },
@@ -16,6 +25,6 @@ const user_login = new model("users", new Schema({
     code: { type: Schema.Types.String, default:"" },
 },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" }}
-))
-    
-module.exports = user_login;
+)
+user_login.index({ location: "2dsphere" })
+module.exports = new model("users", user_login)

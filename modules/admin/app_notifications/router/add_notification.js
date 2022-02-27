@@ -9,7 +9,7 @@ const route = async (req, res, next) => {
         });
         if(!data)
             return res.status(404).send({ status: false, message: "Add Application Notification Failed"})
-        await _data.save();
+        await data.save();
         return res.status(200).send({ status: true, message: "Add Application Notification success", data })
     } catch (error) {
         if(error){

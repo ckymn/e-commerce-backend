@@ -5,35 +5,34 @@ const storage = require("../../../../uploads/products")
 const route = async (req, res, next) => {
     try {
         let { body, files , userData} = req;
-
         let _data = await Store.findOne({ _id: userData.id }).lean();
         let _pr = await new Data({
             ...body,
             location: {
                 coordinates: [ parseFloat(body.long),parseFloat(body.lat) ]
             },
-            color:{
-                name: body.color,
-                barkod: body.barkod,
-                price: body.price,
-                stock: body.stock
-            },
             country: _data.storecountry,
             city: _data.storecity,
             district: _data.storedistrict,
             language: _data.storelanguage,
             author: userData.id,
-        })
+        }).save();
         if(!_pr)
             return res.status(400).send({ status: false, message: "Add Product doesn't work"})
         const imageUrl = await storage.Upload(files, userData.sub, _pr._id);
         let str = await Promise.all(imageUrl).then(d => d );
-        await _pr.set({
-          color: {
-            img: str.map(i => i),
-          },
-        });
-        await _pr.save();
+        console.log(str)
+        await _pr.updateOne({ _id: _pr._id },{
+            $push:{
+                color: {
+                    name: body.color_name,
+                    barkod: body.barkod,
+                    price: body.price,
+                    stock: body.stock,
+                    img: str.map(i=>i)
+                },
+            }
+        },{ upsert: true });
         return res.status(200).send({ status: true, message: "Add Product worked"})
     } catch (error) {
         console.log(error)
