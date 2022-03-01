@@ -7,7 +7,7 @@ const { connectDB } = require("./config/database");
 const app = express();
 
 //db
-connectDB();
+connectDB(); 
 //cors
 // var whitelist = ['http://localhost:3000/','http://localhost:8080/', 'https://vitrinint.netlify.app/']
 // var corsOptionsDelegate = function (req, callback) {
