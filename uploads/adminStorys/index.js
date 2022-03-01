@@ -12,54 +12,37 @@ const storage = new Storage({
 const bucket = storage.bucket(String(process.env.BUCKET_ADMIN_STORYS));
 
 // image 
-const upload = async (file , username, storyId) => {
-  try {
-
-    if(!file)
-      return { status: 400, message: "Please upload a file!" }
-    // Create a new blob in the bucket and upload the file data.
-    const blob = bucket.file(username+"/"+storyId+"/"+new Date().toISOString().replace(/:/g,"_") +"-" +file.originalname.replace(/:/g, "-"));
-    const blobStream = blob.createWriteStream({
-      resumable: false,
-    });
-
-    blobStream.on("error", (err) => {
-      return { 
-        staus: 500, 
-        message: err.message 
-      }
-    });
-    let b =  blobStream.on("finish", async () => {
-      const publicUrl = format(
-        `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-      );
-      return {
-        status: 200,
-        message: "Uploaded the file successfully: " + file.originalname,
-        publicUrl
-      }
-    });
-    blobStream.end(file.buffer);
-    return  b._events.finish()
-  } catch (error) {
-    return {
-      status: 500,
-      message: `Could not upload the file: ${file.originalename}`,
-    }
-  };
+const Upload = async (file, storyId) => {
+  const promises = [];
+    file.forEach(i => {
+        promises.push(
+            new Promise((resolve, reject) => {
+                const blob = bucket.file(storyId+"/"+i.originalname.replace(/:/g, "-"));
+                const blobStream = blob.createWriteStream({
+                    resumable: false
+                });
+                blobStream.on("finish", ()=> {
+                    const publicUrl = format(
+                        `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+                    );
+                    resolve(publicUrl)
+                })
+                .on("error", () => {
+                    reject("Unable to upload image, something went wrong")
+                })
+                .end(i.buffer)
+            }).then(d => { return d })
+        )
+    })
+    return promises
 };
 
 // video
-const vUpload = async (file,username,storyId) => {
+const vUpload = async (file,storyId) => {
   try {
-    let type = mime.lookup(file.originalname);
-    console.log("type: ",type);
-    console.log("add :", mime.extensions[type][0])
-    console.log("file.originalname: ", file.originalename)
-    if(!file)
-      return { status: 400, message: "Please upload a file!" }
-    // Create a new blob in the bucket and upload the file data.
-    const blob = bucket.file(username+"/"+storyId+"/"+new Date().toISOString().replace(/:/g,"_") +"-" +file.originalname.replace(/:/g, "-"));
+    let type = mime.lookup(file[0].originalname);
+    
+    const blob = bucket.file(`${storyId}/vide.${mime.extensions[type][0]}`);
     const blobStream = blob.createWriteStream({
       resumable: true,
 		  contentType: type,
@@ -67,54 +50,29 @@ const vUpload = async (file,username,storyId) => {
     });
 
     blobStream.on("error", (err) => {
-      return { 
-        staus: 500, 
-        message: err.message 
-      }
+      next(err);
     });
-    let b =  blobStream.on("finish", async () => {
-      const publicUrl = format(
-        `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-      );
-      return {
-        status: 200,
-        message: "Uploaded the file successfully: " + file.originalname,
-        publicUrl
-      }
-    });
-    blobStream.end(file.buffer);
-    return  b._events.finish()
+    let b = blobStream.on('finish', () => {
+      res.status(200).json({
+        data: {
+          url: `https://storage.googleapis.com/${bucket.name}/${blob.name}`,
+        },
+      });
+    })
+    console.log('url',await b._events.finish())
+    blobStream.end(file[0].buffer);
   } catch (error) {
     return {
       status: 500,
-      message: `Could not upload the file: ${file.originalename}`,
+      message: `Could not upload the file: ${file[0].originalname}`,
     }
   };
 }
 
-const Delete = async (username, storyIds) => {
-    return await storyIds.map( async i =>{
-        
-        return await bucket.deleteFiles({ prefix: `${username}/${i}`}, (err,file) => {
-            if(err){}
-                return {
-                  status: 500,
-                  message: "Admin Storys Delete Error in Google Cloud Storage"
-                }
-        })
-
-    })
-}
-
-const SingleDelete = async (username, storyIds) => {
-  return  await bucket.deleteFiles({ prefix: `${username}/${storyIds}/`}, (err,files) => {
-       if(err)
-           return {
-             status: 500,
-             message: "Admin Storys Single Delete Error in Google Cloud Storage"
-           }
-   });
+const Delete = async (storyIds) => {
+  await bucket.deleteFiles({ prefix: `${storyIds}` });
 }
 
 
-module.exports = {upload,vUpload,Delete,SingleDelete}
+
+module.exports = {Upload,vUpload,Delete}

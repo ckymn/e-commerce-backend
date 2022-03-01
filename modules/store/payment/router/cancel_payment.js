@@ -4,17 +4,17 @@ const Data = require("../model")
 const route = async (req, res, next) => {
     try {
         let { userData, params } = req;
+        let buyer_ip = "192.168.1.37";
+        let _data = await Data.findOne({ $and:[{_id: params.id },{ author: userData.id }]}).lean();
         await iyzipay.cancel.create({
-            locale: Iyzipay.LOCALE.TR,
-            conversationId: userData.id,
-            paymentId: params.id,
+            ip: "192.168.1.37",
+            paymentId: _data.paymentId,
         }, async function (err, result) {
-            if(err)
-                return res.status(500).send({ status: false, message: `Iyzipay Error : ${err}`})
+            console.log(result)
             if(result.status === "failure")
-                return res.status(400).send({ status: false, message: result.errorMessage, code: result.errorCode})
+                return res.status(402).send({ status: false, message: result.errorMessage, code: result.errorCode})
             if(result.status === "success"){
-                await Data.deleteOne({ $and: [{ author: userData.id }, { paymentId: params.id }] })
+                await Data.deleteOne({ $and: [{_id: params.id },{ author: userData.id }] })
                 return res.status(200).send({ status: true, message: "Cancel Payment Success", data: result })
             }
         })

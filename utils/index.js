@@ -1,4 +1,5 @@
 module.exports = {
     sendEmail : require("./sendEmail"),
-    uploadImage: require("./uploadImage")
+    uploadImage: require("./uploadImage"),
+    uploadVide: require("./uploadVideo")
 }

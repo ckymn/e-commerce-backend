@@ -2,8 +2,10 @@ const Data = require("../../auth/model")
 
 const route = async (req, res, next) => {
    try {
-     let username = req.userData.sub;
-     await Data.findOne({ username })
+     let { userData } = req;
+     let current_time = new Date();
+     let _data = await Data.findOne({ _id: userData.id }).lean();
+     await Data.findOneAndUpdate({ _id: userData.id },{ $inc: { "remain_date.time": - (_data.updated_at.getDate() - _data.remain_date.updated_at.getDate()) } })
           .populate({ path: 'comment' , select: 'comment rate' })
           .populate({ path: 'follow' , select: 'username' })
           .lean()

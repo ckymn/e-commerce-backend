@@ -9,7 +9,7 @@ const route = async (req, res) => {
     try {
         let buyer_id = req.userData.id;
         let basket_id = uuidv4();
-        let buyer_ip = networkInterfaces().en0[1].address
+        let buyer_ip = "192.168.1.37"
 
         let {card_price,card_paid_price,card_installment,card_holder_name,card_number,
             card_expire_month,card_expire_year,card_cvc,card_register,buyerName,buyerSurname,
@@ -31,23 +31,23 @@ const route = async (req, res) => {
                 return res.status(400).send({ status: false, message: result.errorMessage, code: result.errorCode})
             if(result.status === "success"){
                 let time = items.time
-                // burasina dogrulama kodu gelecek !!
-                // result.authCode === authCode
                 if(true){
                     let _data = await new Data({
                         author: buyer_id,
+                        authCode: result.authCode,
                         basketId:basket_id,
                         paymentId: result.paymentId,
                         price: card_price,
                         paid_price: card_paid_price,
-                        paymentTransactionId: result.paymentTransactionId
+                        paymentTransactionId: result.itemTransactions[0].paymentTransactionId
                     })
                     if(!_data)
                         return res.status(400).send({ status: false, message: "Odeme Gerceklesti ama Veri Tabanina kaydedilmedi"})
                     let _register = await Register.findOneAndUpdate({_id: buyer_id}, 
                         {
                             $set:{
-                                remain_date:time 
+                                "remain_date.time":time ,
+                                "remain_date.updated_at": new Date()
                             }
                         },
                         { new: true })

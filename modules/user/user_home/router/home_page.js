@@ -7,13 +7,7 @@ const StoreStory = require("../../../store/story/model")
 const AdminAds = require("../../../admin/advertisement/model")
 const StoreAds = require("../../../store/advertisement/model")
 const AppNfc = require("../../../admin/app_notifications/model")
-const turf = require("turf");
-
-// let mesafe = turf.distance(
-//   turf.point([parseInt(query.lat), parseInt(query.long)]),
-//   turf.point([parseInt(s_lat), parseInt(s_long)]), 
-//   "kilometers"
-// );
+const { ObjectId } = require("mongodb")
 
 const route = async (req,res,next) => {
     try {
@@ -33,12 +27,32 @@ const route = async (req,res,next) => {
                 }
             }
         );
+        
         if(query.search){
           let product_data = await Products.aggregate([
             {
+              $geoNear: {
+                near: {
+                  type: "Point",
+                  coordinates: [parseInt(query.long), parseInt(query.lat)],
+                },
+                spherical: true,
+                maxDistance: query.dst
+                  ? parseInt(query.dst) * 1609.34
+                  : 900 * 1609.34,
+                distanceMultiplier: 1 / 1609.34,
+                distanceField: "ProductDst",
+              },
+            },
+            {
               $match: {
                 $and: [
-                  { $text: { $search: query.search } },
+                  {
+                    $or:[
+                      // { $text: { $search: query.search } },
+                      { title: {$regex: query.search , $options: "i"} }
+                    ]
+                  },
                   {
                     country: _data.country,
                     city: _data.city,
@@ -46,7 +60,7 @@ const route = async (req,res,next) => {
                     is_approved: "yes",
                   },
                   {
-                    color: {
+                    "variants.sizes": {
                       $elemMatch: {
                         price: {
                           $gte: query.minPrc ? parseInt(query.minPrc) : 0,
@@ -57,6 +71,13 @@ const route = async (req,res,next) => {
                   },
                 ],
               },
+            },
+            {
+              $project: {
+                _id: 0,
+                data: "$$ROOT",
+                is_favorite:{ $in:[ObjectId(kuserData.id),"$favorite"]},
+              }
             },
             { $skip: parseInt(query.skip) },
             { $limit: parseInt(query.limit) },
@@ -141,8 +162,6 @@ const route = async (req,res,next) => {
                 distanceField: "ProductDst",
               },
             },
-            { $skip: parseInt(query.skip) },
-            { $limit: parseInt(query.limit) },
             {
               $match: {
                 $and: [
@@ -153,7 +172,7 @@ const route = async (req,res,next) => {
                     is_approved: "yes",
                   },
                   {
-                    color: {
+                    "variants.sizes": {
                       $elemMatch: {
                         price: {
                           $gte: query.minPrc ? parseInt(query.minPrc) : 0,
@@ -165,6 +184,15 @@ const route = async (req,res,next) => {
                 ],
               },
             },
+            {
+              $project: {
+                _id: 0,
+                data: "$$ROOT",
+                is_favorite:{ $in:[ObjectId(kuserData.id),"$favorite"]},
+              }
+            },
+            { $skip: parseInt(query.skip) },
+            { $limit: parseInt(query.limit) },
           ]);
           let store_story = await StoreStory.find({ 
             $and:[

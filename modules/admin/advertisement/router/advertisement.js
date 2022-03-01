@@ -1,22 +1,24 @@
 const Data = require("../model")
-const storeage = require("../../../../uploads/adminAds")
+const storage = require("../../../../uploads/adminAds")
 
 const route = async (req, res, next) => {
     try {
-        let { file , body , adminData} = req;
-       
-        if(!file)
+        let { files , body , adminData} = req;
+        if(!files)
             return res.status(404).send({ status: true, message: "Firstly you should add image"})
         let _data = await new Data({
-            ...body
-        });
+            ...body,
+            ads_date: new Date(body.ads_date)
+        }).save();
         if(!_data)
             return res.status(400).send({ status: false, message: "Admin Add Advertisement doesn't work"})
-        const imageUrl = await storeage.Upload(file, adminData.id, _data._id)
-        await _data.set({
-            img: imageUrl
+        const imagesUrl = await storage.Upload(files,_data._id);
+        let str = await Promise.all(imagesUrl).then(d => d );
+        await Data.updateOne({_id: _data._id},{
+            $push: {
+                img: str,
+            }
         })
-        await _data.save();
         return res.status(200).send({ status: true, message: "Admin Add Advertisement success", data: _data })
     } catch (error) {
         if(error){

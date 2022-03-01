@@ -33,7 +33,7 @@ const pay_form_ads = async(
         },
         buyer: {
             id: buyerId,
-            ip: buyerIp,
+            ip: "192.168.1.37",
             name: buyerName,
             surname: buyerSurname,
             gsmNumber: buyerNumber,
@@ -99,7 +99,7 @@ const pay_form = async(
             email: buyerEmail,
             identityNumber: tcNo,
             registrationAddress: buyerAddress,
-            ip: buyerIp,
+            ip: "192.168.1.37",
             city: buyerCity,
             country: buyerCountry,
         },

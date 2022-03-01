@@ -31,17 +31,14 @@ const store_home = require("./modules/store/store_home/router")
 const sectorSearch = require("./modules/store/auth/router")
 const products = require("./modules/store/products/router")
 const all_advertisement = require('./modules/store/advertisement/router')
-const store_images = require("./modules/store/img/router")
 const panel = require("./modules/store/panel/router")
 
 //store_post
 const store_advertisement = require("./modules/store/advertisement/router")
 const store_auth = require("./modules/store/auth/router")
-const store_forgotPassword = require("./modules/store/password/router")
-const store_resetPassword = require("./modules/store/password/router")
-const store_updatePassword = require("./modules/store/password/router")
 const storeStory = require("./modules/store/story/router")
 const store_payment = require("./modules/store/payment/router")
+const store_images = require("./modules/store/img/router")
 
 //user_get
 const user_auth = require("./modules/user/auth/router")
@@ -98,8 +95,8 @@ router.put(`/admin/update_admin/:id`, middleware.authJwt,login.admin_update)
 router.post(`/admin/sector`, middleware.authJwt, sector.createSector);
 router.post(`/admin/notification_product/:id`,middleware.authJwt,product_notifications.post_single_notification)
 router.put(`/admin/notification_store/:id`,middleware.authJwt, store_notifications.update_store)
-router.put(`/admin/notification_advertisement/:id`, middleware.authJwt, uploadImage.single("img"),advertisement_notification.update_advertisement_store);
-router.post(`/admin/advertisement`,middleware.authJwt, uploadImage.single("img"),admin_advertisement.advertisement)
+router.put(`/admin/notification_advertisement/:id`, middleware.authJwt, uploadImage.array("img"),advertisement_notification.update_advertisement_store);
+router.post(`/admin/advertisement`,middleware.authJwt, uploadImage.array("img"),admin_advertisement.advertisement)
 router.delete(`/admin/advertisement/:id`,middleware.authJwt,admin_advertisement.delete_advertisement);
 router.post(`/admin/search_store`, middleware.authJwt ,storePanel.search_store);
 router.delete(`/admin/store/:id`, middleware.authJwt ,storePanel.delete_store);
@@ -112,7 +109,7 @@ router.put(`/admin/update_subscribe/:id`, middleware.authJwt, uploadImage.single
 router.post(`/admin/banner`, middleware.authJwt, uploadImage.single("img"),adminBanner.add_banner)
 router.delete(`/admin/banner/:id`, middleware.authJwt,adminBanner.delete_banner)
 router.put(`/admin/banner/:id`, middleware.authJwt, uploadImage.single("img"),adminBanner.update_banner)
-router.post(`/admin/storie`, middleware.authJwt, uploadImage.single("img"),adminStory.add_story)
+router.post(`/admin/storie`, middleware.authJwt, uploadImage.array("img",5),adminStory.add_story)
 router.delete(`/admin/storie/:id`, middleware.authJwt,adminStory.delete_story)
 router.post(`/admin/partner`,middleware.authJwt, solutionPartner.add_partner)
 router.delete(`/admin/partner/:id`,middleware.authJwt, solutionPartner.delete_partner)
@@ -149,15 +146,17 @@ router.post(`/store/login`,store_auth.login)
 router.post(`/store/forgot_password`,middleware.authJwt,store_auth.forgot_password)
 router.post(`/store/reset_password`,middleware.authJwt,store_auth.reset_password)
 router.put(`/store/update_password`,middleware.authJwt,store_auth.update_password)
-router.post(`/store/advertisement`, middleware.authJwt ,store_advertisement.add_advertisement)
+router.post(`/store/advertisement`, middleware.authJwt ,middleware.ip_mid.ip2_Middleware,uploadImage.array("img"),store_advertisement.add_advertisement)
+router.delete(`/store/advertisement/:id`, middleware.authJwt, all_advertisement.delete_advertisement);
 router.post(`/store/products`, middleware.authJwt, uploadImage.array('img',10),products.add_products)
 router.delete(`/store/product/:id`, middleware.authJwt, products.delete_product)
-router.put(`/store/product/:id`, middleware.authJwt, uploadImage.array('img',10), products.update_product)
-router.delete(`/store/advertisement/:id`, middleware.authJwt, all_advertisement.delete_advertisement);
+router.put(`/store/product/:id`, middleware.authJwt, products.update_product)
 router.put(`/store/myPanel`,middleware.authJwt,panel.update_info);
-router.post(`/store/payment`,middleware.authJwt,store_payment.store_date_payment)
-router.post(`/store/storie`,middleware.authJwt, uploadImage.single("img"),storeStory.add_story)
+router.post(`/store/payment`,middleware.authJwt,middleware.ip_mid.ip2_Middleware,store_payment.store_date_payment)
+router.post(`/store/storie`,middleware.authJwt, uploadImage.array("img",5),storeStory.add_story)
 router.delete(`/store/storie/:id`,middleware.authJwt,storeStory.delete_story);
+router.post(`/store/images`,middleware.authJwt,uploadImage.single("url"),store_images.add_images);
+router.delete(`/store/images/:id`,middleware.authJwt,store_images.delete_images);
 
 // users_get
 router.get(`/user/login`,user_auth.get_login)
@@ -179,6 +178,7 @@ router.get(`/user/favorites`, middleware.authJwt, user_favorite.all_favorite)
 router.get(`/user/stores`, middleware.authJwt, user_home.stores)
 router.get(`/user/store/:id`, middleware.authJwt, user_home.single_store)
 router.get(`/user/how_i_use`, middleware.authJwt, userPanel.get_how_i_use);
+router.get(`/user/whatsapp/:id`, middleware.authJwt, user_home.whatsapp);
 
  
 // user_post

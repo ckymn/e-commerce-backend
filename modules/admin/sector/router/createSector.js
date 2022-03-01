@@ -16,6 +16,7 @@ const route = async (req, res) => {
                             let sectorId = await Sector.findOne({ sector_name }).lean();
                             let c_category_one = await new Category_One({ 
                                 category_one,
+                                futures: body.category_one_futures.map(i => i),
                                 parent_id: sectorId._id
                             }).save();
                             if(!c_category_one)
@@ -27,10 +28,11 @@ const route = async (req, res) => {
                         if(category_two){
                             await Category_Two.findOne({ category_two }).lean().exec(async (err,data) => {
                                 if(!data || data.length === 0){
-                                    let sectorId = await Sector.findOne({ sector_name }).lean();
+                                    let category_one_Id = await Category_One.findOne({ category_one }).lean();
                                     let c_category_two = await new Category_Two({ 
                                         category_two,
-                                        parent_id: sectorId._id
+                                        futures: body.category_two_futures.map(i => i),
+                                        parent_id: category_one_Id._id
                                     }).save();
                                     if(!c_category_two)
                                         return res.status(400).send({ status: false, message: "Create Category Two Something Error !"})
@@ -41,10 +43,11 @@ const route = async (req, res) => {
                                 if(category_three){
                                     await Category_Three.findOne({ category_three }).lean().exec(async (err,data) => {
                                         if(!data || data.length === 0){
-                                            let sectorId = await Sector.findOne({ sector_name }).lean();
+                                            let category_two_Id = await Category_Two.findOne({ category_two }).lean();
                                             let c_category_three = await new Category_Three({ 
                                                 category_three,
-                                                parent_id: sectorId._id 
+                                                futures: body.category_three_futures.map(i => i),
+                                                parent_id: category_two_Id._id 
                                             }).save();
                                             if(!c_category_three)
                                                 return res.status(400).send({ status: false, message: "Create Category Three Something Error !"})
@@ -55,10 +58,11 @@ const route = async (req, res) => {
                                         if(category_four){
                                             await Category_Four.findOne({ category_four }).lean().exec(async (err,data) => {
                                                 if(!data || data.length === 0){
-                                                    let sectorId = await Sector.findOne({ sector_name }).lean();
+                                                    let category_three_Id = await Category_Three.findOne({ category_three }).lean();
                                                     let c_category_four = await new Category_Four({ 
                                                         category_four ,
-                                                        parent_id: sectorId._id 
+                                                        futures: body.category_four_futures.map(i => i),
+                                                        parent_id: category_three_Id._id 
                                                     }).save();
                                                     if(!c_category_four)
                                                         return res.status(400).send({ status: false, message: "Create Category Four Something Error !"})
@@ -69,10 +73,11 @@ const route = async (req, res) => {
                                                 if(category_five){
                                                     await Category_Five.findOne({ category_five }).lean().exec(async (err,data) => {
                                                     if(!data || data.length === 0){
-                                                        let sectorId = await Sector.findOne({ sector_name }).lean();
+                                                        let category_four_Id = await Category_Four.findOne({ category_four }).lean();
                                                         let c_category_five = await new Category_Five({ 
                                                             category_five ,
-                                                            parent_id: sectorId._id 
+                                                            futures: body.category_five_futures.map(i => i),
+                                                            parent_id: category_four_Id._id 
                                                         }).save();
                                                         if(!c_category_five)
                                                             return res.status(400).send({ status: false, message: "Create Category Five Something Error !"})

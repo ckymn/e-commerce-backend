@@ -6,9 +6,9 @@ const { networkInterfaces } = require("os")
 
 const route = async (req, res) => {
   try { 
-    let { file , body , params  } = req;
+    let { files , body , params  } = req;
     let { is_approved ,link, banner_story_time } = body;
-    let buyer_ip = networkInterfaces().en0[1].address
+    let buyer_ip = "192.168.1.37"
 
     await Data.findOne({ _id: params.id }).lean().exec(async(err,data) => {
       if(!data)
@@ -17,31 +17,31 @@ const route = async (req, res) => {
         if(is_approved === "no"){
           let _pay = await Payment.findOne({ $and: [{author: data.author}, {ads_id: data._id}] })
           iyzipay.refund.create({
-            locale: Iyzipay.LOCALE.TR,
-            conversationId: userData.id,
-            paymentTransactionId: _pay.paymentTransactionId,
+            ip: "192.168.1.37",//buyer_ip,
             price: _pay.price,//burasi paid_price ta olabilir dikkat
-            currency: Iyzipay.CURRENCY.TRY,
-            ip: buyer_ip
-        }, function (err, result) {
-            console.log(result);
-        });
-          let n_data = await Data.findOneAndUpdate({ _id : params.id }, { $set: { is_approved: "no" }}, { new: true })
-          if(!n_data) 
-            return res.status(400).send({ status: false, message: "get single notification don't cahange to NO"})
-          return res.status(200).send({ status: true, message: "get single notification change success NO"})
+            paymentTransactionId: _pay.paymentTransactionId,
+        }, async function (err, result) {
+            if(result.status === "failure"){
+              return res.status(402).send({ status: false, message: result.errorMessage})
+            }else{
+              await Data.findOneAndUpdate({ _id : params.id }, { $set: { is_approved: "no" }})
+              return res.status(200).send({ status: true, message: "Magazanin Parasi Geri Odendi"})
+            }
+          });
         }
         if(is_approved === "yes"){
-          const imageUrl = await storage.Upload(file, data.author, data._id);
-          let n_data = await Data.findOneAndUpdate({ _id : params.id },
+          const imagesUrl = await storage.Upload(files,data._id);
+          let str = await Promise.all(imagesUrl).then(d => d );
+          let n_data = await Data.updateOne({ _id : params.id },
             { 
+              $push:{
+                img: str,
+              },
               $set: { 
                 is_approved: "yes",
-                img: imageUrl,
                 link,
-                banner_story_time
               }
-            }, { new: true })
+            })
           if(!n_data) 
             return res.status(400).send({ status: false, message: "get single notification don't cahange to YES"})
           return res.status(200).send({ status: true, message: "get single notification change success YES"})
@@ -55,17 +55,18 @@ const route = async (req, res) => {
           return res.status(200).send({ status: true, message: "get single notification change success WAIT"})
         }
         if(is_approved === "yes"){
-          const imageUrl = await storage.Upload(file, data.author, data._id);
-          let str = await Promise.all(imageUrl).then(d => d );
-          let n_data = await Data.findOneAndUpdate({ _id : params.id }, 
+          const imagesUrl = await storage.Upload(files,data._id);
+          let str = await Promise.all(imagesUrl).then(d => d );
+          let n_data = await Data.updateOne({ _id : params.id },
             { 
+              $push:{
+                img: str,
+              },
               $set: { 
                 is_approved: "yes",
-                img: str,
                 link,
-                banner_story_time
               }
-            }, { new: true })
+            })
           if(!n_data) 
             return res.status(400).send({ status: false, message: "get single notification don't cahange to YES"})
           return res.status(200).send({ status: true, message: "get single notification change success YES"})
@@ -75,20 +76,17 @@ const route = async (req, res) => {
         if(is_approved === "no"){
           let _pay = await Payment.findOne({ $and: [{author: data.author}, {ads_id: data._id}] })
           iyzipay.refund.create({
-            locale: Iyzipay.LOCALE.TR,
-            conversationId: userData.id,
+            ip: "192.168.1.37",//buyer_ip,
+            price: _pay.price,//burasi paid_price ta olabilir dikkat
             paymentTransactionId: _pay.paymentTransactionId,
-            //burasi paid_price ta olabilir dikkat
-            price: _pay.price,
-            currency: Iyzipay.CURRENCY.TRY,
-            ip: buyer_ip
-        }, function (err, result) {
-            console.log(result);
-        });
-          let n_data = await Data.findOneAndUpdate({ _id : params.id }, { $set: { is_approved: "no" }}, { new: true })
-          if(!n_data) 
-            return res.status(400).send({ status: false, message: "get single notification don't cahange to NO"})
-          return res.status(200).send({ status: true, message: "get single notification change success NO"})
+        }, async function (err, result) {
+            if(result.status === "failure"){
+              return res.status(402).send({ status: false, message: result.errorMessage})
+            }else{
+              await Data.findOneAndUpdate({ _id : params.id }, { $set: { is_approved: "no" }})
+              return res.status(200).send({ status: true, message: "Magazanin Parasi Geri Odendi"})
+            }
+          });
         }
         if(is_approved === "wait"){
           let n_data = await Data.findOneAndUpdate({ _id : params.id }, { $set: { is_approved: "wait" }}, { new: true })

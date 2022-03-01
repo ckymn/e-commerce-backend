@@ -12,28 +12,60 @@ const route = async (req, res) => {
     let { global } = req.body;
 
     let _sector_name = await Sector.aggregate([
-      { $match: { $text: { $search: global } } },
-      { $project: { _id: 0, sector_name: 1, category_one: 1 } },
+      {
+        $match: {
+          $or: [
+            // { $text: { $search: global } },
+            { sector_name: { $regex: global, $options: "i" } },
+          ],
+        },
+      },
+      { $project: { sector_name: 1, category_one: 1 } },
     ]);
     let _category_one = await Category_One.aggregate([
-      { $match: { $text: { $search: global } } },
-      { $project: { _id: 0, category_one: 1, category_two: 1 } },
+      { $match: {
+        $or: [
+          // { $text: { $search: global } },
+          { category_one: { $regex: global, $options: "i" } },
+        ],
+      }, },
+      { $project: { category_one: 1, category_two: 1 } },
     ]);
     let _category_two = await Category_Two.aggregate([
-      { $match: { $text: { $search: global } } },
-      { $project: { _id: 0, category_two: 1, category_three: 1 } },
+      { $match: {
+        $or: [
+          // { $text: { $search: global } },
+          { category_two: { $regex: global, $options: "i" } },
+        ],
+      }, },
+      { $project: { category_two: 1, category_three: 1 } },
     ]);
     let _category_three = await Category_Three.aggregate([
-      { $match: { $text: { $search: global } } },
-      { $project: { _id: 0, category_three: 1, category_four: 1 } },
+      { $match: {
+        $or: [
+          // { $text: { $search: global } },
+          { category_three: { $regex: global, $options: "i" } },
+        ],
+      }, },
+      { $project: { category_three: 1, category_four: 1 } },
     ]);
     let _category_four = await Category_Four.aggregate([
-      { $match: { $text: { $search: global } } },
-      { $project: {_id: 0,  category_four: 1, category_five: 1 } },
+      { $match: {
+        $or: [
+          // { $text: { $search: global } },
+          { category_four: { $regex: global, $options: "i" } },
+        ],
+      }, },
+      { $project: { category_four: 1, category_five: 1 } },
     ]);
     let _category_five = await Category_Five.aggregate([
-      { $match: { $text: { $search: global } } },
-      { $project: { _id: 0, category_five: 1 } },
+      { $match: {
+        $or: [
+          // { $text: { $search: global } },
+          { category_five: { $regex: global, $options: "i" } },
+        ],
+      }, },
+      { $project: { category_five: 1 } },
     ]);
     
     return res.status(200).send({

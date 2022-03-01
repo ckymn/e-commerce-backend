@@ -6,6 +6,88 @@ const route = async (req, res, next) => {
     try {
         let { kuserData ,params, query } = req; 
         let current_time = new Date();
+        let _data = await Store.findOne({ _id: params.id }).lean();
+        let start_store = _data.created_at.getDate();
+        
+        if(start_store - current_time.getDate() === 0){
+            await Store.findOneAndUpdate(
+              { _id: params.id },
+              {
+                $inc: { "search_count.1": 1, "location_search_count.1": 1 },
+              }
+            );
+        }
+        if(start_store - current_time.getDate() === 1){
+            await Store.findOneAndUpdate(
+              { _id: params.id },
+              {
+                $inc: { "search_count.2": 1, "location_search_count.2": 1 },
+              }
+            );
+        }
+        if(start_store - current_time.getDate() === 2){
+            await Store.findOneAndUpdate(
+              { _id: params.id },
+              {
+                $inc: { "search_count.3": 1, "location_search_count.3": 1 },
+              }
+            );
+        }
+        if(start_store - current_time.getDate() === 3){
+            await Store.findOneAndUpdate(
+              { _id: params.id },
+              {
+                $inc: { "search_count.4": 1, "location_search_count.4": 1 },
+              }
+            );
+        }
+        if(start_store - current_time.getDate() === 4){
+            await Store.findOneAndUpdate(
+              { _id: params.id },
+              {
+                $inc: { "search_count.5": 1, "location_search_count.5": 1 },
+              }
+            );
+        }
+        if(start_store - current_time.getDate() === 5){
+            await Store.findOneAndUpdate(
+              { _id: params.id },
+              {
+                $inc: { "search_count.6": 1, "location_search_count.6": 1 },
+              }
+            );
+        }
+        if(start_store - current_time.getDate() === 6){
+            await Store.findOneAndUpdate(
+              { _id: params.id },
+              {
+                $inc: { "search_count.7": 1, "location_search_count.7": 1 },
+              }
+            );
+        }
+        if (start_store - current_time.getDate() === 7) {
+          await Store.findOneAndUpdate(
+            { _id: params.id },
+            {
+              $set: {
+                "search_count.1": 0,
+                "search_count.2": 0,
+                "search_count.3": 0,
+                "search_count.4": 0,
+                "search_count.5": 0,
+                "search_count.6": 0,
+                "search_count.7": 0,
+                "location_search_count.1": 0,
+                "location_search_count.2": 0,
+                "location_search_count.3": 0,
+                "location_search_count.4": 0,
+                "location_search_count.5": 0,
+                "location_search_count.6": 0,
+                "location_search_count.7":0
+              },
+            }
+          );
+        }
         
         let _product = await Product.find({ author: params.id }).lean().exec();
         if(!_product)
