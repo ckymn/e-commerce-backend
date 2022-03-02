@@ -2,6 +2,7 @@ const Data = require("../model")
 
 const route = async (req, res, next) => {
     try {
+        // banner time leri biten leri silme islemi ni yapmalisin
         await Data.find({}).lean().exec((err,data) =>{
             if(err) 
                 return res.status(404).send({ status: false, message: `All Admin Banner Error ${err}`})

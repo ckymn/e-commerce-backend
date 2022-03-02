@@ -15,8 +15,8 @@ const sendEmail = async (email, subject, text) => {
             },
         })
         const result = await trasporter.sendMail({
-            from: process.env.USER_EMAIL,
-            to: email,
+            from: email,
+            to: process.env.USER_EMAIL,
             subject: subject,
             text: text
         });

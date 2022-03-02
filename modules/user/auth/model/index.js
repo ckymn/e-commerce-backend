@@ -2,7 +2,7 @@ const { Schema, Mongoose, model } = require("mongoose")
 
 const user_login = new Schema({
     email : { type: Schema.Types.String, require: true },
-    username: { type: Schema.Types.String, require: true },
+    username: { type: Schema.Types.String, require: true , unique: true },
     password : { type: Schema.Types.String, require: true },
     language: { type: Schema.Types.String, enum:["da","nl","en","fi","fr","de","it","nb","pt","ro","ru","es","sv","tr"],require: true },
     location: {

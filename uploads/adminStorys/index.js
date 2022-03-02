@@ -37,6 +37,10 @@ const Upload = async (file, storyId) => {
     return promises
 };
 
+// delete
+const Delete = async (storyIds) => {
+  await bucket.deleteFiles({ prefix: `${storyIds}` });
+}
 // video
 const vUpload = async (file,storyId) => {
   try {
@@ -67,10 +71,6 @@ const vUpload = async (file,storyId) => {
       message: `Could not upload the file: ${file[0].originalname}`,
     }
   };
-}
-
-const Delete = async (storyIds) => {
-  await bucket.deleteFiles({ prefix: `${storyIds}` });
 }
 
 

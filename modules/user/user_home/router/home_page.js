@@ -261,11 +261,10 @@ const route = async (req,res,next) => {
         }
     } catch (error) {
       console.log(error)
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `User/Home Page , Mongdo Already exists: ${error}`})
-        }
-        return res.status(500).send({ status: false, message: `User Home Page ,Something Missing => ${error}`})
+      if(error.name === "MongoError" && error.code === 11000)
+            return res.status(422).send({ status: false, message: `User/Home Page , Mongdo Already exists: ${error}`})
+        if(error.code === 27)
+          return res.status(422).send({ status: false, message: `We Don't Have Any Data`, data:null})
     }
 };
 

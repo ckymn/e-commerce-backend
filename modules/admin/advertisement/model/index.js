@@ -12,7 +12,6 @@ const admin_ads = new model("admins_ads", new Schema({
     city: { type: Schema.Types.String, require: true },
     district: { type: Schema.Types.String, require: true },
     language: { type: Schema.Types.String, enum:["da","nl","en","fi","fr","de","it","nb","pt","ro","ru","es","sv","tr"],require: true },
-    is_approved: { type: Schema.Types.String, default:"wait"},
     view: [{ type: Schema.Types.ObjectId, ref:"user" }],
 },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" }}

@@ -1,13 +1,11 @@
 const Data = require('../../../store/advertisement/model')
 const Payment = require("../../../store/payment/model")
-const storage = require("../../../../uploads/storeAds")
 const { iyzipay , Iyzipay} = require("../../../../utils/iyzipay")
-const { networkInterfaces } = require("os")
 
 const route = async (req, res) => {
   try { 
     let { files , body , params  } = req;
-    let { is_approved ,link, banner_story_time } = body;
+    let { is_approved  } = body;
     let buyer_ip = "192.168.1.37"
 
     await Data.findOne({ _id: params.id }).lean().exec(async(err,data) => {
@@ -30,16 +28,10 @@ const route = async (req, res) => {
           });
         }
         if(is_approved === "yes"){
-          const imagesUrl = await storage.Upload(files,data._id);
-          let str = await Promise.all(imagesUrl).then(d => d );
           let n_data = await Data.updateOne({ _id : params.id },
             { 
-              $push:{
-                img: str,
-              },
               $set: { 
                 is_approved: "yes",
-                link,
               }
             })
           if(!n_data) 
@@ -55,16 +47,10 @@ const route = async (req, res) => {
           return res.status(200).send({ status: true, message: "get single notification change success WAIT"})
         }
         if(is_approved === "yes"){
-          const imagesUrl = await storage.Upload(files,data._id);
-          let str = await Promise.all(imagesUrl).then(d => d );
           let n_data = await Data.updateOne({ _id : params.id },
             { 
-              $push:{
-                img: str,
-              },
               $set: { 
                 is_approved: "yes",
-                link,
               }
             })
           if(!n_data) 

@@ -103,12 +103,12 @@ router.delete(`/admin/store/:id`, middleware.authJwt ,storePanel.delete_store);
 router.put(`/admin/store/:id`, middleware.authJwt ,storePanel.update_store);
 router.put(`/admin/store_comment/:id`, middleware.authJwt, comment_notifications.update_store_comments);
 router.put(`/admin/product_comment/:id`, middleware.authJwt, comment_notifications.update_product_comments);
-router.post(`/admin/subscribe`, middleware.authJwt, uploadImage.single("img"),subscribe.add_subscription);
+router.post(`/admin/subscribe`, middleware.authJwt, uploadImage.array("img",5),subscribe.add_subscription);
 router.delete(`/admin/subscribe/:id`, middleware.authJwt, subscribe.delete_subscription);
 router.put(`/admin/update_subscribe/:id`, middleware.authJwt, uploadImage.single("img"),subscribe.update_subscription);
-router.post(`/admin/banner`, middleware.authJwt, uploadImage.single("img"),adminBanner.add_banner)
+router.post(`/admin/banner`, middleware.authJwt, uploadImage.array("img",5),adminBanner.add_banner)
 router.delete(`/admin/banner/:id`, middleware.authJwt,adminBanner.delete_banner)
-router.put(`/admin/banner/:id`, middleware.authJwt, uploadImage.single("img"),adminBanner.update_banner)
+router.put(`/admin/banner/:id`, middleware.authJwt, uploadImage.single("img",5),adminBanner.update_banner)
 router.post(`/admin/storie`, middleware.authJwt, uploadImage.array("img",5),adminStory.add_story)
 router.delete(`/admin/storie/:id`, middleware.authJwt,adminStory.delete_story)
 router.post(`/admin/partner`,middleware.authJwt, solutionPartner.add_partner)
@@ -163,7 +163,7 @@ router.get(`/user/login`,user_auth.get_login)
 router.get(`/user/register`,user_auth.get_register)
 router.get(`/user/logout`, middleware.authJwt, user_auth.logout);
 router.get(`/user/home_page`, middleware.authJwt, middleware.active.active,user_home.home_page)
-router.get(`/user/user`, middleware.authJwt, user_home.store)
+router.get(`/user/user`, middleware.authJwt, user_home.user)
 router.get(`/user/storie/:id`, middleware.authJwt, user_home.single_store_story)
 router.get(`/user/store_ads/:id`, middleware.authJwt, user_home.single_store_ads)
 router.get(`/user/admin_ads/:id`, middleware.authJwt, user_home.single_admin_ads)

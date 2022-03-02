@@ -10,48 +10,35 @@ const storage = new Storage({
 
 const bucket = storage.bucket(String(process.env.BUCKET_SUBSCRIPTIONS));
 
-const upload = async (file , username, subscribeId) => {
-  try {
-
-    if(!file)
-      return { status: 400, message: "Please upload a file!" }
-    // Create a new blob in the bucket and upload the file data.
-    const blob = bucket.file(username+"/"+subscribeId+"/"+new Date().toISOString().replace(/:/g,"_") +"-" +file.originalname.replace(/:/g, "-"));
-    const blobStream = blob.createWriteStream({
-      resumable: false,
-    });
-
-    blobStream.on("error", (err) => {
-      return { 
-        staus: 500, 
-        message: err.message 
-      }
-    });
-    let b =  blobStream.on("finish", async () => {
-      const publicUrl = format(
-        `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-      );
-      return {
-        status: 200,
-        message: "Uploaded the file successfully: " + file.originalname,
-        publicUrl
-      }
-    });
-    blobStream.end(file.buffer);
-    return  b._events.finish()
-  } catch (error) {
-    return {
-      status: 500,
-      message: `Could not upload the file: ${file.originalename}`,
-    }
-  };
+// image 
+const Upload = async (file, subsId) => {
+  const promises = [];
+    file.forEach(i => {
+        promises.push(
+            new Promise((resolve, reject) => {
+                const blob = bucket.file(subsId+"/"+i.originalname.replace(/:/g, "-"));
+                const blobStream = blob.createWriteStream({
+                    resumable: false
+                });
+                blobStream.on("finish", ()=> {
+                    const publicUrl = format(
+                        `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+                    );
+                    resolve(publicUrl)
+                })
+                .on("error", () => {
+                    reject("Unable to upload image, something went wrong")
+                })
+                .end(i.buffer)
+            }).then(d => { return d })
+        )
+    })
+    return promises
 };
 
-const Delete = async (username, subscribeId) => {
-  return  await bucket.deleteFiles({ prefix: `${username}/${subscribeId}`}, (err,files) => {
-       if(err)
-           return err
-   });
+// delete
+const Delete = async (subsId) => {
+  await bucket.deleteFiles({ prefix: `${subsId}` });
 }
 
-module.exports = {upload,Delete}
+module.exports = {Upload,Delete}

@@ -55,11 +55,12 @@ const route = async (req,res,next) => {
                 }
             })
     } catch (error) {
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `File Already exists: ${error}`})
-        }
-        return res.status(500).send({ status: false, message: `Product Add Favorite ,Something Missing => ${error}`})
+      if (error.code === 11000){
+        return res.status(500).send({ status: false, message: `User Stores Page, Already Mongo Error` })
+      }
+      if(error.code === 27 ){
+        return res.status(500).send({ status: false, message: `We Don't Have Any Data`, data:null });
+      }
     }
 }
 

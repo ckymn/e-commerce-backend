@@ -1,5 +1,4 @@
 const {iyzipay, pay_form } = require("../../../../utils/iyzipay");
-const { networkInterfaces } = require("os")
 const { v4: uuidv4 } = require('uuid');
 
 const Data = require("../model")

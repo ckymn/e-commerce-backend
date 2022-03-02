@@ -3,20 +3,18 @@ const storage = require("../../../../uploads/subscriptions")
 
 const route = async (req, res, next) => {
     try {
-        let { file , params, body } = req;
-        let { id } = params;
-        let data = await Data.findOne({ _id: id })
+        let { files , params, body } = req;
+
+        let data = await Data.findOne({ _id: params.id })
         if(!data)
             return res.status(400).send({ satus: false, message: "Not Found Update Subscribe"})
-        let d_file = await storage.Delete(req.adminData.sub,data._id)
-        if(d_file != (undefined||null))
-            return res.status(500).send({ status: false, message: `Delete Subscribe file from GCS `})
-        let str = await storage.upload(file,req.adminData.sub,data._id);
-        if(str.status != 200)
-            return res.status(str.status).send({ status: false, message: str.message})
-        let u_data = await data.set({
-            ...body,
-            img: str.publicUrl
+        await storage.Delete(data._id)
+        let str = await storage.Upload(files,data._id);
+        console.log("update subscribe",str)
+        let u_data =  await Data.updateOne({_id: data._id},{
+            $push: {
+                img: str,
+            },
         })
         if(!u_data)
             return res.status(400).send({ status: false, message: "Update Data set doesn't work"})

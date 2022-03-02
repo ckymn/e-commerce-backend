@@ -1,11 +1,11 @@
-const Data = require("../../products/model");
+const Data = require("../model");
 const storage = require("../../../../uploads/images")
 
 const route = async (req, res) => {
 	try {
-		let { id } = req.userData;
+		let { userData } = req;
 		
-		await Data.find({ author: id }).select("color.img -_id").lean().exec((err,data) => {
+		await Data.find({ author: userData.id }).lean().exec((err,data) => {
 			if(err)
 				return res.status(400).send({ status: false, message: `Store Images get from product failed : ${err}` })
 			return res.status(200).send({ status: true, message: `Store Images get from product success`, data })

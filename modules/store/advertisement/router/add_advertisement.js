@@ -3,10 +3,11 @@ const Data = require("../model")
 const Payment = require("../../payment/model")
 const {iyzipay, pay_form_ads} = require("../../../../utils/iyzipay")
 const { v4: uuidv4 } = require('uuid');
+const storage = require("../../../../uploads/storeAds")
 
 const route = async (req, res, next) => {
     try {
-        let { body , userData } = req;
+        let { body , userData ,files} = req;
         let buyer_id = userData.id;
         let basket_id = uuidv4();
         let buyer_ip = "192.168.1.37"
@@ -38,6 +39,10 @@ const route = async (req, res, next) => {
                         });
                         if(!_data)
                             return res.status(404).send({ status: false, message: "Save Advertisement error"})
+                        const imagesUrl = await storage.Upload(files,_data._id);
+                        let str = await Promise.all(imagesUrl).then(d => d );
+                        console.log(str)
+                        await Data.updateOne({ _id: _data._id},{ $push: { img: str }})
                         await Payment.create({
                             author: buyer_id,
                             basketId:basket_id,
@@ -68,6 +73,9 @@ const route = async (req, res, next) => {
                         });
                         if(!_data)
                             return res.status(404).send({ status: false, message: "Save Advertisement error"})
+                        const imagesUrl = await storage.Upload(files,_data._id);
+                        let str = await Promise.all(imagesUrl).then(d => d );
+                        await Data.updateOne({ _id: _data._id},{ $push: { img: str }})
                         await Payment.create({
                             author: buyer_id,
                             basketId:basket_id,
@@ -98,6 +106,9 @@ const route = async (req, res, next) => {
                         });
                         if(!_data)
                             return res.status(404).send({ status: false, message: "Save Advertisement error"})
+                        const imagesUrl = await storage.Upload(files,_data._id);
+                        let str = await Promise.all(imagesUrl).then(d => d );
+                        await Data.updateOne({ _id: _data._id},{ $push: { img: str }})
                         await Payment.create({
                             author: buyer_id,
                             basketId:basket_id,
@@ -129,6 +140,9 @@ const route = async (req, res, next) => {
                         });
                         if(!_data)
                             return res.status(404).send({ status: false, message: "Save Advertisement error"})
+                        const imagesUrl = await storage.Upload(files,_data._id);
+                        let str = await Promise.all(imagesUrl).then(d => d );
+                        await Data.updateOne({ _id: _data._id},{ $push: { img: str }})
                         await Payment.create({
                             author: buyer_id,
                             basketId:basket_id,
@@ -159,6 +173,9 @@ const route = async (req, res, next) => {
                         });
                         if(!_data)
                             return res.status(404).send({ status: false, message: "Save Advertisement error"})
+                        const imagesUrl = await storage.Upload(files,_data._id);
+                        let str = await Promise.all(imagesUrl).then(d => d );
+                        await Data.updateOne({ _id: _data._id},{ $push: { img: str }})
                         await Payment.create({
                             author: buyer_id,
                             basketId:basket_id,
@@ -177,9 +194,9 @@ const route = async (req, res, next) => {
         console.log(error)
         if(error){
             if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `File Already exists!  : ${error}` })
+                return res.status(422).send({ status: false, message: `File Already exists!  : ${error}` })
         }
-        return res.status(500).send({ status: false, message: `Add Advertisement Error Cannot Upload Something Missing => ${error}`})
+        return res.status(422).send({ status: false, message: `Add Advertisement Error Cannot Upload Something Missing => ${error}`})
     }
 }
 
