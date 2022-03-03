@@ -7,6 +7,5 @@ module.exports = {
     stores: require("./stores"),
     single_store: require("./single_store"),
     single_store_ads: require("./single_store_ads"),
-    single_admin_ads: require("./single_admin_ads"),
     whatsapp: require("./whatsapp")
 }

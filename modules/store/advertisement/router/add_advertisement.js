@@ -21,8 +21,9 @@ const route = async (req, res, next) => {
             card_register,buyer_id,buyerName,buyerSurname,buyerNumber,buyerEmail,tcNo,
             ship_b_name,ship_b_city,ship_b_country,ship_b_address,
             buyerAddress,buyer_ip,buyerCity,buyerCountry,items)
-
+        
         if(ads_time === "1d"){
+            
             await iyzipay.payment.create(request,async function(err,result) {
                 if(err)
                     return res.status(500).send({ status: false, message: `Iyzipay Error : ${err}`})
@@ -30,7 +31,7 @@ const route = async (req, res, next) => {
                     return res.status(result.errorCode).send({ status: false, message: result.errorMessage })
                 if(result.status === "success"){
                     if(true){
-                        let _data = await Data.create({
+                        let _data = await new Data({
                             ...body,
                             author: userData.id,
                             authCode: result.authCode,
@@ -41,7 +42,10 @@ const route = async (req, res, next) => {
                         const imagesUrl = await storage.Upload(files,_data._id);
                         let str = await Promise.all(imagesUrl).then(d => d );
                         console.log(str)
-                        await Data.updateOne({ _id: _data._id},{ $push: { img: str }})
+                        await _data.set({
+                            img: str.map(i =>i)
+                        });
+                        await _data.save();
                         await Payment.create({
                             author: buyer_id,
                             basketId:basket_id,

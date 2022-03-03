@@ -73,7 +73,7 @@ const route = async (req,res,next) => {
             {
               $project: {
                 _id: 0,
-                data: "$$ROOT",
+                item: "$$ROOT",
                 is_favorite:{ $in:[ObjectId(kuserData.id),"$favorite"]},
               }
             },
@@ -176,7 +176,7 @@ const route = async (req,res,next) => {
             {
               $project: {
                 _id: 0,
-                data: "$$ROOT",
+                item: "$$ROOT",
                 is_favorite:{ $in:[ObjectId(kuserData.id),"$favorite"]},
               }
             },

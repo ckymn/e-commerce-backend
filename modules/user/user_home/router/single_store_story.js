@@ -5,7 +5,6 @@ const route = async (req,res,next) => {
         let { params, kuserData } = req;
         await Stories.findOne({ $and: [ {_id: params.id}, { view: { $in : [ kuserData.id ]}}] })
             .lean().exec(async(err,data) => {
-                console.log("first",data)
                 if(!data){
                     let data = await Stories.findOneAndUpdate({ _id: params.id }, {
                         $push: { 

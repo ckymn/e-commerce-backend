@@ -3,7 +3,7 @@ const StoreAds = require("../../../store/advertisement/model")
 const route = async (req,res,next) => {
     try {
         let { params, kuserData } = req;
-        await StoreAds.find({ $and: [ {_id: params.id}, { view: { $in : [ kuserData.id ]}}] })
+        await StoreAds.find({ $and: [ {_id: params.id},{ view: { $in : [ kuserData.id ]}}] })
             .lean().exec(async(err,data) => {
                 if(data.length === 0){
                     let data = await StoreAds.findOneAndUpdate({ _id: params.id }, {

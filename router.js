@@ -91,7 +91,7 @@ router.put(`/admin/update_admin/:id`, middleware.authJwt,login.admin_update)
 router.post(`/admin/sector`, middleware.authJwt, sector.createSector);
 router.post(`/admin/notification_product/:id`,middleware.authJwt,product_notifications.post_single_notification)
 router.put(`/admin/notification_store/:id`,middleware.authJwt, store_notifications.update_store)
-router.put(`/admin/notification_advertisement/:id`, middleware.authJwt, uploadImage.array("img"),advertisement_notification.update_advertisement_store);
+router.put(`/admin/notification_advertisement/:id`, middleware.authJwt, uploadImage.array("img",2),advertisement_notification.update_advertisement_store);
 router.post(`/admin/advertisement`,middleware.authJwt, uploadImage.array("img"),admin_advertisement.advertisement)
 router.delete(`/admin/advertisement/:id`,middleware.authJwt,admin_advertisement.delete_advertisement);
 router.post(`/admin/search_store`, middleware.authJwt ,storePanel.search_store);
@@ -157,7 +157,7 @@ router.get(`/user/home_page`, middleware.authJwt, middleware.active.active,user_
 router.get(`/user/user`, middleware.authJwt, user_home.user)
 router.get(`/user/storie/:id`, middleware.authJwt, user_home.single_store_story)
 router.get(`/user/store_ads/:id`, middleware.authJwt, user_home.single_store_ads)
-router.get(`/user/admin_ads/:id`, middleware.authJwt, user_home.single_admin_ads)
+router.get(`/user/admin_ads/:id`, middleware.authJwt, user_home.single_admin_story)
 router.get(`/user/product/:id`, middleware.authJwt, user_home.single_product)
 router.get(`/user/comment_store`, middleware.authJwt, user_profile.comment_store)
 router.get(`/user/comment_product`, middleware.authJwt, user_profile.comment_product)
