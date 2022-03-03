@@ -10,7 +10,7 @@ const route = async (req, res, next) => {
         if(_result)
             return res.status(500).send({ status: false, message: "email already exists"})
         const hash = await bcrypt.hashSync(password, 10);
-        const data = await Data.create({
+        const data = await new Data({
             ...body,
             location: {
                 coordinates: [ parseFloat(body.long),parseFloat(body.lat) ]
@@ -18,12 +18,15 @@ const route = async (req, res, next) => {
             store_open_hour: parseInt(body.store_open_hour),
             store_close_hour: parseInt(body.store_close_hour),
             password : hash,
-            storeimg: str.publicUrl
         });
         // storage
         let str = await storage.Upload(file,data._id);
         if(str.status !== 200)
             return res.status(str.status).send({ status: false, message : str.message})
+        await data.set({
+          storeimg: str.publicUrl
+        })
+        await data.save();
         return res.status(200).send({ status: true, message: "user register success", data })
     } catch (error) {
       if (error.name === "MongoError" && error.code === 11000) {
