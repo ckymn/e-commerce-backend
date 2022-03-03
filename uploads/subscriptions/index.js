@@ -16,7 +16,7 @@ const Upload = async (file, subsId) => {
     file.forEach(i => {
         promises.push(
             new Promise((resolve, reject) => {
-                const blob = bucket.file(subsId+"/"+i.originalname.replace(/:/g, "-"));
+                const blob = bucket.file(subsId+"/"+i.originalname.replace(/ /g, "_"));
                 const blobStream = blob.createWriteStream({
                     resumable: false
                 });

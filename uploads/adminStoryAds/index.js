@@ -17,7 +17,7 @@ const Upload = async (file, adsId) =>{
       file.forEach(i => {
           promises.push(
               new Promise((resolve, reject) => {
-                  const blob = bucket.file(adsId+"/"+i.originalname.replace(/:/g, "-"));
+                  const blob = bucket.file(adsId+"/"+i.originalname.replace(/ /g, "_"));
                   const blobStream = blob.createWriteStream({
                       resumable: false
                   });
@@ -35,7 +35,7 @@ const Upload = async (file, adsId) =>{
           )
       })
       return promises
-  }
+}
   //delete
 const Delete = async (adsId) => {
     await bucket.deleteFiles({ prefix: `${adsId}` });

@@ -10,20 +10,16 @@ const storage = new Storage({
 
 const bucket = storage.bucket(String(process.env.BUCKET_ADMINS));
 
-const upload = async (file , username) => {
+const Upload = async (file , adminId) => {
   try {
-
-    if(!file)
-      return { status: 400, message: "Please upload a file!" }
-    // Create a new blob in the bucket and upload the file data.
-    const blob = bucket.file(username+"/"+new Date().toISOString().replace(/:/g,"_") +"-" +file.originalname.replace(/:/g, "-"));
+    const blob = bucket.file(adminId+"/"+file.originalname.replace(/ /g, "_"));
     const blobStream = blob.createWriteStream({
       resumable: false,
     });
 
     blobStream.on("error", (err) => {
       return { 
-        staus: 500, 
+        staus: 400, 
         message: err.message 
       }
     });
@@ -37,14 +33,18 @@ const upload = async (file , username) => {
         publicUrl
       }
     });
+    
     blobStream.end(file.buffer);
     return  b._events.finish()
   } catch (error) {
     return {
-      status: 500,
+      status: 400,
       message: `Could not upload the file: ${file.originalename}`,
     }
   };
 };
+const Delete = async (adminId) => {
+  await bucket.deleteFiles({ prefix: `${adminId}` });
+};
 
-module.exports = {upload}
+module.exports = {Upload,Delete}
