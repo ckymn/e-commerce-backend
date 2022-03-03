@@ -23,8 +23,6 @@ const sector = require("./modules/admin/sector/router");
 const admin_advertisement  = require("./modules/admin/advertisement/router")
 const login = require("./modules/admin/login/router")
 const subscribe = require("./modules/admin/subscriptions/router")
-const adminBanner = require("./modules/admin/banner/router")
-const adminStory = require("./modules/admin/story/router")
 const solutionPartner = require("./modules/admin/solution_partners/router")
 //store_get
 const store_home = require("./modules/store/store_home/router")
@@ -76,8 +74,6 @@ router.get(`/admin/store_comment/:id`, middleware.authJwt, comment_notifications
 router.get(`/admin/product_comments`, middleware.authJwt, comment_notifications.all_product_comment)
 router.get(`/admin/product_comment/:id`, middleware.authJwt, comment_notifications.single_product_comment)
 router.get(`/admin/all_subscribe`, middleware.authJwt, subscribe.all_subscription)
-router.get(`/admin/banners`, middleware.authJwt,adminBanner.all_banner)
-router.get(`/admin/stories`, middleware.authJwt,adminStory.all_story)
 router.get(`/admin/partners`, middleware.authJwt,solutionPartner.all_partner)
 router.get(`/admin/app_notifications`, middleware.authJwt,app_notification.all_notification)
 router.get(`/admin/app_notification/:id`, middleware.authJwt,app_notification.single_notification)
@@ -106,11 +102,6 @@ router.put(`/admin/product_comment/:id`, middleware.authJwt, comment_notificatio
 router.post(`/admin/subscribe`, middleware.authJwt, uploadImage.array("img",5),subscribe.add_subscription);
 router.delete(`/admin/subscribe/:id`, middleware.authJwt, subscribe.delete_subscription);
 router.put(`/admin/update_subscribe/:id`, middleware.authJwt, uploadImage.single("img"),subscribe.update_subscription);
-router.post(`/admin/banner`, middleware.authJwt, uploadImage.array("img",5),adminBanner.add_banner)
-router.delete(`/admin/banner/:id`, middleware.authJwt,adminBanner.delete_banner)
-router.put(`/admin/banner/:id`, middleware.authJwt, uploadImage.single("img",5),adminBanner.update_banner)
-router.post(`/admin/storie`, middleware.authJwt, uploadImage.array("img",5),adminStory.add_story)
-router.delete(`/admin/storie/:id`, middleware.authJwt,adminStory.delete_story)
 router.post(`/admin/partner`,middleware.authJwt, solutionPartner.add_partner)
 router.delete(`/admin/partner/:id`,middleware.authJwt, solutionPartner.delete_partner)
 router.put(`/admin/partner/:id`,middleware.authJwt, solutionPartner.update_partner)

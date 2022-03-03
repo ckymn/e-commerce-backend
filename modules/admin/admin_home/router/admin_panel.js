@@ -1,6 +1,6 @@
 const Store = require("../../../store/auth/model"),
   Product = require("../../../store/products/model"),
-  Story = require("../../story/model"),
+  AdminStoryAds = require("../../advertisement/model"),
   User = require("../../../user/auth/model"),
   Admin = require("../../login/model"),
   Subscription = require("../../subscriptions/model"),
@@ -15,7 +15,7 @@ const route = async (req, res, next) => {
   try {
     let total_store = await Store.find({}).count().lean().exec();
     let total_product = await Product.find({}).count().lean().exec();
-    let total_story = await Story.find({}).count().lean().exec();
+    let total_story = await AdminStoryAds.find({}).count().lean().exec();
     let total_user = await User.find({}).count().lean().exec();
     let active_user = await Admin.find({ role: { $in: "admin" } })
       .select("active -_id")
@@ -41,7 +41,7 @@ const route = async (req, res, next) => {
       .exec();
 
     let storys = await Story.find({}).lean().exec();
-    let admins = await Admin.find({}).lean().exec();
+    let admins = await AdmAdminStoryAdsin.find({}).lean().exec();
     let stores = await Store.find({}).lean().exec();
     let users = await User.find({}).lean().exec();
     let store_ads = await StoreAdvertisement.find({}).lean().exec();

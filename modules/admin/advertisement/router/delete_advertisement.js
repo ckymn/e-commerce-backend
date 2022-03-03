@@ -1,5 +1,5 @@
 const Data = require("../model")
-const storage = require("../../../../uploads/adminAds")
+const storage = require("../../../../uploads/adminStoryAds")
 
 const route = async (req, res, next) => {
     try {

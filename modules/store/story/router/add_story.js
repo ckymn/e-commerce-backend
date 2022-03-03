@@ -41,9 +41,9 @@ const route = async (req, res, next) => {
         console.log(error)
         if(error){
             if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `files Already exists: ${error}`})
+                return res.status(422).send({ status: false, message: `files Already exists: ${error}`})
         }
-        return res.status(500).send({ status: false, message: `Store Add Story ,Something Missing => ${error}`})
+        return res.status(422).send({ status: false, message: `Store Add Story ,Something Missing => ${error}`})
     }
 }
 

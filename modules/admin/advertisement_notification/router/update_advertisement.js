@@ -83,14 +83,19 @@ const route = async (req, res) => {
       }
     })
   } catch (error) {
-    if(error){
-      if(error.name === "MongoError" && error.code === 11000)
-          return res.status(500).send({ status: false, message: `Admin/Advertisement Notification, Mongo Already exists!  : ${error}` })
-    }
-    return res.status(500).send({ 
-      status: false,
-      message: `Single Post Advertisement Notificaton Error Cannot Upload Something Missing => ${error}`
-    })
+      if (error.name === "MongoError" && error.code === 11000) {
+        return res
+          .status(422)
+          .send({
+            status: false,
+            message: `Admin/Advertisement Notification, Mongo Already exists!  : ${error}`,
+          });
+      } else {
+        return res.status(422).send({
+          status: false,
+          message: `Single Post Advertisement Notificaton Error Cannot Upload Something Missing => ${error}`,
+        });
+      }
   }
   
 };

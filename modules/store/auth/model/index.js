@@ -45,6 +45,7 @@ const store_register = new Schema(
     comment: [{ type: Schema.Types.ObjectId, ref: "store_comment" }],
     star: [{ type: Schema.Types.ObjectId, ref: "store_star" }],
     follow: [{ type: Schema.Types.ObjectId, ref: "users" }],
+    is_follow: { type: Schema.Types.Boolean, default: false },
     view: [
       {
         who: {

@@ -2,11 +2,9 @@ const Data = require("../../auth/model")
 const Products = require("../../../store/products/model")
 const AdminData = require("../../../admin/login/model")
 const ActiveUser = require("../../../../middlewares")
-const AdminStory = require("../../../admin/story/model")
+const AdminAdsStory = require("../../../admin/advertisement/model")
 const StoreStory = require("../../../store/story/model")
-const AdminAds = require("../../../admin/advertisement/model")
 const StoreAds = require("../../../store/advertisement/model")
-const AppNfc = require("../../../admin/app_notifications/model")
 const { ObjectId } = require("mongodb")
 
 const route = async (req,res,next) => {
@@ -89,35 +87,32 @@ const route = async (req,res,next) => {
                   { city: _data.city },
               ]
           }).lean();
-          let admin_story = await AdminStory.find({
-              $and: [
+          let admin_ads_story = await AdminAdsStory.find({
+            $and: [
+              {
+                $or: [
                   {
-                      $or:[
-                          { $and: [ { language: _data.language },{ country: _data.country }, { city: _data.city }, { district: _data.district } ] },
-                          { $and: [ { language: _data.language },{ country: _data.country }, { city: _data.city } ] }
-                      ]
+                    $and: [
+                      { language: _data.language },
+                      { country: _data.country },
+                      { city: _data.city },
+                      { district: _data.district },
+                    ],
                   },
                   {
-                      user_time: { $gte : current_time }
+                    $and: [
+                      { language: _data.language },
+                      { country: _data.country },
+                      { city: _data.city },
+                    ],
                   },
-                  {
-                      language: _data.language
-                  }
-              ]
-              
-          }).lean();
-          let admin_ads = await AdminAds.aggregate([
-            {
-              $match:{
-                $and:[
-                  { country: _data.country },
-                  { city: _data.city },
-                  { language: _data.language },
-                  { is_approved: "yes" }
-                ]
+                ],
+              },
+              {
+                banner_story_time: { $gte: current_time },
               }
-            }
-          ])
+            ],
+          }).lean();
           let store_ads = await StoreAds.aggregate([
             {
               $match:{
@@ -125,26 +120,20 @@ const route = async (req,res,next) => {
                   { country: _data.country },
                   { city: _data.city },
                   { language: _data.language },
-                  { is_approved: "yes" }
+                  { is_approved: "yes" },
+                  { banner_story_time: { $gte: current_time } },
+                  { ads_which: "Story"  }
                 ]
               }
             }
           ])
-          let app_ntf = await AppNfc.find({
-            $and: [
-              { country: _data.country },
-              { city: _data.city },
-              { district: _data.district },
-              { language: _data.language },
-            ],
-          }).lean();
           
           return res
           .status(200)
           .send({
             status: true,
             message: "Products and StoreStory are success ",
-            data: { product_data, store_story, admin_story , admin_ads, store_ads , app_ntf },
+            data: { product_data, store_story, admin_ads_story, store_ads },
           });
         }else{
           let product_data = await Products.aggregate([
@@ -200,36 +189,33 @@ const route = async (req,res,next) => {
                 { country: _data.country },
                 { city: _data.city },
             ]
-          })
-          let admin_story = await AdminStory.find({
-              $and: [
+          }).lean();
+          let admin_ads_story = await AdminAdsStory.find({
+            $and: [
+              {
+                $or: [
                   {
-                      $or:[
-                          { $and: [ { language: _data.language },{ country: _data.country }, { city: _data.city }, { district: _data.district } ] },
-                          { $and: [ { language: _data.language },{ country: _data.country }, { city: _data.city } ] }
-                      ]
+                    $and: [
+                      { language: _data.language },
+                      { country: _data.country },
+                      { city: _data.city },
+                      { district: _data.district },
+                    ],
                   },
                   {
-                      user_time: { $gte : current_time }
+                    $and: [
+                      { language: _data.language },
+                      { country: _data.country },
+                      { city: _data.city },
+                    ],
                   },
-                  {
-                      language: _data.language
-                  }
-              ]
-              
-          })
-          let admin_ads = await AdminAds.aggregate([
-            {
-              $match:{
-                $and:[
-                  { country: _data.country },
-                  { city: _data.city },
-                  { language: _data.language },
-                  { is_approved: "yes" }
-                ]
+                ],
+              },
+              {
+                banner_story_time: { $gte: current_time },
               }
-            }
-          ])
+            ],
+          }).lean();
           let store_ads = await StoreAds.aggregate([
             {
               $match:{
@@ -237,34 +223,36 @@ const route = async (req,res,next) => {
                   { country: _data.country },
                   { city: _data.city },
                   { language: _data.language },
-                  { is_approved: "yes" }
+                  { is_approved: "yes" },
+                  { banner_story_time: { $gte: current_time } },
+                  { ads_which: "Story"  }
                 ]
               }
             }
           ])
-          let app_ntf = await AppNfc.find({
-            $and: [
-              { country: _data.country },
-              { city: _data.city },
-              { district: _data.district },
-              { language: _data.language },
-            ],
-          }).lean();
 
           return res
           .status(200)
           .send({
             status: true,
             message: "Products and StoreStory are success ",
-            data: { product_data, store_story, admin_story , admin_ads, store_ads ,app_ntf},
+            data: { product_data, store_story, admin_ads_story, store_ads },
           });
         }
     } catch (error) {
-      console.log(error)
-      if(error.name === "MongoError" && error.code === 11000)
-            return res.status(422).send({ status: false, message: `User/Home Page , Mongdo Already exists: ${error}`})
-        if(error.code === 27)
-          return res.status(422).send({ status: false, message: `We Don't Have Any Data`, data:null})
+      if (error.name === "MongoError" && error.code === 11000) {
+        return res.status(422).send({
+          status: false,
+          message: `User/Home Page , Mongdo Already exists: ${error}`,
+        });
+      } else {
+        if (error.code === 27)
+          return res.status(422).send({
+            status: false,
+            message: `We Don't Have Any Data`,
+            data: null,
+          });
+      }
     }
 };
 
