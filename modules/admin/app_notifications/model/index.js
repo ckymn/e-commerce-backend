@@ -2,7 +2,7 @@ const { Schema , model } = require("mongoose")
 
 const route = new Schema({
     title: { type: Schema.Types.String, maxlength: 200 },
-    description: { type: Schema.Types.String, maxlength: 500 ,required: true },
+    body: { type: Schema.Types.String, maxlength: 500 ,required: true },
     country: { type: Schema.Types.String, required: true },
     city: { type: Schema.Types.String, required: true },
     district: { type: Schema.Types.String, required: true },

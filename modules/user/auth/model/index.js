@@ -4,16 +4,17 @@ const user_login = new Schema({
     email : { type: Schema.Types.String, require: true },
     username: { type: Schema.Types.String, require: true , unique: true },
     password : { type: Schema.Types.String, require: true },
-    language: { type: Schema.Types.String, enum:["da","nl","en","fi","fr","de","it","nb","pt","ro","ru","es","sv","tr"],require: true },
     location: {
-        type: {
-          type: Schema.Types.String,
-          default: "Point",
-        },
-        coordinates: {
-          type: [Schema.Types.Number],
-        },
+      type: {
+        type: Schema.Types.String,
+        default: "Point",
       },
+      coordinates: {
+        type: [Schema.Types.Number],
+      },
+    },
+    registration_token: { type: Schema.Types.String , required: true },
+    language: { type: Schema.Types.String, enum:["da","nl","en","fi","fr","de","it","nb","pt","ro","ru","es","sv","tr"],require: true },
     country: { type: Schema.Types.String, require: true },
     city: { type: Schema.Types.String, require: true },
     district: { type: Schema.Types.String, require: true },

@@ -10,6 +10,15 @@ const postSchema = new model("store_storie", new Schema({
 	country: { type: Schema.Types.String, require: true },
 	city: { type: Schema.Types.String, require: true },
 	district: { type: Schema.Types.String, require: true },
+	location: {
+		type: {
+		  type: Schema.Types.String,
+		  default: "Point",
+		},
+		coordinates: {
+		  type: [Schema.Types.Number],
+		},
+	  },
 	language: { type: Schema.Types.String, enum:["da","nl","en","fi","fr","de","it","nb","pt","ro","ru","es","sv","tr"],require: true },
 },
 	{ timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }}

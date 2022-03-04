@@ -37,7 +37,7 @@ const route = async (req,res,next) => {
                 spherical: true,
                 maxDistance: query.dst
                   ? parseInt(query.dst) * 1609.34
-                  : 900 * 1609.34,
+                  : 6.25 * 1609.34,
                 distanceMultiplier: 1 / 1609.34,
                 distanceField: "ProductDst",
               },
@@ -52,9 +52,6 @@ const route = async (req,res,next) => {
                     ]
                   },
                   {
-                    country: _data.country,
-                    city: _data.city,
-                    language: _data.language,
                     is_approved: "yes",
                   },
                   {
