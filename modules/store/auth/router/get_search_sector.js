@@ -20,7 +20,7 @@ const route = async (req, res) => {
           ],
         },
       },
-      { $project: { sector_name: 1, category_one: 1 } },
+      { $project: { sector_name: 1, category_one: 1 , parent_id: 1, child_id: 1} },
     ]);
     let _category_one = await Category_One.aggregate([
       { $match: {
@@ -29,7 +29,7 @@ const route = async (req, res) => {
           { category_one: { $regex: global, $options: "i" } },
         ],
       }, },
-      { $project: { category_one: 1, category_two: 1 } },
+      { $project: { category_one: 1, category_two: 1 , parent_id: 1, child_id: 1} },
     ]);
     let _category_two = await Category_Two.aggregate([
       { $match: {
@@ -38,7 +38,7 @@ const route = async (req, res) => {
           { category_two: { $regex: global, $options: "i" } },
         ],
       }, },
-      { $project: { category_two: 1, category_three: 1 } },
+      { $project: { category_two: 1, category_three: 1 , parent_id: 1, child_id: 1} },
     ]);
     let _category_three = await Category_Three.aggregate([
       { $match: {
@@ -47,7 +47,7 @@ const route = async (req, res) => {
           { category_three: { $regex: global, $options: "i" } },
         ],
       }, },
-      { $project: { category_three: 1, category_four: 1 } },
+      { $project: { category_three: 1, category_four: 1 , parent_id: 1, child_id: 1} },
     ]);
     let _category_four = await Category_Four.aggregate([
       { $match: {
@@ -56,7 +56,7 @@ const route = async (req, res) => {
           { category_four: { $regex: global, $options: "i" } },
         ],
       }, },
-      { $project: { category_four: 1, category_five: 1 } },
+      { $project: { category_four: 1, category_five: 1 , parent_id: 1, child_id: 1} },
     ]);
     let _category_five = await Category_Five.aggregate([
       { $match: {
@@ -65,7 +65,7 @@ const route = async (req, res) => {
           { category_five: { $regex: global, $options: "i" } },
         ],
       }, },
-      { $project: { category_five: 1 } },
+      { $project: { parent_id : 1, category_five: 1 } },
     ]);
     
     return res.status(200).send({
@@ -81,16 +81,16 @@ const route = async (req, res) => {
       },
     });
   } catch (error) {
-    if (error) {
-      if (error.name === "MongoError" && error.code === 11000)
-        return res
-          .status(500)
-          .send({ status: false, message: `File Already exists!  : ${error}` });
+    if (error.name === "MongoError" && error.code === 11000) {
+      return res
+        .status(422)
+        .send({ status: false, message: `File Already exists!  : ${error}` });
+    } else {
+      return res.status(422).send({
+        status: false,
+        message: `Store Search Sector Error , Something Missing => ${error}`,
+      });
     }
-    return res.status(500).send({
-      status: false,
-      message: `Store Search Sector Error , Something Missing => ${error}`,
-    });
   }
 };
 

@@ -35,15 +35,20 @@ var Futures = new mongoose.Schema({
 const products = new mongoose.Schema(
   {
     author: { type: ObjectId, ref: "stores" },
-
     title: { type: String, required: true },
     description: { type: String, required: true }, 
     brand: { type: String, required: true },
     style: { type: String, unique: true },
-    categories: { type: String },
+    categories: {
+      sector: { type: ObjectId, ref:"sector"},
+      category_one: { type: ObjectId, ref:"category_one"},
+      category_two: { type: ObjectId, ref:"category_two"},
+      category_three: { type: ObjectId, ref:"category_three"},
+      category_four: { type: ObjectId, ref:"category_four"},
+      category_five: { type: ObjectId, ref:"category_five"},
+    },
     variants: [ Variants ],
     futures: [ Futures ],
-
     is_approved: { type: String, default: "wait" },
     country: { type: String, required: true },
     city: { type: String, required: true },
