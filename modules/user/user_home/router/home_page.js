@@ -32,11 +32,11 @@ const route = async (req,res,next) => {
               $geoNear: {
                 near: {
                   type: "Point",
-                  coordinates: [parseInt(query.long), parseInt(query.lat)],
+                  coordinates: [parseFloat(query.long), parseFloat(query.lat)],
                 },
                 spherical: true,
                 maxDistance: query.dst
-                  ? parseInt(query.dst) * 1609.34
+                  ? parseFloat(query.dst) * 1609.34
                   : 6.25 * 1609.34,
                 distanceMultiplier: 1 / 1609.34,
                 distanceField: "ProductDst",
@@ -58,8 +58,8 @@ const route = async (req,res,next) => {
                     "variants.sizes": {
                       $elemMatch: {
                         price: {
-                          $gte: query.minPrc ? parseInt(query.minPrc) : 0,
-                          $lte: query.maxPrc ? parseInt(query.maxPrc) : 1000000,
+                          $gte: query.minPrc ? parseFloat(query.minPrc) : 0,
+                          $lte: query.maxPrc ? parseFloat(query.maxPrc) : 1000000,
                         },
                       },
                     },
@@ -138,12 +138,12 @@ const route = async (req,res,next) => {
               $geoNear: {
                 near: {
                   type: "Point",
-                  coordinates: [parseInt(query.long), parseInt(query.lat)],
+                  coordinates: [parseFloat(query.long), parseFloat(query.lat)],
                 },
                 spherical: true,
                 maxDistance: query.dst
                   ? parseInt(query.dst) * 1609.34
-                  : 900 * 1609.34,
+                  : 6.25 * 1609.34,
                 distanceMultiplier: 1 / 1609.34,
                 distanceField: "ProductDst",
               },
@@ -152,17 +152,14 @@ const route = async (req,res,next) => {
               $match: {
                 $and: [
                   {
-                    country: _data.country,
-                    city: _data.city,
-                    language: _data.language,
                     is_approved: "yes",
                   },
                   {
                     "variants.sizes": {
                       $elemMatch: {
                         price: {
-                          $gte: query.minPrc ? parseInt(query.minPrc) : 0,
-                          $lte: query.maxPrc ? parseInt(query.maxPrc) : 1000000,
+                          $gte: query.minPrc ? parseFloat(query.minPrc) : 0,
+                          $lte: query.maxPrc ? parseFloat(query.maxPrc) : 1000000,
                         }
                       },
                     },
