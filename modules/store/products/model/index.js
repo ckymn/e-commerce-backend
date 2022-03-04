@@ -55,9 +55,14 @@ const products = new mongoose.Schema(
     district: { type: String, required: true },
     language: { type: String, enum:["da","nl","en","fi","fr","de","it","nb","pt","ro","ru","es","sv","tr"],require: true },
     location: {
-      type: { type: String, default: "Point",},
-      coordinates: { type: [Number], required: true },
-    },
+      type: {
+        type: String,
+        default: "Point",
+      },
+      coordinates: {
+        type: [Number],
+      },
+  },
     comments: [{ type: ObjectId, ref: "product_comment" }],
     star: [{ type: ObjectId, ref: "product_star" }],
     favorite: [{ type: ObjectId, ref: "user" }],

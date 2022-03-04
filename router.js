@@ -159,17 +159,12 @@ router.get(`/user/storie/:id`, middleware.authJwt, user_home.single_store_story)
 router.get(`/user/store_ads/:id`, middleware.authJwt, user_home.single_store_ads)
 router.get(`/user/admin_ads/:id`, middleware.authJwt, user_home.single_admin_story)
 router.get(`/user/product/:id`, middleware.authJwt, user_home.single_product)
-router.get(`/user/comment_store`, middleware.authJwt, user_profile.comment_store)
-router.get(`/user/comment_product`, middleware.authJwt, user_profile.comment_product)
-router.post(`/user/feedback`, middleware.authJwt, user_profile.feed_back)
-router.get(`/user/help`, middleware.authJwt, user_profile.help)
-router.get(`/user/logout`, middleware.authJwt, user_profile.logout)
-router.get(`/user/my_account`, middleware.authJwt, user_profile.my_account)
 router.get(`/user/favorites`, middleware.authJwt, user_favorite.all_favorite)
 router.get(`/user/stores`, middleware.authJwt, user_home.stores)
 router.get(`/user/store/:id`, middleware.authJwt, user_home.single_store)
-router.get(`/user/how_i_use`, middleware.authJwt, userPanel.get_how_i_use);
 router.get(`/user/whatsapp/:id`, middleware.authJwt, user_home.whatsapp);
+router.post(`/user/feedback`, middleware.authJwt, user_profile.feed_back)
+router.post(`/user/profile`, middleware.authJwt, user_profile.profile)
 
  
 // user_post

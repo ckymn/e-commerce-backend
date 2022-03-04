@@ -1,6 +1,6 @@
 const { Schema, Mongoose, model } = require("mongoose")
 
-const ads = new model("store_ads", new Schema({
+const ads = new Schema({
     author: { type: Schema.Types.ObjectId, ref: "stores" },
     ads_which: { type: Schema.Types.String, enum:["Banner","Story"],required: true },
     ads_time: { type: Schema.Types.String, enum:["1d","5d","1w","2w","1m"],required: true },
@@ -24,10 +24,10 @@ const ads = new model("store_ads", new Schema({
         coordinates: {
           type: [Schema.Types.Number],
         },
-      },
+    },
     language: { type: Schema.Types.String, enum:["da","nl","en","fi","fr","de","it","nb","pt","ro","ru","es","sv","tr"],require: true },
 },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" }}
-))
-
-module.exports = ads;
+)
+ads.index({ location: "2dsphere"})
+module.exports = new model("store_ads", ads);
