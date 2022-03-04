@@ -19,6 +19,7 @@ connectDB();
 //   }
 //   callback(null, corsOptions) // callback expects two parameters: error and options
 // }
+
 //mid
 app.use(cors());
 app.use(morgan("dev"))
