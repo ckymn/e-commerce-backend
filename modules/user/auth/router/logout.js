@@ -1,10 +1,18 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
+const Active = require("../../../admin/login/model")
 
 const route = async (req, res, next) => {
   try {
     let { kuserData } = req;
     await jwt.sign({ id: kuserData.id }, process.env.JWT_ACCESS_SECRET,{ expiresIn: "1ms" });
+    await Active.findOneAndUpdate({ role: { $in: ["admin"] } },
+      {
+        $pull: {
+          active: kuserData.id
+        }
+      }
+    );
     return res.status(200).send({ status: true, message:"logout was successed"})
   } catch (error) {
     if(error){

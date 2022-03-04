@@ -246,12 +246,19 @@ const route = async (req,res,next) => {
           message: `User/Home Page , Mongdo Already exists: ${error}`,
         });
       } else {
-        if (error.code === 27)
+        if (error.code === 27){
           return res.status(422).send({
             status: false,
             message: `We Don't Have Any Data`,
             data: null,
           });
+        }else{
+          return res.status(422).send({
+            status: false,
+            message: `User Home Page Error , ${error}`,
+            data: null,
+          });
+        }
       }
     }
 };

@@ -9,39 +9,34 @@ const Store = require("../../../store/auth/model"),
   AdvertisementNotificaiton = require("../../../store/advertisement/model"),
   StoreNotification = require("../../../store/auth/model"),
   ProductNotification = require("../../../store/products/model"),
-  Payment = require("../../../store/payment/model");
+  Payment = require("../../../store/payment/model"),
+  StoreStory = require("../../../store/story/model");
 
 const route = async (req, res, next) => {
   try {
     let total_store = await Store.find({}).count().lean().exec();
     let total_product = await Product.find({}).count().lean().exec();
-    let total_story = await AdminStoryAds.find({}).count().lean().exec();
+    let total_story = await StoreStory.find({}).count().lean().exec();
     let total_user = await User.find({}).count().lean().exec();
     let active_user = await Admin.find({ role: { $in: "admin" } })
       .select("active -_id")
       .lean()
       .exec();
-    let total_sub_1month = await Subscription.find({
-      sub_name: { $in: "1Month" },
-    })
+    let total_sub_1month = await Subscription.find({ sub_name: { $in: "1Month" }})
       .count()
       .lean()
       .exec();
-    let total_sub_3month = await Subscription.find({
-      sub_name: { $in: "3Month" },
-    })
+    let total_sub_3month = await Subscription.find({ sub_name: { $in: "3Month" }})
       .count()
       .lean()
       .exec();
-    let total_sub_1year = await Subscription.find({
-      sub_name: { $in: "1Year" },
-    })
+    let total_sub_1year = await Subscription.find({ sub_name: { $in: "1Year" }})
       .count()
       .lean()
       .exec();
 
     let storys = await Story.find({}).lean().exec();
-    let admins = await AdmAdminStoryAdsin.find({}).lean().exec();
+    let admins = await AdminStoryAds.find({}).lean().exec();
     let stores = await Store.find({}).lean().exec();
     let users = await User.find({}).lean().exec();
     let store_ads = await StoreAdvertisement.find({}).lean().exec();
@@ -82,16 +77,16 @@ const route = async (req, res, next) => {
       },
     });
   } catch (error) {
-    if (error) {
-      if (error.name === "MongoError" && error.code === 11000)
+      if (error.name === "MongoError" && error.code === 11000) {
         return res
-          .status(500)
+          .status(422)
           .send({ status: false, message: `File Already exists!  : ${error}` });
-    }
-    return res.status(500).send({
-      status: false,
-      message: `Admin Panel Something Missing => ${error}`,
-    });
+      } else {
+        return res.status(422).send({
+          status: false,
+          message: `Admin Panel Something Missing => ${error}`,
+        });
+      }
   }
 };
 

@@ -26,7 +26,27 @@ const route = async (req, res, next) => {
         }, process.env.JWT_ACCESS_SECRET, { expiresIn: process.env.JWT_ACCESS_TIME });
         return res.status(200).send({ status: true, message: "token was created", data: access_token })
    } catch (error) {
-        return res.status(500).send({ status: false, message: `User Login ${error}`});
-   }
+    if (error.name === "MongoError" && error.code === 11000) {
+      return res.status(422).send({
+        status: false,
+        message: `User/Login , Mongdo Already exists: ${error}`,
+        data: null,
+      });
+    } else {
+      if (error.code === 27){
+        return res.status(422).send({
+          status: false,
+          message: `We Don't Have Any Data`,
+          data: null,
+        });
+      }else{
+        return res.status(422).send({
+          status: false,
+          message: `User/Login Error , ${error}`,
+          data: null,
+        });
+      }
+    }
+  }
 }
 module.exports = route
