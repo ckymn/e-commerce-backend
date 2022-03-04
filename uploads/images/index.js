@@ -24,7 +24,7 @@ const MultiUpload = (files, imgId) => {
                     const publicUrl = format(
                         `https://storage.googleapis.com/${bucket.name}/${blob.name}`
                     );
-                    resolve(publicUrl)
+                    resolve(publicUrl,imgId)
                 })
                 .on("error", () => {
                     reject("Unable to upload image, something went wrong")

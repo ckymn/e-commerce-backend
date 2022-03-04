@@ -146,8 +146,8 @@ router.put(`/store/myPanel`,middleware.authJwt,panel.update_info);
 router.post(`/store/payment`,middleware.authJwt,middleware.ip_mid.ip2_Middleware,store_payment.store_date_payment)
 router.post(`/store/storie`,middleware.authJwt, uploadImage.array("img",5),storeStory.add_story)
 router.delete(`/store/storie/:id`,middleware.authJwt,storeStory.delete_story);
-router.post(`/store/images`,middleware.authJwt,uploadImage.single("url"),store_images.add_images);
-router.delete(`/store/images/:id`,middleware.authJwt,store_images.delete_images);
+router.post(`/store/images`,middleware.authJwt,uploadImage.array("url"),store_images.add_images);
+router.delete(`/store/images`,middleware.authJwt,store_images.delete_images);
 
 // users_get
 router.get(`/user/login`,user_auth.get_login)
