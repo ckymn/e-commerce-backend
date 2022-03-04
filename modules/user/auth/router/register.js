@@ -22,9 +22,11 @@ const route = async (req, res, next) => {
         password: hash,
       });
       await _user.save();
+      
       return res
         .status(200)
         .send({ status: true, message: "user register success" });
+
     } catch (error) {
       if (error.name === "MongoError" && error.code === 11000) {
         return res.status(422).send({

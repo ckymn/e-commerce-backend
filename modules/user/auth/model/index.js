@@ -13,7 +13,6 @@ const user_login = new Schema({
         type: [Schema.Types.Number],
       },
     },
-    registration_token: { type: Schema.Types.String , required: true },
     language: { type: Schema.Types.String, enum:["da","nl","en","fi","fr","de","it","nb","pt","ro","ru","es","sv","tr"],require: true },
     country: { type: Schema.Types.String, require: true },
     city: { type: Schema.Types.String, require: true },
@@ -24,6 +23,7 @@ const user_login = new Schema({
     product_comment: [{ type: Schema.Types.ObjectId, ref:"product_comment" }],
 	  role : { type: Schema.Types.String, required: true, default: "user" },
     code: { type: Schema.Types.String, default:"" },
+    registration_token: { type: Schema.Types.String },
 },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" }}
 )

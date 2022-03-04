@@ -5,17 +5,10 @@ const { firebase_ntf } = require("../../../../utils");
 const route = async (req, res, next) => {
     try {
       let { body } = req;
+      let _data = await new Data({ ...body });
 
-      let _data = await new Data({
-        ...body,
-      });
       if (!_data) {
-        return res
-          .status(400)
-          .send({
-            status: false,
-            message: "Add Application Notification Failed",
-          });
+        return res.status(404).send({ status: false, message: "Add Application Notification Failed"});
       } else {
         let user = await User.find({
           $and: [
@@ -25,12 +18,15 @@ const route = async (req, res, next) => {
         console.log("burasi array olucak", user);
 
         const message = {
-          data: body,
+          data: {
+            title: body.title,
+            description: body.description,
+          },
           tokens: user.registrationTokens,
         };
         let _message = await firebase_ntf(message, registrationTokens);
-
         console.log(_message);
+        
         return;
         await _data.save();
         return res
@@ -48,7 +44,7 @@ const route = async (req, res, next) => {
           message: `File Already exists!  : ${error}`,
         });
       } else {
-        return res.status(422).send({
+        return res.status(500).send({
           status: false,
           message: `Add Admin Notification Error , Something Missing => ${error}`,
         });

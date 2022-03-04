@@ -13,7 +13,17 @@ const route = async (req,res,next) => {
         let actives = [];
         let current_time = new Date();
 
-        let _data = await Data.findOne({ _id: kuserData.id});
+        let _data = await Data.findOneAndUpdate({ _id: kuserData.id },
+          {
+            $set: {
+              location: {
+                type: "Point",
+                coordinates: [parseFloat(body.long), parseFloat(body.lat)],
+              },
+            },
+          },{upsert: true}
+        );
+        //{'$set': {'location': {'type': "Point", 'coordinates': [user ['lon'], user ['lat']]}}}
         await ActiveUser.active.active_control(req.active);
         for(let [key,value] of req.active){
             actives.push(key);            

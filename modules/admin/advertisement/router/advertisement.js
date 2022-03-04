@@ -5,7 +5,6 @@ const route = async (req, res, next) => {
     try {
         let { files , body , adminData} = req;
         let { ads_time } = body;
-        
         if(files.length === 0){
             return res.status(400).send({ status: true, message: "Firstly you should add image"})
         }
@@ -13,6 +12,9 @@ const route = async (req, res, next) => {
             if(ads_time === "1d"){
                 let _data = await new Data({
                     ...body,
+                    location:{
+                        coordinates: [parseFloat(body.long),parseFloat(body.lat)]
+                    },
                     banner_story_time: new Date(+new Date()+24*60*60*1000)
                 });
                 if(!_data)
