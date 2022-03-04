@@ -11,72 +11,95 @@ const route = async (req, res, next) => {
       let current_time = new Date();
       let _data = await Data.findOne({ _id: kuserData.id });
 
-      let store_ads = await StoreBanner.find({
-        $and: [
-          { is_approved: "yes" },
-          { country: _data.country },
-          { city: _data.city },
-          { language: _data.language },
-          { ads_which: "Banner" },
-          { banner_story_time: { $gte: current_time } },
-        ],
-      })
-        .select("img link");
-      let store_story = await StoreStory.find({
-        $and: [
-          { country: _data.country },
-          { city: _data.city },
-          { language: _data.language },
-        ],
-      })
-        .select("author_img img");
-      let admin_ads_story = await AdminAdsStory.find({
-        $and: [
-          {
-            $or: [
-              {
-                $and: [
-                  { language: _data.language },
-                  { country: _data.country },
-                  { city: _data.city },
-                  { district: _data.district },
-                ],
-              },
-              {
-                $and: [
-                  { language: _data.language },
-                  { country: _data.country },
-                  { city: _data.city },
-                ],
-              },
+      let store_ads = await StoreBanner.aggregate([
+        {
+          $geoNear: {
+            near: {
+              type: "Point",
+              coordinates: [parseFloat(query.long), parseFloat(query.lat)],
+            },
+            spherical: true,
+            maxDistance: query.dst
+              ? parseFloat(query.dst) * 1609.34
+              : 900 * 1609.34,
+            distanceMultiplier: 1 / 1609.34,
+            distanceField: "StoreStoryDst",
+          },
+        },
+        {
+          $match:{
+            $and:[
+              { is_approved: "yes" },
+              { banner_story_time: { $gte: current_time } },
+              { ads_which: "Banner"  }
+            ]
+          }
+        }
+      ])
+      let store_story = await StoreStory.aggregate([
+        {
+          $geoNear: {
+            near: {
+              type: "Point",
+              coordinates: [parseFloat(query.long), parseFloat(query.lat)],
+            },
+            spherical: true,
+            maxDistance: query.dst
+              ? parseFloat(query.dst) * 1609.34
+              : 900 * 1609.34,
+            distanceMultiplier: 1 / 1609.34,
+            distanceField: "StoreStoryDst",
+          },
+        },
+        {
+          $match: {
+            language: _data.language,
+          },
+        },
+      ]);
+      let admin_ads_story = await AdminAdsStory.aggregate([
+        {
+          $geoNear: {
+            near: {
+              type: "Point",
+              coordinates: [parseFloat(query.long), parseFloat(query.lat)],
+            },
+            spherical: true,
+            maxDistance: query.dst
+              ? parseFloat(query.dst) * 1609.34
+              : 6.25 * 1609.34,
+            distanceMultiplier: 1 / 1609.34,
+            distanceField: "AdminStoryDst",
+          },
+        },
+        {
+          $match: {
+            $and: [
+              { banner_story_time: { $gte: current_time } },
+              { ads_which: "Banner" },
             ],
           },
-          {
-            banner_story_time: { $gte: current_time },
-          },
-        ],
-      })
-        .select("author_img img link")
-        .lean();
+        },
+      ]);
       let stores = await Stores.aggregate([
         {
           $geoNear: {
             near: {
               type: "Point",
-              coordinates: [parseInt(query.long), parseInt(query.lat)],
+              coordinates: [parseFloat(query.long), parseFloat(query.lat)],
             },
             spherical: true,
+            maxDistance: query.dst
+              ? parseFloat(query.dst) * 1609.34
+              : 6.25 * 1609.34,
             distanceMultiplier: 1 / 1609.34,
-            distanceField: "StoreDst",
+            distanceField: "ProductDst",
           },
         },
         {
           $match: {
             $and: [
               {
-                storecountry: _data.country,
-                storecity: _data.city,
-                storelanguage: _data.language,
                 is_approved: "yes",
               },
               {

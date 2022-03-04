@@ -77,46 +77,71 @@ const route = async (req,res,next) => {
             { $skip: parseInt(query.skip) },
             { $limit: parseInt(query.limit) },
           ]);
-          let store_story = await StoreStory.find({ 
-              $and:[
-                  { language: _data.language },
-                  { country: _data.country },
-                  { city: _data.city },
-              ]
-          }).lean();
-          let admin_ads_story = await AdminAdsStory.find({
-            $and: [
-              {
-                $or: [
+          let store_story =  await StoreStory.aggregate([
+            {
+              $geoNear: {
+                near: {
+                  type: "Point",
+                  coordinates: [parseFloat(query.long), parseFloat(query.lat)],
+                },
+                spherical: true,
+                maxDistance: query.dst
+                  ? parseFloat(query.dst) * 1609.34
+                  : 900 * 1609.34,
+                distanceMultiplier: 1 / 1609.34,
+                distanceField: "StoreStoryDst",
+              },
+            },
+            {
+              $match: {
+                language: _data.language,
+              },
+            },
+          ]);
+          let admin_ads_story = await AdminAdsStory.aggregate([
+            {
+              $geoNear: {
+                near: {
+                  type: "Point",
+                  coordinates: [parseFloat(query.long), parseFloat(query.lat)],
+                },
+                spherical: true,
+                maxDistance: query.dst
+                  ? parseFloat(query.dst) * 1609.34
+                  : 6.25 * 1609.34,
+                distanceMultiplier: 1 / 1609.34,
+                distanceField: "AdminStoryDst",
+              },
+            },
+            {
+              $match: {
+                $and: [
                   {
-                    $and: [
-                      { language: _data.language },
-                      { country: _data.country },
-                      { city: _data.city },
-                      { district: _data.district },
-                    ],
+                    banner_story_time: { $gte: current_time },
                   },
-                  {
-                    $and: [
-                      { language: _data.language },
-                      { country: _data.country },
-                      { city: _data.city },
-                    ],
-                  },
+                  { ads_which: "Story" },
                 ],
               },
-              {
-                banner_story_time: { $gte: current_time },
-              }
-            ],
-          }).lean();
+            },
+          ]);
           let store_ads = await StoreAds.aggregate([
+            {
+              $geoNear: {
+                near: {
+                  type: "Point",
+                  coordinates: [parseFloat(query.long), parseFloat(query.lat)],
+                },
+                spherical: true,
+                maxDistance: query.dst
+                  ? parseFloat(query.dst) * 1609.34
+                  : 900 * 1609.34,
+                distanceMultiplier: 1 / 1609.34,
+                distanceField: "StoreStoryDst",
+              },
+            },
             {
               $match:{
                 $and:[
-                  { country: _data.country },
-                  { city: _data.city },
-                  { language: _data.language },
                   { is_approved: "yes" },
                   { banner_story_time: { $gte: current_time } },
                   { ads_which: "Story"  }
@@ -142,7 +167,7 @@ const route = async (req,res,next) => {
                 },
                 spherical: true,
                 maxDistance: query.dst
-                  ? parseInt(query.dst) * 1609.34
+                  ? parseFloat(query.dst) * 1609.34
                   : 6.25 * 1609.34,
                 distanceMultiplier: 1 / 1609.34,
                 distanceField: "ProductDst",
@@ -177,46 +202,71 @@ const route = async (req,res,next) => {
             { $skip: parseInt(query.skip) },
             { $limit: parseInt(query.limit) },
           ]);
-          let store_story = await StoreStory.find({ 
-            $and:[
-                { language: _data.language },
-                { country: _data.country },
-                { city: _data.city },
-            ]
-          }).lean();
-          let admin_ads_story = await AdminAdsStory.find({
-            $and: [
-              {
-                $or: [
+          let store_story =  await StoreStory.aggregate([
+            {
+              $geoNear: {
+                near: {
+                  type: "Point",
+                  coordinates: [parseFloat(query.long), parseFloat(query.lat)],
+                },
+                spherical: true,
+                maxDistance: query.dst
+                  ? parseFloat(query.dst) * 1609.34
+                  : 900 * 1609.34,
+                distanceMultiplier: 1 / 1609.34,
+                distanceField: "StoreStoryDst",
+              },
+            },
+            {
+              $match: {
+                language: _data.language,
+              },
+            },
+          ]);
+          let admin_ads_story = await AdminAdsStory.aggregate([
+            {
+              $geoNear: {
+                near: {
+                  type: "Point",
+                  coordinates: [parseFloat(query.long), parseFloat(query.lat)],
+                },
+                spherical: true,
+                maxDistance: query.dst
+                  ? parseFloat(query.dst) * 1609.34
+                  : 6.25 * 1609.34,
+                distanceMultiplier: 1 / 1609.34,
+                distanceField: "AdminStoryDst",
+              },
+            },
+            {
+              $match: {
+                $and: [
                   {
-                    $and: [
-                      { language: _data.language },
-                      { country: _data.country },
-                      { city: _data.city },
-                      { district: _data.district },
-                    ],
+                    banner_story_time: { $gte: current_time },
                   },
-                  {
-                    $and: [
-                      { language: _data.language },
-                      { country: _data.country },
-                      { city: _data.city },
-                    ],
-                  },
+                  { ads_which: "Story" },
                 ],
               },
-              {
-                banner_story_time: { $gte: current_time },
-              }
-            ],
-          }).lean();
+            },
+          ]);
           let store_ads = await StoreAds.aggregate([
+            {
+              $geoNear: {
+                near: {
+                  type: "Point",
+                  coordinates: [parseFloat(query.long), parseFloat(query.lat)],
+                },
+                spherical: true,
+                maxDistance: query.dst
+                  ? parseFloat(query.dst) * 1609.34
+                  : 900 * 1609.34,
+                distanceMultiplier: 1 / 1609.34,
+                distanceField: "StoreStoryDst",
+              },
+            },
             {
               $match:{
                 $and:[
-                  { country: _data.country },
-                  { city: _data.city },
-                  { language: _data.language },
                   { is_approved: "yes" },
                   { banner_story_time: { $gte: current_time } },
                   { ads_which: "Story"  }
