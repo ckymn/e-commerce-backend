@@ -7,6 +7,7 @@ const store_register = new Schema(
     email: { type: Schema.Types.String, require: true, unique: true },
     phone: { type: Schema.Types.String, require: true, unique: true },
     username: { type: Schema.Types.String, require: true, unique: true },
+    description: { type: Schema.Types.String, required: true, },
     storeimg: { type: Schema.Types.String, require: true },
     password: { type: Schema.Types.String, require: true },
     resetCode: { type: Schema.Types.String, require: true, default: "" },

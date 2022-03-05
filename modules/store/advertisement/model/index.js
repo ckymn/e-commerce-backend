@@ -2,6 +2,7 @@ const { Schema, Mongoose, model } = require("mongoose")
 
 const ads = new Schema({
     author: { type: Schema.Types.ObjectId, ref: "stores" },
+    type: { type: Schema.Types.String, default: "store_ads"},
     ads_which: { type: Schema.Types.String, enum:["Banner","Story"],required: true },
     ads_time: { type: Schema.Types.String, enum:["1d","5d","1w","2w","1m"],required: true },
     banner_story_time: { type: Schema.Types.Date, require: false, default: new Date(+new Date()+24*3600*1000) },

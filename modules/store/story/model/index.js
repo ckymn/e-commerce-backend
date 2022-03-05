@@ -2,6 +2,7 @@ const { Mongoose, Schema, model} = require("mongoose");
 
 const store_storie = new Schema({
 	author: { type: Schema.Types.ObjectId, ref: "store"},
+    type: { type: Schema.Types.String, default: "store_storie"},
 	author_img: { type: Schema.Types.String},
 	story_time: { type: Schema.Types.Date, default:new Date(+new Date() + 24*60*60*1000) },
 	img: [{ type: Schema.Types.String, required: true }],

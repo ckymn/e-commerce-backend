@@ -1,14 +1,17 @@
 const Store = require("../../../store/auth/model")
 const Product = require("../../../store/products/model")
-const turf = require("turf")
+const { ObjectId } = require("mongodb");
+const { Store_Star } = require("../../star/model");
 
 const route = async (req, res, next) => {
     try {
         let { kuserData ,params, query } = req; 
         let current_time = new Date();
-        let _data = await Store.findOne({ _id: params.id }).lean();
-        let start_store = _data.created_at.getDate();
 
+        let _data = await Store.findOne({ _id: params.id }).lean();
+        
+        let start_store = _data.created_at.getDate();
+        // search count - location search count
         if(current_time.getDate() - start_store === 0){
             await Store.findOneAndUpdate(
               { _id: params.id },
@@ -88,32 +91,81 @@ const route = async (req, res, next) => {
             }
           );
         }
-        
-        let _product = await Product.find({ author: params.id }).lean().exec();
-        let _store = await Store.findOneAndUpdate(
-          { _id: params.id },
+     
+        // store 
+        let store = await Store.aggregate([
           {
-            $push: {
-              view: { who: kuserData.id, date: current_time },
+            $geoNear: {
+              near: {
+                type: "Point",
+                coordinates: [parseFloat(query.long), parseFloat(query.lat)],
+              },
+              spherical: true,
+              maxDistance: query.dst
+                ? parseFloat(query.dst) * 1609.34
+                : 10 * 1609.34,
+              distanceMultiplier: 1 / 1609.34,
+              distanceField: "StoreDst",
             },
+          },
+          {
+            $match: { _id: ObjectId(params.id)}
+          },
+          {
+            $project:{
+              _id: 1,
+              storedistrict:1,
+              storename: 1,
+              storeimg: 1,
+              follow_count: { $cond: { if: { $isArray: "$follow" }, then: { $size: "$follow" }, else: "NA"} },
+              star_count: { $cond: { if: { $isArray: "$star" }, then: { $size: "$star" }, else: "NA"}},
+              phone:1,
+              description: 1,
+              is_follow: { $in: [ObjectId(kuserData.id), "$follow"] },
+              store_dst: "$StoreDst"
+            }
           }
-        );
-        // magaza mesafesi 
-        let s_lat = _store.location.coordinates[0]
-        let s_long = _store.location.coordinates[1];
-        let mesafe = turf.distance(
-          turf.point([parseFloat(query.lat), parseFloat(query.long)]),
-          turf.point([parseFloat(s_lat), parseFloat(s_long)]),
-          "kilometers"
-        );
+        ]);
+        // store star avarage
+        let s_avg = await Store_Star.aggregate([
+          { $match: { store_id: ObjectId(params.id) } },
+          { $group: { _id: "avg_rate", rate: { $avg: "$rate" } } },
+        ]);
+        let store_star_avg = s_avg[0] ? s_avg[0].rate : 0
+        // product of store
+        let product = await Product.aggregate([
+          {
+            $match:{ 
+              $and:[
+                { author: ObjectId(params.id)},
+                { is_approved: "yes" }
+              ]
+            }
+          },
+          {
+            $project: {
+              title: 1,
+              price: { $arrayElemAt: ["$variants.sizes.price",0]},
+              min_price: { $arrayElemAt: ["$variants.sizes.min_price",0]},
+              img: { $arrayElemAt: ["$variants.images.url",0]},
+              is_favorite:{ $in:[ObjectId(kuserData.id),"$favorite"]},
+            }
+          }
+        ])
+
         return res
           .status(200)
           .send({
             status: true,
             message: "Single Store and Products of Store find Success",
-            data: { mesafe, _product },
+            data: {
+              store, 
+              store_star_avg,
+              product
+             },
           });
     }catch (error) {
+      console.log(error)
       if (error.code === 11000) {
         return res
           .status(422)
