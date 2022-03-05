@@ -117,9 +117,12 @@ const route = async (req, res, next) => {
         },
         {
           $project: {
-            _id: 0,
-            data: "$$ROOT",
-            is_follow: { $in: [ObjectId(kuserData.id), "$follow"] },
+            _id: 1,
+            phone:1,
+            storeimg:1,
+            storedistrict:1,
+            storename:1,
+            StoreDistance:"$StoreDst",
           },
         },
         { $skip: parseInt(query.skip) },
