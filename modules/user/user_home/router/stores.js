@@ -116,6 +116,14 @@ const route = async (req, res, next) => {
           },
         },
         {
+          $lookup:{
+            from:"product_stars",
+            localField:"_id",
+            foreignField:"store_id",
+            as:"star_avarage"
+          }
+        },
+        {
           $project: {
             _id: 1,
             phone:1,
@@ -123,11 +131,15 @@ const route = async (req, res, next) => {
             storedistrict:1,
             storename:1,
             StoreDistance:"$StoreDst",
+            follow_count: { $cond: { if: { $isArray: "$follow" }, then: { $size: "$follow" }, else: "NA"} },
+            star_count: { $size: "$star_avarage.rate" },
+            star_avg: { $avg: "$star_avarage.rate" }
           },
         },
         { $skip: parseInt(query.skip) },
         { $limit: parseInt(query.limit) },
       ]);
+  
 
       return res.status(200).send({
         status: true,
