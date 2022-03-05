@@ -6,7 +6,7 @@ const admin_firebase = admin.initializeApp({
 });
 
 const route = async (message, registrationTokens) => {
-  admin_firebase
+  return admin_firebase
     .messaging()
     .sendMulticast(message)
     .then((response) => {
@@ -19,6 +19,10 @@ const route = async (message, registrationTokens) => {
         });
         console.log("List of tokens that caused failures: " + failedTokens);
       }
+      return ({
+        message: response.successCount + ' messages were sent successfully',
+        data: response.responses
+      });
     });
 };
 module.exports = route; 

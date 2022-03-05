@@ -8,8 +8,8 @@ const route = async (req, res, next) => {
         let current_time = new Date();
         let _data = await Store.findOne({ _id: params.id }).lean();
         let start_store = _data.created_at.getDate();
-        
-        if(start_store - current_time.getDate() === 0){
+
+        if(current_time.getDate() - start_store === 0){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -17,7 +17,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if(start_store - current_time.getDate() === 1){
+        if(current_time.getDate() - start_store === 1){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -25,7 +25,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if(start_store - current_time.getDate() === 2){
+        if(current_time.getDate() - start_store === 2){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -33,7 +33,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if(start_store - current_time.getDate() === 3){
+        if(current_time.getDate() - start_store === 3){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -41,7 +41,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if(start_store - current_time.getDate() === 4){
+        if(current_time.getDate() - start_store=== 4){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -49,7 +49,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if(start_store - current_time.getDate() === 5){
+        if(current_time.getDate() - start_store=== 5){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -57,7 +57,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if(start_store - current_time.getDate() === 6){
+        if(current_time.getDate() - start_store=== 6){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -65,7 +65,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if (start_store - current_time.getDate() === 7) {
+        if (current_time.getDate() - start_store === 7) {
           await Store.findOneAndUpdate(
             { _id: params.id },
             {
@@ -90,26 +90,45 @@ const route = async (req, res, next) => {
         }
         
         let _product = await Product.find({ author: params.id }).lean().exec();
-        let _store = await Store.findOneAndUpdate({ _id: params.id },
-            { 
-                $push: { 
-                    view: { who: kuserData.id , date: current_time } 
-                }
-            }).lean().exec();
+        let _store = await Store.findOneAndUpdate(
+          { _id: params.id },
+          {
+            $push: {
+              view: { who: kuserData.id, date: current_time },
+            },
+          }
+        );
+        // magaza mesafesi 
         let s_lat = _store.location.coordinates[0]
         let s_long = _store.location.coordinates[1];
         let mesafe = turf.distance(
           turf.point([parseFloat(query.lat), parseFloat(query.long)]),
-          turf.point([parseFloat(s_lat), parseFloat(s_long)]), 
+          turf.point([parseFloat(s_lat), parseFloat(s_long)]),
           "kilometers"
         );
-        return res.status(200).send({ status: true, message: "Single Store and Products of Store find Success", data: { mesafe, _product} })
+        return res
+          .status(200)
+          .send({
+            status: true,
+            message: "Single Store and Products of Store find Success",
+            data: { mesafe, _product },
+          });
     }catch (error) {
-        if(error){
-            if(error.code === 11000)
-                return res.status(422).send({ status: false, message:`Single Store and Products of Store, Already Mongo Exist`})
-        }
-        return res.status(422).send({ status: false, message: `User/Single Store , Missing Error : ${error}`});
+      if (error.code === 11000) {
+        return res
+          .status(422)
+          .send({
+            status: false,
+            message: `Single Store and Products of Store, Already Mongo Exist`,
+          });
+      } else {
+        return res
+          .status(422)
+          .send({
+            status: false,
+            message: `User/Single Store , Missing Error : ${error}`,
+          });
+      }
     }
 }
 module.exports = route

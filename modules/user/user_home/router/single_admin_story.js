@@ -21,7 +21,7 @@ const route = async (req,res,next) => {
     } catch (error) {
       if (error.name === "MongoError" && error.code === 11000) {
         return res
-          .status(500)
+          .status(422)
           .send({ status: false, message: `File Already exists: ${error}` });
       } else {
         return res

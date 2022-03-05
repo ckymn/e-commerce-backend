@@ -12,22 +12,25 @@ const route = async (req,res,next) => {
         let { kuserData ,params, query ,body } = req;
         let actives = [];
         let current_time = new Date();
-
-        let _data = await Data.findOneAndUpdate({ _id: kuserData.id },
+        
+        // user find- location update
+        let _data = await Data.findOneAndUpdate(
+          { _id: kuserData.id },
           {
             $set: {
-              location: {
-                type: "Point",
-                coordinates: [parseFloat(body.long), parseFloat(body.lat)],
-              },
+              "location.coordinates": [
+                parseFloat(query.long),
+                parseFloat(query.lat),
+              ],
             },
-          },{upsert: true}
+          }
         );
-        //{'$set': {'location': {'type': "Point", 'coordinates': [user ['lon'], user ['lat']]}}}
+        // active users find
         await ActiveUser.active.active_control(req.active);
         for(let [key,value] of req.active){
             actives.push(key);            
         }
+        //active users update
         await AdminData.findOneAndUpdate({ role: { $in: ["admin"] } },
             { 
                 $set: {
@@ -47,7 +50,7 @@ const route = async (req,res,next) => {
                 spherical: true,
                 maxDistance: query.dst
                   ? parseFloat(query.dst) * 1609.34
-                  : 6.25 * 1609.34,
+                  : 10 * 1609.34,
                 distanceMultiplier: 1 / 1609.34,
                 distanceField: "ProductDst",
               },
@@ -118,7 +121,7 @@ const route = async (req,res,next) => {
                 spherical: true,
                 maxDistance: query.dst
                   ? parseFloat(query.dst) * 1609.34
-                  : 6.25 * 1609.34,
+                  : 10 * 1609.34,
                 distanceMultiplier: 1 / 1609.34,
                 distanceField: "AdminStoryDst",
               },
@@ -178,7 +181,7 @@ const route = async (req,res,next) => {
                 spherical: true,
                 maxDistance: query.dst
                   ? parseFloat(query.dst) * 1609.34
-                  : 6.25 * 1609.34,
+                  : 10 * 1609.34,
                 distanceMultiplier: 1 / 1609.34,
                 distanceField: "ProductDst",
               },
@@ -243,7 +246,7 @@ const route = async (req,res,next) => {
                 spherical: true,
                 maxDistance: query.dst
                   ? parseFloat(query.dst) * 1609.34
-                  : 6.25 * 1609.34,
+                  : 10 * 1609.34,
                 distanceMultiplier: 1 / 1609.34,
                 distanceField: "AdminStoryDst",
               },
@@ -308,9 +311,7 @@ const route = async (req,res,next) => {
           });
         }else{
           return res.status(422).send({
-            status: false,
-            message: `User Home Page Error , ${error}`,
-            data: null,
+            message: `User/Home Page Error : ${error}`,
           });
         }
       }

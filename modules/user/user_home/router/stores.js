@@ -27,15 +27,15 @@ const route = async (req, res, next) => {
           },
         },
         {
-          $match:{
-            $and:[
+          $match: {
+            $and: [
               { is_approved: "yes" },
               { banner_story_time: { $gte: current_time } },
-              { ads_which: "Banner"  }
-            ]
-          }
-        }
-      ])
+              { ads_which: "Banner" },
+            ],
+          },
+        },
+      ]);
       let store_story = await StoreStory.aggregate([
         {
           $geoNear: {
@@ -67,7 +67,7 @@ const route = async (req, res, next) => {
             spherical: true,
             maxDistance: query.dst
               ? parseFloat(query.dst) * 1609.34
-              : 6.25 * 1609.34,
+              : 10 * 1609.34,
             distanceMultiplier: 1 / 1609.34,
             distanceField: "AdminStoryDst",
           },
@@ -91,9 +91,9 @@ const route = async (req, res, next) => {
             spherical: true,
             maxDistance: query.dst
               ? parseFloat(query.dst) * 1609.34
-              : 6.25 * 1609.34,
+              : 10 * 1609.34,
             distanceMultiplier: 1 / 1609.34,
-            distanceField: "ProductDst",
+            distanceField: "StoreDst",
           },
         },
         {
@@ -119,8 +119,8 @@ const route = async (req, res, next) => {
           $project: {
             _id: 0,
             data: "$$ROOT",
-            is_follow:{ $in:[ObjectId(kuserData.id),"$follow"]},
-          }
+            is_follow: { $in: [ObjectId(kuserData.id), "$follow"] },
+          },
         },
         { $skip: parseInt(query.skip) },
         { $limit: parseInt(query.limit) },
@@ -142,13 +142,18 @@ const route = async (req, res, next) => {
           status: false,
           message: `User Stores Page, Already Mongo Error`,
         });
-      }
-      if (error.code === 27) {
-        return res.status(422).send({
-          status: false,
-          message: `We Don't Have Any Data`,
-          data: null,
-        });
+      } else {
+        if (error.code === 27) {
+          return res.status(422).send({
+            status: false,
+            message: `We Don't Have Any Data`,
+            data: null,
+          });
+        } else {
+          return res.status(500).send({
+            message: `User/Stores Error : ${error}`,
+          });
+        }
       }
     }
 }
