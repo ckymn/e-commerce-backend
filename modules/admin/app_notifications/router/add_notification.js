@@ -18,7 +18,7 @@ const route = async (req, res, next) => {
         const registrationTokens = [];
         user.filter(i => { registrationTokens.push(i.registration_token) });
         const message = {
-          data: {
+          notification: {
             title: body.title,
             body: body.description,
           },
@@ -26,8 +26,6 @@ const route = async (req, res, next) => {
         };
         let _message = await firebase_ntf(message, registrationTokens);
         console.log(_message);
-        
-        return;
         let _data = await new Data({ ...body });
       if (!_data) 
         return res.status(404).send({ status: false, message: "Add Application Notification Failed"});
