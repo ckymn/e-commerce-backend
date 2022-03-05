@@ -35,6 +35,9 @@ const route = async (req, res, next) => {
             if(ads_time === "5d"){
                 let _data = await new Data({
                     ...body,
+                    location:{
+                        coordinates: [parseFloat(body.long),parseFloat(body.lat)]
+                    },
                     banner_story_time: new Date(+new Date()+5*24*60*60*1000)
                 }).save();
                 if(!_data)
@@ -50,6 +53,9 @@ const route = async (req, res, next) => {
             if(ads_time === "1w"){
                 let _data = await new Data({
                     ...body,
+                    location:{
+                        coordinates: [parseFloat(body.long),parseFloat(body.lat)]
+                    },
                     banner_story_time: new Date(+new Date()+7*24*60*60*1000)
                 }).save();
                 if(!_data)
@@ -65,6 +71,9 @@ const route = async (req, res, next) => {
             if(ads_time === "2w"){
                 let _data = await new Data({
                     ...body,
+                    location:{
+                        coordinates: [parseFloat(body.long),parseFloat(body.lat)]
+                    },
                     banner_story_time: new Date(+new Date()+14*24*60*60*1000)
                 }).save();
                 if(!_data)
@@ -80,6 +89,9 @@ const route = async (req, res, next) => {
             if(ads_time === "1m"){
                 let _data = await new Data({
                     ...body,
+                    location:{
+                        coordinates: [parseFloat(body.long),parseFloat(body.lat)]
+                    },
                     banner_story_time: new Date(+new Date()+30*24*60*60*1000)
                 }).save();
                 if(!_data)

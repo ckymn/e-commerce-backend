@@ -1,4 +1,4 @@
-
+const Store = require("../../auth/model")
 const Data = require("../model")
 const Payment = require("../../payment/model")
 const {iyzipay, pay_form_ads} = require("../../../../utils/iyzipay")
@@ -11,6 +11,7 @@ const route = async (req, res, next) => {
         let buyer_id = userData.id;
         let basket_id = uuidv4();
         let buyer_ip = "192.168.1.37"
+        let store = await Store.findOne({ _id: userData.id });
         
         let {card_price,card_paid_price,card_installment,card_holder_name,card_number,
             card_expire_month,card_expire_year,card_cvc,card_register,buyerName,buyerSurname,
@@ -35,7 +36,10 @@ const route = async (req, res, next) => {
                             ...body,
                             author: userData.id,
                             authCode: result.authCode,
-                            banner_story_time: new Date(+new Date()+24*60*60*1000)
+                            banner_story_time: new Date(+new Date()+24*60*60*1000),
+                            location: {
+                                coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
+                            }
                         });
                         if(!_data)
                             return res.status(404).send({ status: false, message: "Save Advertisement error"})
@@ -72,7 +76,10 @@ const route = async (req, res, next) => {
                             ...body,
                             author: userData.id,
                             authCode: result.authCode,
-                            banner_story_time: new Date(+new Date()+5*24*60*60*1000)
+                            banner_story_time: new Date(+new Date()+5*24*60*60*1000),
+                            location: {
+                                coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
+                            }
                         });
                         if(!_data)
                             return res.status(404).send({ status: false, message: "Save Advertisement error"})
@@ -105,7 +112,10 @@ const route = async (req, res, next) => {
                             ...body,
                             author: userData.id,
                             authCode: result.authCode,
-                            banner_story_time: new Date(+new Date()+7*24*60*60*1000)
+                            banner_story_time: new Date(+new Date()+7*24*60*60*1000),
+                            location: {
+                                coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
+                            }
                         });
                         if(!_data)
                             return res.status(404).send({ status: false, message: "Save Advertisement error"})
@@ -139,7 +149,10 @@ const route = async (req, res, next) => {
                             ...body,
                             author: userData.id,
                             authCode: result.authCode,
-                            banner_story_time: new Date(+new Date()+2*7*24*60*60*1000)
+                            banner_story_time: new Date(+new Date()+2*7*24*60*60*1000),
+                            location: {
+                                coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
+                            }
                         });
                         if(!_data)
                             return res.status(404).send({ status: false, message: "Save Advertisement error"})
@@ -172,7 +185,10 @@ const route = async (req, res, next) => {
                             ...body,
                             author: userData.id,
                             authCode: result.authCode,
-                            banner_story_time: new Date(+new Date()+30*24*60*60*1000)
+                            banner_story_time: new Date(+new Date()+30*24*60*60*1000),
+                            location: {
+                                coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
+                            }
                         });
                         if(!_data)
                             return res.status(404).send({ status: false, message: "Save Advertisement error"})

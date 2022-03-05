@@ -68,7 +68,6 @@ router.get(`/admin/advertisements`,middleware.authJwt, admin_advertisement.all_a
 router.get(`/admin/advertisement/:id`,middleware.authJwt, admin_advertisement.single_advertisement);
 router.get(`/admin/admins`, middleware.authJwt, login.admin_all)
 router.get(`/admin/notification_stores`, middleware.authJwt, store_notifications.all_store)
-router.get(`/admin/suspension_store`, middleware.authJwt ,storePanel.suspension_store);
 router.get(`/admin/store_comments`, middleware.authJwt, comment_notifications.all_store_comment)
 router.get(`/admin/store_comment/:id`, middleware.authJwt, comment_notifications.single_store_comment)
 router.get(`/admin/product_comments`, middleware.authJwt, comment_notifications.all_product_comment)
