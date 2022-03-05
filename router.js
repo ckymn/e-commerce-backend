@@ -106,8 +106,6 @@ router.post(`/admin/partner`,middleware.authJwt, solutionPartner.add_partner)
 router.delete(`/admin/partner/:id`,middleware.authJwt, solutionPartner.delete_partner)
 router.put(`/admin/partner/:id`,middleware.authJwt, solutionPartner.update_partner)
 router.post(`/admin/app_notification`,middleware.authJwt, app_notification.add_notification)
-router.put(`/admin/app_notification/:id`,middleware.authJwt, app_notification.update_notificaiton)
-router.delete(`/admin/app_notification/:id`,middleware.authJwt, app_notification.delete_notification)
 router.post(`/admin/how_i_use`, middleware.authJwt, userPanel.how_i_use)
 
 //store_get
