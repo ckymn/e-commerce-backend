@@ -4,7 +4,10 @@ const route = async (req, res, next) => {
    try {
      let { kuserData } = req;
 
-     let _admin = await Data.findOne({ _id: kuserData.id });
+     let _admin = await Data.findOne({ _id: kuserData.id }).populate({
+       path: "product_comment",
+       select: "comment rate -_id",
+     }).populate({ path: "follow", select:"username -_id storename"});
      if(!_admin)
           return res.status(404).send({ status: false, message : "you are not admin stop!" });
      return res.status(200).send({ status: true, message: "token was created", data:  _admin })
