@@ -44,7 +44,6 @@ const route = async (req,res,next) => {
                 _id:0,
                 item: "$$ROOT",
                 is_favorite:{ $in:[ObjectId(kuserData.id),"$favorite"]},
-
             }
           }
         ]);

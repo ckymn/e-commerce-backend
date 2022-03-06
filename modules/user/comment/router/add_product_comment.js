@@ -6,12 +6,13 @@ const User = require("../../auth/model")
 const route = async( req,res,next) => {
     try {
         let { body ,kuserData , params} = req;
-        
+        let user = await User.findOne({ _id: kuserData.id }).lean();
         // product comment
         let _data = await new Product_Comment({
             ...body,
             product_id: params.id,
             author: kuserData.id,
+            author_name: user.username
         }).save();
         if(!_data)
             return res.status(400).send({ status: false, message: "Add Product Comment Data Error"})
