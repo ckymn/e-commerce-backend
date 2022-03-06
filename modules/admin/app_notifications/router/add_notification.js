@@ -45,9 +45,9 @@ const route = async (req, res, next) => {
           message: `File Already exists!  : ${error}`,
         });
       } else {
-        return res.status(500).send({
-          status: false,
-          message: `Add Admin Notification Error , Something Missing => ${error}`,
+        next({
+          status: 404,
+          message: `Admin/add_notification , Something Missing`,
         });
       }
     }

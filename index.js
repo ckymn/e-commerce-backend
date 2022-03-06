@@ -33,6 +33,14 @@ app.set('views',__dirname)
 
 //router
 app.use(router);
+
+//error handling mid
+app.use((err, req, res, next) => {
+  return res
+    .status(err.status)
+    .send({ status: err.status, message: err.message });
+});
+
 //run
 let PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

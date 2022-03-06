@@ -2,6 +2,7 @@ require("dotenv").config();
 const Data = require("../model")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
+const Api404Error = require("../../../../handlers/api404Error/api404Error")
 
 const route = async (req, res, next) => {
    try {
@@ -12,6 +13,7 @@ const route = async (req, res, next) => {
           }
         });
         if(!_user){
+          throw new Api404Error('user/login',)
           return res.status(404).send({ status: false, message : "You have to signup" });
         }else{
           let _role = _user.role;
