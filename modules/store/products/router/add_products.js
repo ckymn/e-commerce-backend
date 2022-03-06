@@ -20,6 +20,7 @@ const route = async (req, res, next) => {
             district: _data.storedistrict,
             language: _data.storelanguage,
             author: userData.id,
+            phone: _data.phone
         }).save();
         if(!_pr)
             return res.status(400).send({ status: false, message: "Add Product doesn't work"})

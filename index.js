@@ -34,12 +34,15 @@ app.set('views',__dirname)
 //router
 app.use(router);
 
-//error handling mid
-app.use((err, req, res, next) => {
-  return res
-    .status(err.status)
-    .send({ status: err.status, message: err.message });
-});
+// app.use((req,res,next) => {
+//   const error = new Error("Aradiginiz sayfa bulunamamaktadir...");
+//   error.status = 404;
+//   next(error);
+// })
+// //error handling mid
+// app.use((err, req, res, next) => {
+//   res.status(err.status || 500).send({ status: err.status, message: err.message });
+// });  
 
 //run
 let PORT = process.env.PORT || 8080;
