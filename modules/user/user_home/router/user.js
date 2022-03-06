@@ -15,7 +15,7 @@ const route = async (req, res, next) => {
        })
        .populate({ 
          path: "follow", 
-         select: "username storename" 
+         select: "username storename storeimg" 
        });
      if(!_admin)
           return res.status(404).send({ status: false, message : "you are not admin stop!" });
