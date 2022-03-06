@@ -7,11 +7,15 @@ const route = async (req, res, next) => {
      let _admin = await Data.findOne({ _id: kuserData.id })
        .populate({
          path: "product_comment",
-         select: "comment rate -_id",
+         select: "comment rate product_id",
+         populate:{
+           path: "product_id",
+           select: "title"
+         }
        })
        .populate({ 
          path: "follow", 
-         select: "username -_id storename" 
+         select: "username storename" 
        });
      if(!_admin)
           return res.status(404).send({ status: false, message : "you are not admin stop!" });

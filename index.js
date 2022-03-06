@@ -41,7 +41,12 @@ app.use(router);
 // })
 // //error handling mid
 // app.use((err, req, res, next) => {
-//   res.status(err.status || 500).send({ status: err.status, message: err.message });
+//   res.status(err.status || 500).send({
+//     error: {
+//       status: err.status,
+//       message: err.message || "Internal Server Error...",
+//     },
+//   });
 // });  
 
 //run
