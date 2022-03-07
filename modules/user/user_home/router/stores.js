@@ -4,12 +4,16 @@ const StoreStory = require("../../../store/story/model")
 const AdminAdsStory = require("../../../admin/advertisement/model")
 const Stores = require("../../../store/auth/model");
 const { ObjectId } = require("mongodb");
+const ApiError = require("../../../../errors/ApiError");
 
 const route = async (req, res, next) => {
     try {
       let { kuserData, query } = req;
       let current_time = new Date();
+
       let _data = await Data.findOne({ _id: kuserData.id });
+      if(!_data)
+        return next(new ApiError("User not found",404))
 
       let store_ads = await StoreBanner.aggregate([
         {
@@ -96,25 +100,25 @@ const route = async (req, res, next) => {
             distanceField: "StoreDst",
           },
         },
-        {
-          $match: {
-            $and: [
-              {
-                is_approved: "yes",
-              },
-              {
-                store_open_hour: {
-                  $lte: query.hour ? parseInt(query.hour) : 25,
-                },
-              },
-              {
-                store_close_hour: {
-                  $gte: query.hour ? parseInt(query.hour) : 0,
-                },
-              },
-            ],
-          },
-        },
+        // {
+        //   $match: {
+        //     $and: [
+        //       {
+        //         is_approved: "yes",
+        //       },
+        //       {
+        //         store_open_hour: {
+        //           $lte: query.hour ? parseInt(query.hour) : 25,
+        //         },
+        //       },
+        //       {
+        //         store_close_hour: {
+        //           $gte: query.hour ? parseInt(query.hour) : 0,
+        //         },
+        //       },
+        //     ],
+        //   },
+        // },
         {
           $lookup:{
             from:"product_stars",
@@ -152,24 +156,13 @@ const route = async (req, res, next) => {
         },
       });
     } catch (error) {
-      if (error.code === 11000) {
-        return res.status(422).send({
-          status: false,
-          message: `User Stores Page, Already Mongo Error`,
-        });
-      } else {
-        if (error.code === 27) {
-          return res.status(422).send({
-            status: false,
-            message: `We Don't Have Any Data`,
-            data: null,
-          });
-        } else {
-          return res.status(500).send({
-            message: `User/Stores Error : ${error}`,
-          });
-        }
+      if (error.name === "MongoError" && error.code === 11000) {
+        next(new ApiError(error?.message, 422));
       }
+      if (error.code === 27) {
+        next(new ApiError("We Don't Have Any Data", 500, null));
+      }
+      next(new ApiError(error?.message));
     }
 }
 module.exports = route

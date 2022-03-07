@@ -2,7 +2,8 @@ const {iyzipay, pay_form } = require("../../../../utils/iyzipay");
 const { v4: uuidv4 } = require('uuid');
 
 const Data = require("../model")
-const Register = require("../../auth/model")
+const Register = require("../../auth/model");
+const ApiError = require("../../../../errors/ApiError");
 
 const route = async (req, res) => {
     try {
@@ -24,10 +25,8 @@ const route = async (req, res) => {
         
         // ODEME
         await iyzipay.payment.create(request, async function(err,result) {
-            if(err)
-                return res.status(500).send({ status: false, message: `Iyzipay Error : ${err}`})
             if(result.status === "failure")
-                return res.status(400).send({ status: false, message: result.errorMessage, code: result.errorCode})
+                return next(new ApiError(result.errorMessage,400));     
             if(result.status === "success"){
                 let time = items.time
                 if(true){
@@ -41,7 +40,7 @@ const route = async (req, res) => {
                         paymentTransactionId: result.itemTransactions[0].paymentTransactionId
                     })
                     if(!_data)
-                        return res.status(400).send({ status: false, message: "Odeme Gerceklesti ama Veri Tabanina kaydedilmedi"})
+                        return next(new ApiError("Odeme Gerceklesti ama Veri Tabanina kaydedilmedi",400));
                     let _register = await Register.findOneAndUpdate({_id: buyer_id}, 
                         {
                             $set:{
@@ -51,7 +50,7 @@ const route = async (req, res) => {
                         },
                         { new: true })
                     if(!_register)
-                        return res.status(400).send({ status: false, message: "Odeme Gerceklesti ama Kullanici Hesap suresi guncellenmedi"}) 
+                        return next(new ApiError("Store date payment not found",404));
                     await _data.save();
                     return res.status(200).send({ status: true, message: "Islem Devam ediyor", data: result})
                 }
@@ -59,11 +58,13 @@ const route = async (req, res) => {
             return res.status(500).send({ status: false, message:"Girdiginiz Kod Uyusmusyor .Tekrar deneyin"})
         })
     } catch (error) {
-        if (error) {
-            if (error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `File Already exists!  : ${error}` })
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
         }
-        return res.status(500).send({ status: false, message: `Store Payment Error Cannot Upload Something Missing => ${error}` })
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message));
     }
 }
 

@@ -1,4 +1,5 @@
-const Store = require("../../../store/auth/model"),
+const 
+  Store = require("../../../store/auth/model"),
   Product = require("../../../store/products/model"),
   AdminStoryAds = require("../../advertisement/model"),
   User = require("../../../user/auth/model"),
@@ -10,7 +11,8 @@ const Store = require("../../../store/auth/model"),
   StoreNotification = require("../../../store/auth/model"),
   ProductNotification = require("../../../store/products/model"),
   Payment = require("../../../store/payment/model"),
-  StoreStory = require("../../../store/story/model");
+  StoreStory = require("../../../store/story/model")
+  ApiError = require("../../../../errors/ApiError");
 
 const route = async (req, res, next) => {
   try {
@@ -35,10 +37,10 @@ const route = async (req, res, next) => {
       .lean()
       .exec();
 
-    let storys = await Story.find({}).lean().exec();
-    let admins = await AdminStoryAds.find({}).lean().exec();
-    let stores = await Store.find({}).lean().exec();
-    let users = await User.find({}).lean().exec();
+    let storys = await AdminStoryAds.find({ads_which: "Story"}).lean().exec();
+    let banners = await AdminStoryAds.find({ads_which: "Banner"}).lean().exec();
+    let stores = await Store.find({}).select("-password").lean().exec();
+    let users = await User.find({}).select("-password").lean().exec();
     let store_ads = await StoreAdvertisement.find({}).lean().exec();
     let app_ntfc = await AppNotification.find({}).lean().exec();
     let ads_ntfc = await AdvertisementNotificaiton.find({ is_approved: "wait" })
@@ -65,7 +67,7 @@ const route = async (req, res, next) => {
         total_sub_3month,
         total_sub_1year,
         storys,
-        admins,
+        banners,
         stores,
         users,
         store_ads,
@@ -77,16 +79,13 @@ const route = async (req, res, next) => {
       },
     });
   } catch (error) {
-      if (error.name === "MongoError" && error.code === 11000) {
-        return res
-          .status(422)
-          .send({ status: false, message: `File Already exists!  : ${error}` });
-      } else {
-        return res.status(422).send({
-          status: false,
-          message: `Admin Panel Something Missing => ${error}`,
-        });
-      }
+    if (error.name === "MongoError" && error.code === 11000) {
+      next(new ApiError(error?.message, 422));
+    }
+    if (error.code === 27) {
+      next(new ApiError("We Don't Have Any Data", 500, null));
+    }
+    next(new ApiError(error?.message,500));
   }
 };
 

@@ -2,8 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan")
-const router = require("./router");
+const {admin,store,user} = require("./routes");
 const { connectDB } = require("./config/database");
+const { errorHandler  } = require("./middlewares")
 const app = express();
 
 //db
@@ -31,10 +32,17 @@ app.use(express.json());
 app.set('view engine', 'ejs');
 app.set('views',__dirname)
 
-//router
-app.use(router);
+// router
+app.use(admin);
+app.use(store);
+app.use(user);
+
+//! Error Handler
+app.use(errorHandler);  
+
 //run
 let PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+ 

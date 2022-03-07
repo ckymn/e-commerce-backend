@@ -5,6 +5,7 @@ const ActiveUser = require("../../../../middlewares")
 const AdminAdsStory = require("../../../admin/advertisement/model")
 const StoreStory = require("../../../store/story/model")
 const StoreAds = require("../../../store/advertisement/model")
+const ApiError = require("../../../../errors/ApiError")
 const { ObjectId } = require("mongodb")
 
 const route = async (req,res,next) => {
@@ -14,8 +15,7 @@ const route = async (req,res,next) => {
         let current_time = new Date();
         
         // user find- location update
-        let _data = await Data.findOneAndUpdate(
-          { _id: kuserData.id },
+        let _data = await Data.findOneAndUpdate({ _id: kuserData.id },
           {
             $set: {
               "location.coordinates": [
@@ -25,12 +25,13 @@ const route = async (req,res,next) => {
             },
           }
         );
+        if(!_data)
+          return next(new ApiError("Didn't find User",404));
         // active users find
         await ActiveUser.active.active_control(req.active);
         for(let [key,value] of req.active){
             actives.push(key);            
         }
-        //active users update
         await AdminData.findOneAndUpdate({ role: { $in: ["admin"] } },
             { 
                 $set: {
@@ -66,6 +67,16 @@ const route = async (req,res,next) => {
                   },
                   {
                     is_approved: "yes",
+                  },
+                  {
+                    store_open_hour: {
+                      $lte: query.hour ? parseInt(query.hour) : 25,
+                    },
+                  },
+                  {
+                    store_close_hour: {
+                      $gte: query.hour ? parseInt(query.hour) : 0,
+                    },
                   },
                   {
                     "variants.sizes": {
@@ -298,23 +309,12 @@ const route = async (req,res,next) => {
         }
     } catch (error) {
       if (error.name === "MongoError" && error.code === 11000) {
-        return res.status(422).send({
-          status: false,
-          message: `User/Home Page , Mongdo Already exists: ${error}`,
-        });
-      } else {
-        if (error.code === 27){
-          return res.status(422).send({
-            status: false,
-            message: `We Don't Have Any Data`,
-            data: null,
-          });
-        }else{
-          return res.status(422).send({
-            message: `User/Home Page Error : ${error}`,
-          });
-        }
+        next(new ApiError(error?.message, 422));
       }
+      if (error.code === 27) {
+        next(new ApiError("We Don't Have Any Data", 500, null));
+      }
+      next(new ApiError(error?.message));
     }
 };
 

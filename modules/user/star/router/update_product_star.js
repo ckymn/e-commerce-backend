@@ -1,5 +1,5 @@
 const { Product_Star } = require("../model")
-const Product = require("../../../store/products/model")
+const ApiError = require("../../../../errors/ApiError")
 
 const route = async( req,res,next) => {
     try {
@@ -8,18 +8,21 @@ const route = async( req,res,next) => {
             $set: {
                 rate: body.rate
             }
-        }, { new: true }).lean().exec(async(err,data) => {
+        }, { new: true })
+        .lean().exec(async(err,data) => {
             if(data.matchedCount === 0)
-                return res.status(400).send({ status: false, message: "Not Found Star Document"})
+                return next(new ApiError("Update product star didn't match",404));
             return res.status(200).send({ status: true, message: "User Update Product Comment Success"})
         })
         
     } catch (error) {
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `Mongo Error ${error}`})
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
         }
-        return res.status(500).send({ status: false, message: `User Comment Delete of Product, Something Missing Error : ${error}`})
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message));
     }
 }
 

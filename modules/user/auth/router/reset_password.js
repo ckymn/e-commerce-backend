@@ -1,32 +1,36 @@
 const Data = require("../model");
-const bcrypt = require("bcryptjs")
+const bcrypt = require("bcryptjs");
+const ApiError = require("../../../../errors/ApiError");
 
 const route = async (req, res, next) => {
     try {
-        let { body, adminData } = req;
+        let { body, kuserData } = req;
         
-        let _data = await Data.findOne({ _id: adminData.id }).lean().exec();
+        let _data = await Data.findOne({ _id: kuserData.id }).lean().exec();
         if(!_data)
-            return res.status(404).send({ status: false, message: "Before Code , Don't match any data"})
+            return next(new ApiError("Not Found",404))
         if(body.code != _data.code){
-            return res.status(400).send({ status: false , message: "Don't Match Code. Try Again"})
+            return next(new ApiError("Don't Match Code. Try Again",400))
         }else{
             if(body.new_password != body.new_again_password){
-                return res.status(400).send({ status: false , message: "New Passwords Don't Match. Try Again"})
+                return next(new ApiError("New password don't match !",400))
             }else{
                 let hash = await bcrypt.hash(body.new_password, 10);
-                let u_pas_data = await Data.findOneAndUpdate({ _id: adminData.id }, {$set: { password: hash , code:"" }},{new: true})
-                if(!u_pas_data)
-                    return res.status(404).send({ status: false, message: "After code , Don't match any data"})
+                await Data.findOneAndUpdate({ _id: kuserData.id },
+                  { $set: { password: hash, code: "" } },
+                  { new: true }
+                );
                 return res.status(200).send({ status: true, message: "Reset Password Success"})
             }
         }
     } catch (error) {
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `Forgot Password, Mongo Error => ${error}`})
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
         }
-        return res.status(500).send({ status: false, message: `Forgot Password, Missing Somethimes => ${error}`})
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message));
     }
 }
 

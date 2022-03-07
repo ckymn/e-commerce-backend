@@ -1,3 +1,4 @@
+const ApiError = require("../../../../errors/ApiError");
 const Data = require("../model")
 
 const route = async (req, res, next) => {
@@ -6,9 +7,7 @@ const route = async (req, res, next) => {
 
         let d_w = await Data.find({ $and: [ { author: id },{"is_approved": { $in: "wait"}} ] }).lean();
         let d_n = await Data.find({ $and: [ { author: id },{"is_approved": { $in: "no"}} ] }).lean();
-        let d_y = await Data.find({
-          $and: [{ author: id }, { is_approved: { $in: "yes" } }],
-        })
+        let d_y = await Data.find({ $and: [{ author: id }, { is_approved: { $in: "yes" } }] })
           .populate({
             path: "comments",
             populate: {
@@ -19,17 +18,18 @@ const route = async (req, res, next) => {
           })
           .populate({ path: "star", select: "rate", options: { lean: true } })
           .lean()
-          .exec();
        
         if(!d_w.length && !d_n.length && !d_y.length)
-            return res.status(404).send({ status: false, message: "You don't have any items. Add product to see"})
+          return next(new ApiError("All Product not found",404));
         return res.status(200).send({ status: true, message: "All Product status here", data: { d_w, d_n, d_y } })
     } catch (error) {
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `File Already exists!  : ${error}` })
-        }
-        return res.status(500).send({ status: false, message: `All Products Error Cannot Upload Something Missing => ${error}`})
+      if (error.name === "MongoError" && error.code === 11000) {
+        next(new ApiError(error?.message, 422));
+      }
+      if (error.code === 27) {
+        next(new ApiError("We Don't Have Any Data", 500, null));
+      }
+      next(new ApiError(error?.message));
     }
 }
 

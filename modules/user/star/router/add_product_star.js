@@ -1,11 +1,12 @@
 const { Product_Star } = require("../model")
 const Product = require("../../../store/products/model")
+const ApiError = require("../../../../errors/ApiError")
 
 const route = async( req,res,next) => {
     try {
         let { body ,kuserData , params} = req;
         let store = await Product.findOne({ _id: params.id });
-        console.log(store.author)
+        
         await Product_Star.findOne({ $and:[{product_id: params.id},{author: kuserData.id}] })
             .lean().exec(async(err,data) => {
                 if(!data){
@@ -16,7 +17,7 @@ const route = async( req,res,next) => {
                         store_id: store.author,
                     },async (err,data) => {
                         if(err)
-                            return res.status(400).send({ status: false, message: "Create Star Error !"})
+                            return next(new ApiError("Create product star error",400))
                         let p_data = await Product.findOneAndUpdate({ _id: params.id },
                             {
                                 $push: {
@@ -24,18 +25,20 @@ const route = async( req,res,next) => {
                                 }
                             }, { new: true })
                         if(!p_data)
-                            return res.status(400).send({ status: false, message: "Update Product Star Data success "})
+                            return next(new ApiError("Product update star Not found!",404))
                         })
                     return res.status(200).send({ status: true, message: "User to Product Comment Success", data })
                 }
-                return res.status(400).send({ status: false, message: "Add Product Star Already Exist ! "})
+                return next(new ApiError("Product star already exist",400));
             })
     } catch (error) {
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `Mongo Error ${error}`})
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
         }
-        return res.status(500).send({ status: false, message: `User Comment Add of Product, Something Missing Error : ${error}`})
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message));
     }
 }
 

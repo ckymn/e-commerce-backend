@@ -1,31 +1,37 @@
 const Data = require("../model");
-const bcrypt = require("bcryptjs")
+const bcrypt = require("bcryptjs");
+const ApiError = require("../../../../errors/ApiError");
 
 const route = async (req, res, next) => {
     try {
-        let { body, adminData } = req;
-        let _data = await Data.findOne({ _id: adminData.id }).lean().exec();
+        let { body, userData } = req;
+        let _data = await Data.findOne({ _id: userData.id }).lean().exec();
+        if(!_data)
+            return next(new ApiError("Store not found",404))
+
         let decoded = await bcrypt.compare(body.old_password,_data.password);
         if(!decoded){
-            return res.status(400).send({ status: false, message: "You entered your old password incorrectly."})
+            return next(new ApiError("Old Password incorrectly",401));
         }else{
-            if(body.new_password != body.new_again_password){
-                return res.status(400).send({ status: false, message: "Don't match new_password and new_again_password incorrectly."})
+            if(body.new_password != body.new_password_again){
+                return next(new ApiError("Didn't match new password and new again password",400));
             }else{
                 let encode = await bcrypt.hash(body.new_password,10);
-                let u_data = await Data.findOneAndUpdate({ _id: adminData.id }, {$set: { password: encode }},{new: true});
+                let u_data = await Data.findOneAndUpdate({ _id: userData.id }, {$set: { password: encode }},{new: true});
                 if(!u_data)
-                    return res.status(404).send({ status: false, message: "Update Password Don't Match Failed"})
+                    return next(new ApiError("Update password didn't match",409));
                 return res.status(200).send({ status: true, message: "Update Password Success"})
             }
         }
     } catch (error) {
         console.log(error)
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `Update Password, Mongo Error => ${error}`})
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
         }
-        return res.status(500).send({ status: false, message: `Update Password, Missing Somethimes => ${error}`})
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message,500));
     }
 }
 

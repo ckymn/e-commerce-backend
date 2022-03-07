@@ -5,7 +5,7 @@ const {TokenExpiredError} = jwt;
 const catchError = (err,res) => {
     if( err instanceof TokenExpiredError)
         return res.status(401).send({ status: false, message: "A_Unauthorized! Access Token was expired!" })
-    return res.sendStatus(401).send({ status: false, message: "A_Unauthorized !"  });
+    return res.status(401).send({ status: false, message: "A_Unauthorized !"  });
 }
 
 const route = async (req,res,next) => {

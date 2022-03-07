@@ -2,6 +2,7 @@ require("dotenv").config();
 const Data = require("../model")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
+const ApiError = require("../../../../errors/ApiError")
 
 const route = async (req, res, next) => {
    try {
@@ -12,16 +13,13 @@ const route = async (req, res, next) => {
           }
         });
         if(!_user){
-          return res.status(404).send({ status: false, message : "You have to signup" });
+          return next( new ApiError("You have to signup",404))
         }else{
-          let _role = _user.role;
           let match = await bcrypt.compare(password, _user.password)
           if(!match)
-              return res.status(401).send({ status: false, message: "password or email invalid"});
+              return next(new ApiError("Passwo prd or Email invalid",400));
           let access_token = await jwt.sign({ 
-              sub: _user.username, 
               id: _user.id,
-              role: _role,
               address: { 
                   country: _user.country,
                   city: _user.city,
@@ -33,26 +31,12 @@ const route = async (req, res, next) => {
       }
    } catch (error) {
     if (error.name === "MongoError" && error.code === 11000) {
-      return res.status(422).send({
-        status: false,
-        message: `User/Login , Mongdo Already exists: ${error}`,
-        data: null,
-      });
-    } else {
-      if (error.code === 27){
-        return res.status(422).send({
-          status: false,
-          message: `We Don't Have Any Data`,
-          data: null,
-        });
-      }else{
-        return res.status(500).send({
-          status: false,
-          message: `User/Login Error , ${error}`,
-          data: null,
-        });
-      }
+      next(new ApiError(error?.message, 422));
     }
+    if (error.code === 27) {
+      next(new ApiError("We Don't Have Any Data", 500, null));
+    }
+    next(new ApiError(error?.message))
   }
 }
 module.exports = route

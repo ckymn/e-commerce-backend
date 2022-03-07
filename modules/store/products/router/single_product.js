@@ -1,10 +1,11 @@
+const ApiError = require("../../../../errors/ApiError");
 const Data = require("../model")
 
 const route = async (req, res, next) => {
     try {
-        let { id } = req.params;
-        let u_id = req.userData.id;
-        let s_d = await Data.findOne({ $and: [ { author: u_id }, { _id: id } ] })
+        let { params,userData } = req.params;
+
+        let s_product = await Data.findOne({ $and: [ { author: userData.id }, { _id: params.id } ] })
             .populate({ path: 'comments', 
                 populate:{
                     path: 'author',
@@ -14,15 +15,17 @@ const route = async (req, res, next) => {
             })
             .populate({ path: 'star', select: 'rate' ,options: { lean: true}})
             .lean().exec();
-        if(!s_d)
-            return res.status(404).send({ status: false, message: "Single product find error"})
+        if(!s_product)
+            return next(new ApiError("Single Product not found",404))
         return res.status(200).send({ status: true, message: "Single product search success", data: s_d })
     } catch (error) {
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `File Already exists!  : ${error}` })
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
         }
-        return res.status(500).send({ status: false, message: `Single Products Error Cannot Upload Something Missing => ${error}`})
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message));
     }
 }
 

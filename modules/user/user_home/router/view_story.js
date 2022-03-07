@@ -1,12 +1,13 @@
 const Stories = require("../../../store/story/model")
 const StoreAds = require("../../../store/advertisement/model")
-const AdminStoryAds = require("../../../admin/advertisement/model")
+const AdminStoryAds = require("../../../admin/advertisement/model");
+const ApiError = require("../../../../errors/ApiError");
 
 const route = async (req,res,next) => {
     try {
         let { params, kuserData,query } = req;
         if(!query.type){
-            return res.status(404).send({ status: false, message: "Not Found Any Data"})
+            return next(new ApiError("query type is necessary", 400))
         }else{
             if(query.type === "admin_ads"){
                 await AdminStoryAds.findOne({ $and: [ {_id: params.id}, { view: { $in : [ kuserData.id ]}}] })
@@ -18,7 +19,7 @@ const route = async (req,res,next) => {
                             }
                         })
                         if(!data)
-                            return res.status(400).send({ status: false, message: "Not Found Single Admin Story !"})
+                            return next(new ApiError("Admin advertisement story Not found",404))
                         return res.status(200).send({ status: true, message: "Find Single Stories success and View story set ", data })
                     }else{
                         return res.status(200).send({ status: true, message: "Find Single Stories success", data })
@@ -35,7 +36,7 @@ const route = async (req,res,next) => {
                             }
                         })
                         if(!data)
-                            return res.status(400).send({ status: false, message: "Not Found Single Store Story !"})
+                            return next(new ApiError("Store advertisement story Not found",404))
                         return res.status(200).send({ status: true, message: "Find Single Stories success and View story set ", data })
                     }else{
                         return res.status(200).send({ status: true, message: "Find Single Stories success", data })
@@ -52,7 +53,7 @@ const route = async (req,res,next) => {
                             }
                         })
                         if(!data)
-                            return res.status(400).send({ status: false, message: "Not Found Single Store Story !"})
+                            return next(new ApiError("Store story Not found",404))
                         return res.status(200).send({ status: true, message: "Find Single Stories success and View story set ", data })
                     }else{
                         return res.status(200).send({ status: true, message: "Find Single Stories success", data })
@@ -62,15 +63,12 @@ const route = async (req,res,next) => {
         }
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {
-        return res
-            .status(422)
-            .send({ status: false, message: `File Already exists: ${error}` });
-        } else {
-        return res.status(500).send({
-            status: false,
-            message: `User Single Stories ,Something Missing => ${error}`,
-        });
+          next(new ApiError(error?.message, 422));
         }
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message));
     }
 };
 

@@ -10,12 +10,12 @@ const storage = new Storage({
 
 const bucket = storage.bucket(String(process.env.BUCKET_STORES));
 
-const Upload = async (file , username) => {
+const Upload = async (file , storeId) => {
   try {
 
     if(!file)
       return { status: 400, message: "Please upload a file!" }
-    const blob = bucket.file(username+"/"+file.originalname.replace(/ /g, "_"));
+    const blob = bucket.file(storeId+"/"+file.originalname.replace(/ /g, "_"));
     const blobStream = blob.createWriteStream({
       resumable: false,
     });
@@ -46,7 +46,7 @@ const Upload = async (file , username) => {
   };
 };
   //delete
-const Delete = async (adsId) => {
-  await bucket.deleteFiles({ prefix: `${adsId}` });
+const Delete = async (storeId) => {
+  await bucket.deleteFiles({ prefix: `${storeId}` });
 };
 module.exports = {Upload,Delete}

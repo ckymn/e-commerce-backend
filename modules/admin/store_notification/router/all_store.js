@@ -1,20 +1,28 @@
 const Data = require("../../../store/auth/model");
+const ApiError = require("../../../../errors/ApiError")
 
 const route = async (req,res,next) => {
     try {
         let d_w = await Data.find({"is_approved": { $in: "wait" }}).lean();
-        let d_n = await Data.find({"is_approved": { $in: "no" }}).lean();
+        let d_n = await Data.find({"is_approved": { $in: "not" }}).lean();
         let d_y = await Data.find({"is_approved": { $in: "yes" }}).lean();
-
-        if(!d_w.length && !d_n.length && !d_y.length)
-            return res.status(404).send({ status: false, message: "Not Found Store Notification "})  
-        return res.status(200).send({ status: true, message: "All Store Data success return", data: { d_w, d_n, d_y }})
+        if(!d_w)
+            return next(new ApiError("All store notification not found",404));
+        return res
+          .status(200)
+          .send({
+            status: true,
+            message: "All Store Data success return",
+            data: { d_w , d_n, d_y },
+          });
     } catch (error) {
-        if(error){
-            if(error.message === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `Mongo Connect Error => ${error}`})
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
         }
-        return res.status(500).send({ status: false, message: `All Store Notifications => ${error}`})
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message, 500));
     }
 };
 

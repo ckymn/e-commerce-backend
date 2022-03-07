@@ -1,23 +1,27 @@
 const Data = require("../../../user/auth/model")
+const ApiError = require("../../../../errors/ApiError")
 
 const route = async (req, res, next) => {
     try {
         let data = await Data.find({})
             .populate({ path: "follow", select: 'username -_id' })
-            .populate({ path: "favorite_product"})
-            .populate({ path: "store_comment"})
-            .populate({ path: "product_comment"})
+            .populate({ path: "favorite_product", select:"title"})
+            .populate({ path: "store_comment", select: "comment rate"})
+            .populate({ path: "product_comment", select: "comment rate"})
+            .select("-password")
             .lean().exec();
        
         if(!data)
             return res.status(404).send({ status: false, message: "Not Found Store User"})
         return res.status(200).send({status: true, message: "All Users Success", data })
     } catch (error) {
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `File Already exists!  : ${error}` })
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
         }
-        return res.status(500).send({ status: false, message: `All Store Users Error Cannot Upload Something Missing => ${error}`})
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message, 500));
     }
 }
 

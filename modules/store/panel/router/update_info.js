@@ -1,20 +1,27 @@
+const ApiError = require("../../../../errors/ApiError");
 const Data = require("../../auth/model")
-
 
 const route = async (req, res, next) => {
     try {
         let { id } = req.userData;
         let { name, surname, email, username } = req.body;
-        let _data = await Data.findOneAndUpdate({ _id: id },{$set: { name ,surname,email,username }}, { new: true }).lean().exec();
-        if(!_data)
-            return res.status(400).send({ status: false, message: "Not Update Information about Seller"})
-        return res.status(200).send({ status: true, message: "Seller Information Update success", data: _data })
+        
+        let data = await Data.findOneAndUpdate(
+          { _id: id },
+          { $set: { name, surname, email } },
+          { new: true }
+        )
+        if(!data)
+            return next(new ApiError("Store update not found",404));
+        return res.status(200).send({ status: true, message: "Seller Information Update success", data })
     } catch (error) {
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `File Already exists!: ${error} `})
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
         }
-        return res.status(500).send({ status: false, message: `Update Information Seller Cannot Upload , Something Missing => ${error}`})
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message));
     }
 }
 

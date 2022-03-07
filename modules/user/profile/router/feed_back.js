@@ -1,17 +1,23 @@
 const { sendEmailToVitrin} = require("../../../../utils")
+const ApiError = require("../../../../errors/ApiError")
 
 const route = async (req,res,next) => {
     try {
         let { body, kuserData } = req;
-        console.log(kuserData)
         let { email, feed_back } = body;
+
         let _email = await sendEmailToVitrin(email,`send by ${kuserData.sub}`,feed_back)
         if(_email.status != 200)
-            return res.status(_email.status).send({ status: false, message: _email.message})
+            return next(new ApiError(_email.message,_email.status))
         return res.status(_email.status).send({ status: false, message: _email.message})
     } catch (error) {
-        if(error)
-            return res.status(500).send({ status: false, message: `Something Error Feed Back ${error}`})
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
+        }
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message));
     }
 };
 
