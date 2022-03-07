@@ -3,5 +3,6 @@ module.exports = {
     active: require("./active"),
     ip_mid: require("./requestIp"),
     errorHandler: require("./errorHandler"),
-    idChecker: require("./idChecker")
+    idChecker: require("./idChecker"),
+    validate: require("./validate")
 }

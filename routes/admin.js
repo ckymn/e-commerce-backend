@@ -7,6 +7,9 @@ const { uploadImage } = require("../utils")
 
 //middleware
 const middleware = require("../middlewares");
+//validations
+const schemas = require("../validations/project");
+
 //admin_get
 const admin_home = require("../modules/admin/admin_home/router")
 const advertisement_notification = require("../modules/admin/advertisement_notification/router")
@@ -23,7 +26,7 @@ const sector = require("../modules/admin/sector/router");
 const admin_advertisement  = require("../modules/admin/advertisement/router")
 const login = require("../modules/admin/login/router")
 const subscribe = require("../modules/admin/subscriptions/router")
-const solutionPartner = require("../modules/admin/solution_partners/router")
+const solutionPartner = require("../modules/admin/solution_partners/router");
 
 //admin_get
 router.get(`/admin/homePage`, middleware.authJwt,admin_home.admin_panel);
@@ -53,7 +56,7 @@ router.get(`/admin/app_notification/:id`,middleware.idChecker(), middleware.auth
 router.get(`/admin/logout`, middleware.authJwt,login.logout)
 
 //admin_post
-router.post(`/admin/register`,uploadImage.single("img"),login.register)
+router.post(`/admin/register`,middleware.validate(schemas.createValidation),uploadImage.single("img"),login.register)
 router.post(`/admin/login`,login.login)
 router.post(`/admin/forgot_password`,middleware.authJwt,login.forgot_password)
 router.post(`/admin/reset_password`,middleware.authJwt,login.reset_password)
