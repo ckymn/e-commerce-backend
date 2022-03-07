@@ -39,19 +39,13 @@ const route = async (req, res, next) => {
             }   
         }
     } catch (error) {
-      console.log(error);
-      if (error.name === "MongoError" && error.code === 11000) {
-        return res
-          .status(422)
-          .send({ status: false, message: `File Already exists!  : ${error}` });
-      } else {
-        return res
-          .status(500)
-          .send({
-            status: false,
-            message: `Admin/Update Store, Something Missing => ${error}`,
-          });
-      }
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
+        }
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message, 500));
     }
 }
 

@@ -1,23 +1,26 @@
 const Data = require("../../auth/model")
+const ApiError = require("../../../../errors/ApiError")
 
 const route = async (req,res,next) => {
     try {
         let { params, body , kuserData} = req;
+
         await Data.findOne({ _id: kuserData.id })
             .select("favorite_product -_id")
             .populate({ path: "favorite_product" })
             .lean().exec((err,data) => {
                 if(data.length === 0)
-                    return res.status(404).send({ status: false , message: "Product all Follow failed On User Data !"})
+                    return next(new ApiError("All Product Favorite Not Found",404))
                 return res.status(200).send({ status: true, message: "Product Add Favorite Success", data })
             })
-
     } catch (error) {
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(422).send({ status: false, message: `File Already exists: ${error}`})
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
         }
-        return res.status(422).send({ status: false, message: `Product Add Favorite ,Something Missing => ${error}`,data:null})
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message));
     }
 }
 

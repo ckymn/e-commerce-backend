@@ -1,13 +1,13 @@
 const Data = require("../model");
 const Store = require("../../auth/model")
-const Sectors = require("../../../admin/sector/model")
+const ApiError = require("../../../../errors/ApiError")
 
 const route = async (req, res, next) => {
     try {
         let { body , userData} = req;
         
         let _data = await Store.findOne({ _id: userData.id }).lean();
-        let _pr = await new Data({
+        let p_create = await new Data({
             ...body,
             location: {
                 coordinates: [ parseFloat(body.long),parseFloat(body.lat) ]
@@ -22,16 +22,17 @@ const route = async (req, res, next) => {
             author: userData.id,
             phone: _data.phone
         }).save();
-        if(!_pr)
-            return res.status(400).send({ status: false, message: "Add Product doesn't work"})
+        if(!p_create)
+            return next(new ApiError("Product create doesn't work",400))
         return res.status(200).send({ status: true, message: "Add Product worked"})
     } catch (error) {
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(422).send({ status: false, message: `File Already exists!  : ${error}` })
-        }else{
-            return res.status(422).send({ status: false, message: `Store Add Products Error Cannot Upload Something Missing => ${error}`})
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
         }
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message));
     }
 }
 

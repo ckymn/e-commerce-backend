@@ -1,39 +1,49 @@
 const Data = require("../model")
 const storage = require("../../../../uploads/images")
 const { v4: uuidv4 } = require("uuid")
+const ApiError = require("../../../../errors/ApiError")
 
 const route = async (req, res, next) => {
     try {
       let { file, files, userData } = req;
+
       if(file){
         let data = await Data.create({ author: userData.id });
+        if(!data)
+          return next(new ApiError("Create store image didn't work",400));
         const str = await storage.Upload(file, data._id);
         if (str.status !== 200)
-          return res.status(str.status).send({ status: false, message: str.message });
-        await Data.updateOne({ _id: data.id },
+          return next(new ApiError(str.message,str.status));
+        let u_img = await Data.updateOne({ _id: data.id },
           {
             $set: {
               url: str.publicUrl,
             },
           }
         );
+        if(u_img.matchedCount === 0)
+          return next(new ApiError("Image update didn't update",404));
         return res
           .status(200)
           .send({ status: true, message: "Upload Images Success", data });
       
       }
       if (files) {
-        console.log('files')
         files.map(async (i) => {
           let data = await Data.create({ author: userData.id });
+          if(!data)
+            return next(new ApiError("Create store images didn't work",400));
+          // ! GCS HATA YAKALAMA
           const str = await storage.Upload(i, data._id);
-          await Data.updateOne({ _id: data._id },
+          let u_img = await Data.updateOne({ _id: data._id },
             {
               $set: {
                 url: str.publicUrl,
               },
             }
           );
+          if(u_img.matchedCount === 0)
+            return next(new ApiError("Image update didn't update",404));
         });
         return res
           .status(200)
@@ -41,17 +51,12 @@ const route = async (req, res, next) => {
       }
     } catch (error) {
       if (error.name === "MongoError" && error.code === 11000) {
-        return res
-          .status(422)
-          .send({ status: false, message: `File Already exists!  : ${error}` });
-      } else {
-        return res
-          .status(422)
-          .send({
-            status: false,
-            message: `Upload Images , Something Missing => ${error}`,
-          });
+        next(new ApiError(error?.message, 422));
       }
+      if (error.code === 27) {
+        next(new ApiError("We Don't Have Any Data", 500, null));
+      }
+      next(new ApiError(error?.message));
     }
 }
 

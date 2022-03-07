@@ -2,13 +2,18 @@ const Store = require("../../../store/auth/model")
 const Product = require("../../../store/products/model")
 const { ObjectId } = require("mongodb");
 const { Store_Star } = require("../../star/model");
+const ApiError = require("../../../../errors/ApiError");
 
 const route = async (req, res, next) => {
     try {
         let { kuserData ,params, query } = req; 
         let current_time = new Date();
 
+        // ! BURDA YAPILAMASI GEREKENLER VAR ..
+
         let _data = await Store.findOne({ _id: params.id }).lean();
+        if(!_data)
+          return next(new ApiError("Store not Found !",404))
         
         let start_store = _data.created_at.getDate();
         // search count - location search count
@@ -165,22 +170,13 @@ const route = async (req, res, next) => {
              },
           });
     }catch (error) {
-      console.log(error)
-      if (error.code === 11000) {
-        return res
-          .status(422)
-          .send({
-            status: false,
-            message: `Single Store and Products of Store, Already Mongo Exist`,
-          });
-      } else {
-        return res
-          .status(422)
-          .send({
-            status: false,
-            message: `User/Single Store , Missing Error : ${error}`,
-          });
+      if (error.name === "MongoError" && error.code === 11000) {
+        next(new ApiError(error?.message, 422));
       }
+      if (error.code === 27) {
+        next(new ApiError("We Don't Have Any Data", 500, null));
+      }
+      next(new ApiError(error?.message));
     }
 }
 module.exports = route

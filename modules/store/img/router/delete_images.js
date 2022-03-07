@@ -1,5 +1,6 @@
 const Data = require("../model");
-const storage = require("../../../../uploads/images")
+const storage = require("../../../../uploads/images");
+const ApiError = require("../../../../errors/ApiError");
 
 const route = async (req, res, next) => {
   try {
@@ -8,23 +9,23 @@ const route = async (req, res, next) => {
 
     if (Array.isArray(arr) && arr.length > 0) {
       arr.map(async (i) => {
-        await Data.deleteOne({ $and: [{ author: userData.id }, { _id: i }] });
+        let d_img = await Data.deleteOne({ $and: [{ author: userData.id }, { _id: i }] });
+        if(d_img.deletedCount === 0)
+          return next(new ApiError("Store images didn't remove",409))
+        //! GCS REMOVE 
         await storage.Delete(i).catch(console.error);
       });
       return res.status(200).send({ status: false, message: "Delete Images Success"})
     }
-    return res.status(400).send({ status: false, message: "Firstly Upload Image For Delete"})
+    return next(new ApiError("Delete images doesn't array",400))
   } catch (error) {
     if (error.name === "MongoError" && error.code === 11000) {
-      return res
-        .status(422)
-        .send({ status: false, message: `File Already exists: ${error}` });
-    } else {
-      return res.status(500).send({
-        status: false,
-        message: `Store Add Images ,Something Missing => ${error}`,
-      });
+      next(new ApiError(error?.message, 422));
     }
+    if (error.code === 27) {
+      next(new ApiError("We Don't Have Any Data", 500, null));
+    }
+    next(new ApiError(error?.message));
   }
 }
 

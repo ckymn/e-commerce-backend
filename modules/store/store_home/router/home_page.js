@@ -5,7 +5,8 @@ const Data = require("../../auth/model"),
   StoreFollow = require("../../../user/follow/model"),
   { Store_Star , Product_Star} = require("../../../user/star/model"),
   mongoose = require("mongoose"),
-  Payment = require("../../payment/model");
+  Payment = require("../../payment/model"),
+  ApiError = require("../../../../errors/ApiError");
 
 
 const route = async (req, res, next) => {
@@ -151,6 +152,7 @@ const route = async (req, res, next) => {
     let wp_msg_count = Object.values(wp.wp_msg_count);
     let search_count = Object.values(sc_lc.search_count);
     let location_search_count = Object.values(sc_lc.location_search_count)
+
     return res.status(200).send({
       status: true,
       message: "Store Home Page Success",
@@ -167,17 +169,13 @@ const route = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.log(error)
-    if (error) {
-      if (error.name === "MongoError" && error.code === 11000)
-        return res.status(error.code).send({
-          status: false,
-          message: `Find Store, MongoError Database Already Exist : ${error}`,
-        });
+    if (error.name === "MongoError" && error.code === 11000) {
+      next(new ApiError(error?.message, 422));
     }
-    return res
-      .status(500)
-      .send({ status: false, message: `Find Store, Missing Error : ${error}` });
+    if (error.code === 27) {
+      next(new ApiError("We Don't Have Any Data", 500, null));
+    }
+    next(new ApiError(error?.message));
   }
 };
 module.exports = route;

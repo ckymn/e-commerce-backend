@@ -1,5 +1,7 @@
 const Data = require("../model");
 const storage = require("../../../../uploads/subscriptions")
+const ApiError = require("../../../../errors/ApiError")
+
 
 const route = async (req, res, next) => {
     try {
@@ -12,11 +14,13 @@ const route = async (req, res, next) => {
             return res.status(200).send({ status: true, message: "Delete Subscribe Success"})
         })
     } catch (error) {
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `File Already exists!  : ${error}` })
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
         }
-        return res.status(500).send({ status: false, message: `Delete Subscription, Something Missing => ${error}`})
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message, 500));
     }
 }
 

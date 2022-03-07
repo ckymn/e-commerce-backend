@@ -32,18 +32,13 @@ const route = async (req,res,next) => {
           },
         });
     } catch (error) {
-      if (error.message === "MongoError" && error.code === 11000) {
-        return res
-          .status(422)
-          .send({ status: false, message: `Mongo Already Exist => ${error}` });
-      } else {
-        return res
-          .status(500)
-          .send({
-            status: false,
-            message: `Profile Page Erro , Missing Error => ${error}`,
-          });
+      if (error.name === "MongoError" && error.code === 11000) {
+        next(new ApiError(error?.message, 422));
       }
+      if (error.code === 27) {
+        next(new ApiError("We Don't Have Any Data", 500, null));
+      }
+      next(new ApiError(error?.message));
     }
 };
 

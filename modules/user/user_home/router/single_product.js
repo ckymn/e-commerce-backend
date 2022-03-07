@@ -1,9 +1,11 @@
 const { ObjectId } = require("mongodb");
+const ApiError = require("../../../../errors/ApiError");
 const Products = require("../../../store/products/model")
 
 const route = async (req,res,next) => {
     try {
         let { params, query ,kuserData} = req;
+
         let data = await Products.aggregate([
           { $match: { _id: ObjectId(params.id) } },
           {
@@ -11,7 +13,11 @@ const route = async (req,res,next) => {
               from: "product_comments",
               let: { comments: "$comments" },
               pipeline: [
-                { $match: { $expr: { $in: ["$_id", "$$comments"] } } },
+                {
+                  $match: {
+                    $and: [{ $expr: { $in: ["$_id", "$$comments"] } }, { is_approved: "yes" }],
+                  },
+                },
                 { $project: { _id: 0 } }, // suppress _id
               ],
               as: "product_of_comments",
@@ -40,13 +46,15 @@ const route = async (req,res,next) => {
             },
           },
           {
-            $project:{
-                _id:0,
-                item: "$$ROOT",
-                is_favorite:{ $in:[ObjectId(kuserData.id),"$favorite"]},
-            }
-          }
+            $project: {
+              _id: 0,
+              item: "$$ROOT",
+              is_favorite: { $in: [ObjectId(kuserData.id), "$favorite"] },
+            },
+          },
         ]);
+        if(data.length === 0)
+          return next(new ApiError("Single Product Not Found",404))
         return res
           .status(200)
           .send({
@@ -55,11 +63,13 @@ const route = async (req,res,next) => {
             data,
           });
     } catch (error) {
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `File Already exists: ${error}`})
-        }
-        return res.status(500).send({ status: false, message: `User Single Product ,Something Missing => ${error}`})
+      if (error.name === "MongoError" && error.code === 11000) {
+        next(new ApiError(error?.message, 422));
+      }
+      if (error.code === 27) {
+        next(new ApiError("We Don't Have Any Data", 500, null));
+      }
+      next(new ApiError(error?.message));
     }
 };
 

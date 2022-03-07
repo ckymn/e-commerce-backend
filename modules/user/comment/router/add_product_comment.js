@@ -2,6 +2,7 @@ const { Product_Comment } = require("../model")
 const { Product_Star } = require("../../star/model")
 const Product = require("../../../store/products/model")
 const User = require("../../auth/model")
+const ApiError = require("../../../../errors/ApiError")
 
 const route = async( req,res,next) => {
     try {
@@ -15,7 +16,7 @@ const route = async( req,res,next) => {
             author_name: user.username
         }).save();
         if(!_data)
-            return res.status(400).send({ status: false, message: "Add Product Comment Data Error"})
+            return next(new ApiError( "Add Product Comment Data Error",400));
         // product update comments
         let p_data = await Product.findOneAndUpdate({ _id: params.id }, 
             {
@@ -24,7 +25,7 @@ const route = async( req,res,next) => {
                 }
             }, { new: true })
         if(!p_data)
-            return res.status(400).send({ status: false, message: "Add Product Comment Data to Product success but Update Product Comment error"})
+            return next(new ApiError( "Update Product Comment Not Found!",404));
         // user update product_comment
         let u_data = await User.findOneAndUpdate({ _id: kuserData.id }, 
             {
@@ -33,7 +34,7 @@ const route = async( req,res,next) => {
                 }
             }, { new: true })
         if(!u_data)
-            return res.status(400).send({ status: false, message: "Add Product Comment Data to User success but Update Product Comment error"})
+            return next(new ApiError( "Update User Comment Field Not Found!",404));
         
         let pruduct_star = await Product_Star.create({
             rate: body.rate,
@@ -42,15 +43,17 @@ const route = async( req,res,next) => {
             store_id: p_data.author,
         });
         if(!pruduct_star)
-            return res.status(400).send({ status: false, message: "Product Start error"})
+            return next(new ApiError( "Create Product Star Error",400));
             
         return res.status(200).send({ status: true, message: "User to Product Comment Success", data: _data })
     } catch (error) {
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `Mongo Error ${error}`})
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
         }
-        return res.status(500).send({ status: false, message: `User Comment Add of Product, Something Missing Error : ${error}`})
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message));
     }
 }
 

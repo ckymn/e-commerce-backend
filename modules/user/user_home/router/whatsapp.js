@@ -1,3 +1,4 @@
+const ApiError = require("../../../../errors/ApiError");
 const Data = require("../../../store/auth/model");
 
 const route = async (req, res, next) => {
@@ -5,6 +6,9 @@ const route = async (req, res, next) => {
     let { params, kuserData } = req;
     let current_time = new Date();
     let _data = await Data.findOne({ _id: params.id }).lean();
+    if(!_data)
+      return next(new ApiError("Store Not found",404));
+      
     let start_store = _data.created_at.getDate();
     
     if(start_store - current_time.getDate() === 0){
@@ -82,18 +86,13 @@ const route = async (req, res, next) => {
     
     res.status(200).send({ status: true, message: "Whatsapp counter update" });
   } catch (error) {
-    if (error) {
-      if (error.name === "MongoError" && error.code === 11000)
-        return res
-          .status(500)
-          .send({ status: false, message: `File Already exists!  : ${error}` });
+    if (error.name === "MongoError" && error.code === 11000) {
+      next(new ApiError(error?.message, 422));
     }
-    return res
-      .status(500)
-      .send({
-        status: false,
-        message: `Store login  Error Cannot Upload Something Missing => ${error}`,
-      });
+    if (error.code === 27) {
+      next(new ApiError("We Don't Have Any Data", 500, null));
+    }
+    next(new ApiError(error?.message));
   }
 };
 module.exports = route;

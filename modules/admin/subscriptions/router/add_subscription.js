@@ -1,5 +1,6 @@
 const Data = require("../model");
 const storage = require("../../../../uploads/subscriptions")
+const ApiError = require("../../../../errors/ApiError")
 
 const route = async (req, res, next) => {
     try {
@@ -11,18 +12,24 @@ const route = async (req, res, next) => {
             return res.status(400).send({ status: false, message: `Not Found Subscribe Data`})
         const imagesUrl = await storage.Upload(files,data._id);
         let str = await Promise.all(imagesUrl).then(d => d );
-        await Data.updateOne({_id: data._id},{
+        let u_sbs = await Data.updateOne({_id: data._id},{
             $push: {
                 img: str,
             },
         })
-        return res.status(200).send({ status: true, message: "Subscribe Data success", data })
+        if(u_sbs.matchedCount === 0)
+            return next(new ApiError("Subscribe dont match",409))
+        return res
+          .status(200)
+          .send({ status: true, message: "Subscribe Data success", data });
     } catch (error) {
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `File Already exists!  : ${error}` })
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
         }
-        return res.status(500).send({ status: false, message: `Add Subscription, Something Missing => ${error}`})
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message, 500));
     }
 }
 

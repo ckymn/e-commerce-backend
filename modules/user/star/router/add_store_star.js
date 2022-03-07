@@ -1,5 +1,6 @@
 const { Store_Star } = require("../model")
 const Store = require("../../../store/auth/model")
+const ApiError = require("../../../../errors/ApiError")
 
 const route = async( req,res,next) => {
     try {
@@ -13,26 +14,28 @@ const route = async( req,res,next) => {
                         store_id: params.id
                     },async (err,data) => {
                         if(err)
-                            return res.status(400).send({ status: false, message: "Create Star Error !"})
+                            return next(new ApiError("Create star store !",400))
                         let s_data = await Store.findOneAndUpdate({ _id: params.id },
                             {
                                 $push: {
                                     "star": data._id
                                 }
                             }, { new: true })
-                        if(!s_data)
-                            return res.status(400).send({ status: false, message: "Update Store Star Data success "})
-                        })
+                        if(!s_data) 
+                            return next(new ApiError("Update store star Not found !",404))
+                    })
                     return res.status(200).send({ status: true, message: "User to Store Comment Success" })
                 }
-                return res.status(400).send({ status: false, message: "Add Store Star Already Exist "})
+                return next(new ApiError("Store star already exist !",400))
             })
     } catch (error) {
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `Mongo Error ${error}`})
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
         }
-        return res.status(500).send({ status: false, message: `User Comment Add of Store, Something Missing Error : ${error}`})
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message));
     }
 }
 
