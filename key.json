@@ -1,0 +1,12 @@
+{
+    "type": "service_account",
+    "project_id": "famous-hull-332022",
+    "private_key_id": "16ba56f52a5ee1ea9738337220587f7406b9c131",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCmGFMwfjqft1ir\nTCUMUMcQoXLkqarhW5g2LZFgS4eDhK4c2uJncUQU5qRnaAqZ/h0lU8c02OXI9Kfx\nYk3Nm69aW5tsYQApb3Hg2ulu25OycDVlUtj56kwApqjCPxHhU+OVOGYVpN+pF7gD\nh7q1+TqzgdV6AjUJPepRiBTq2+EiYh3EdFacu9ceGdkOW5+A9QFHzevBTgo47z5r\nV8THZbKFhsKESE26JZ3U56wmYIjeZkivK1HSctylyinye6/8qtl0TzI1m1nbz6b/\nzdQuUPCFbFioCDW5QCy9htWw3W4e2PkeInt3GvuWmnmxRCKAMGOQP3V5gWtfdWwY\ncgZ16TQdAgMBAAECgf8guJkAQXd+VNwrjZjyD+bBNVF1qbL31LW45ZaTjJHqG0Ht\nj3XGldaYAz5xQtIpLt4XlgvCMtaJc4c7/ggztQkSVQrJecoOX6ptdxljkt5sYmpm\nx2t/8rD1Tb2+IFlc3/9CkRWLYTyMk1tgRZi+lh8lCszHzZZx/+tDJKWC0mgH3bab\n5y7O53FjzJDNns7G1vsQw3imlJwM88aZhmr7vwG7oygZhA8zcrPdBoM0BADNBG51\ntsMYlmKvvtUHHq35NXG6ppR1rJ6VIvAhPPd1iGvZi851anQxbW+5Amj2R/e3BWbX\nTBP4kGUIPlf2MlO8JU26ZJ+Nr2rrna2IN8u4hdMCgYEA4gc/ZeG47FiuLfQFen3R\n1HDeh7+vjCrol65AI/7bcRiroGPJQjeTfUv6Rnw5EFWfKIeVuWoctssNvFSNNtMw\n3swSWCiSyTfTJwUsbBNF5qs5uFGeYBotS8fwLeMcSF4a8VxaGGhX1vomUKFWYIgB\nzKNR/BBWJ+JP6RrsVHJX9v8CgYEAvB6VQbhe3yCTUWpFK0mfPurYXKiGqud5EObh\nZQNEFmKmOfcui1cMcNjRGAaQV8uCGNNuOsoNUPaqkUjl+cnErPiiKCs23NSZ68Lq\nWZF8VTv943xexdcsco4kyXNHAOMlqmGuvb3XHS920jxkwym5++babq8sw4uG+uDy\n23DG0OMCgYEAlr/6urrHmWq0ERYVqVLNZgE5ihSAwt3Db5baVKegOFgZ78ld6/oh\nNoo8DFLBxHE2y9NSOu3Y5Nmc+aTy4kQM7ivxeDbnX6kJ/ZZnwFVCY8yDnLljBfmv\niEF7oT8+F84b7iqINIszOsBwWYqhj5RmjtPG1HUY4VUBsxkv0krI/IUCgYAd48oZ\nWB8S2s0teXImD5uS1qOsDUbgbsjoq5aSgzNVTzVULnchwqICaCDI7XoPyRERur5f\n7uywuZCeZvPLfYiXZyX0tfEQo2MVd7Heq2QS8uZDN+ajDq5MQVONApj8hhrc+IpY\nMYq1Y25At0HXVJDtel+oiILXSxsWT5mmzkN4uwKBgQCSPsWdfis1RC7n24GYtO/K\nnVy7w30IqYEP6GtupEO2ZS/3voJLWXdn6ysVBH07l62sZrxp607AZx0pybt5S98D\nOA71hIqakJCzjoVcSZt697Eb5bkGz31iiuw4m/c2EE1UlJ+9RS0SOC5amVx/p6xF\nijZEJmSmMU4IBSUUu3LISw==\n-----END PRIVATE KEY-----\n",
+    "client_email": "admins@famous-hull-332022.iam.gserviceaccount.com",
+    "client_id": "115546413404512315295",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/admins%40famous-hull-332022.iam.gserviceaccount.com"
+  }
