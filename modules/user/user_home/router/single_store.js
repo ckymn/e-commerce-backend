@@ -41,7 +41,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if(current_time.getDate() - start_store === 3){
+        if(current_time.getDate() - start_store === 3 || 6){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -49,7 +49,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if(current_time.getDate() - start_store=== 4){
+        if(current_time.getDate() - start_store=== 4 || 8){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -57,7 +57,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if(current_time.getDate() - start_store=== 5){
+        if(current_time.getDate() - start_store=== 5 || 10){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -65,7 +65,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if(current_time.getDate() - start_store=== 6){
+        if(current_time.getDate() - start_store=== 6 || 12){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -73,7 +73,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if (current_time.getDate() - start_store === 7) {
+        if (current_time.getDate() - start_store === 7 || 14) {
           await Store.findOneAndUpdate(
             { _id: params.id },
             {
@@ -158,17 +158,15 @@ const route = async (req, res, next) => {
           }
         ])
 
-        return res
-          .status(200)
-          .send({
-            status: true,
-            message: "Single Store and Products of Store find Success",
-            data: {
-              store, 
-              store_star_avg,
-              product
-             },
-          });
+        return res.status(200).send({
+          status: true,
+          message: "Single Store and Products of Store find Success",
+          data: {
+            store,
+            store_star_avg,
+            product,
+          },
+        });
     }catch (error) {
       if (error.name === "MongoError" && error.code === 11000) {
         next(new ApiError(error?.message, 422));

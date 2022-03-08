@@ -6,7 +6,7 @@ const ApiError = require("../../../../errors/ApiError")
 
 const route = async (req, res, next) => {
   try {
-    const { email, password, username } = req.body;
+    let { email, password, username } = req.body;
     let _store = await Data.findOne({ $or: [{ username }, { email }] });
     if(!_store)
       return next(new ApiError("Store not found",404));

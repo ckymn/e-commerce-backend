@@ -1,6 +1,5 @@
 const Data = require("../../auth/model");
 const StoreBanner = require("../../../store/advertisement/model")
-const StoreStory = require("../../../store/story/model")
 const AdminAdsStory = require("../../../admin/advertisement/model")
 const Stores = require("../../../store/auth/model");
 const StoreAds = require("../../../store/advertisement/model")
@@ -90,70 +89,66 @@ const route = async (req, res, next) => {
           }
         }
       ])
-      let store_story = await StoreStory.aggregate([
-        {
-          $geoNear: {
-            near: {
-              type: "Point",
-              coordinates: [parseFloat(query.long), parseFloat(query.lat)],
-            },
-            spherical: true,
-            maxDistance: query.dst
-              ? parseFloat(query.dst) * 1609.34
-              : 900 * 1609.34,
-            distanceMultiplier: 1 / 1609.34,
-            distanceField: "StoreStoryDst",
-          },
-        },
-        {
-          $match: {
-            $and: [
-              { language: _data.language },
-              { story_time: { $gte: current_time } },
-            ],
-          },
-        },
-        {
-          $lookup: {
-            from: "users",
-            let: { author: "$author" },
-            pipeline: [
-              {
-                $match: {
-                  $expr: { $in: ["$$author", "$follow"] }
-                },
-              },
-            ],
-            as: "matched_store_story",
-          },
-        },
-      ]);
-      let _story = await Data.aggregate([
+      //? eski
+      // let store_story = await StoreStory.aggregate([
+      //   {
+      //     $geoNear: {
+      //       near: {
+      //         type: "Point",
+      //         coordinates: [parseFloat(query.long), parseFloat(query.lat)],
+      //       },
+      //       spherical: true,
+      //       maxDistance: query.dst
+      //         ? parseFloat(query.dst) * 1609.34
+      //         : 900 * 1609.34,
+      //       distanceMultiplier: 1 / 1609.34,
+      //       distanceField: "StoreStoryDst",
+      //     },
+      //   },
+      //   {
+      //     $match: {
+      //       $and: [
+      //         { language: _data.language },
+      //         { story_time: { $gte: current_time } },
+      //       ],
+      //     },
+      //   }, 
+      // ]);
+      let store_story = await Data.aggregate([
         { $match: { _id: ObjectId(kuserData.id) } },
         {
           $lookup: {
             from: "stores",
             let: { follow: "$follow" },
             pipeline: [
-              { $match: { $expr: { $in: ["$_id","$$follow"]}} },
+              { $match: { $expr: { $in: ["$_id", "$$follow"] } } },
               {
                 $lookup: {
                   from: "store_stories",
-                  let: { store_id: "$_id"},
-                  pipeline:[
-                    { 
+                  let: { store_id: "$_id" },
+                  pipeline: [
+                    {
                       $match: {
-                        $and: [ { $expr: { $in: ["$author","$$store_id"]} }, {story_time: { $gte: current_time}}]
-                      }
-                    }
+                        $and: [
+                          { $expr: { $eq: ["$author", "$$store_id"] } },
+                          { story_time: { $gte: current_time } },
+                        ],
+                      },
+                    },
                   ],
-                  as: "follow_stories"
-                }
-              }
+                  as: "follow_stories",
+                },
+              },
             ],
-            as: "follow_stores"
+            as: "follow_stores",
           },
         },
+        {
+          $project:{
+            _id: 1,
+            follow_stories: "$follow_stores.follow_stories"
+          }
+        }
       ]);
       let stores = await Stores.aggregate([
         {
@@ -218,12 +213,11 @@ const route = async (req, res, next) => {
         status: true,
         message: "Stores Success",
         data: {
-          // store_ads_banner,
-          // admin_ads_story,
-          // store_ads_story,
-          // store_story,
-          // stores,
-          _story
+          store_ads_banner,
+          admin_ads_story,
+          store_ads_story,
+          store_story,
+          stores,
         },
       });
     } catch (error) {
