@@ -57,12 +57,12 @@ router.get(`/admin/app_notification/:id`,middleware.idChecker(), middleware.auth
 router.get(`/admin/logout`, middleware.authJwt,login.logout)
 
 //admin_post
-router.post(`/admin/register`,middleware.validate(schemas.auth.register),uploadImage.single("img"),login.register)
+router.post(`/admin/register`,middleware.validate(schemas.register),uploadImage.single("img"),login.register)
 router.post(`/admin/login`,login.login)
 router.post(`/admin/forgot_password`,middleware.authJwt,login.forgot_password)
 router.post(`/admin/reset_password`,middleware.authJwt,login.reset_password)
 router.put(`/admin/update_password`,middleware.authJwt,login.update_password)
-router.post(`/admin/register_admin`,middleware.validate(schemas.auth.register), middleware.authJwt,login.admin_ekle)
+router.post(`/admin/register_admin`,middleware.validate(schemas.register), middleware.authJwt,login.admin_ekle)
 router.delete(`/admin/delete_admin/:id`,middleware.idChecker(), middleware.authJwt,login.admin_delete)
 router.put(`/admin/update_admin/:id`,middleware.idChecker(), middleware.authJwt,login.admin_update)
 router.post(`/admin/sector`, middleware.authJwt, sector.createSector);

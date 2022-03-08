@@ -7,7 +7,7 @@ const route = async (req, res, next) => {
     try {
       let { file, files, userData } = req;
 
-      if(file){
+      if(files.length === 1){
         let data = await Data.create({ author: userData.id });
         if(!data)
           return next(new ApiError("Create store image didn't work",400));
@@ -28,7 +28,7 @@ const route = async (req, res, next) => {
           .send({ status: true, message: "Upload Images Success", data });
       
       }
-      if (files) {
+      if (files.length > 1) {
         files.map(async (i) => {
           let data = await Data.create({ author: userData.id });
           if(!data)

@@ -39,7 +39,7 @@ const products = new mongoose.Schema(
     title: { type: String, required: true },
     description: { type: String, required: true }, 
     brand: { type: String, required: true },
-    style: { type: String, unique: true },
+    style: { type: String },
     phone: { type: String, required: true },
     categories: {
       sector: { type: ObjectId, ref:"sector"},

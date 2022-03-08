@@ -8,7 +8,7 @@ const { uploadImage } = require("../utils")
 //middleware
 const middleware = require("../middlewares");
 //validations
-const schemas = require("../validations/admin");
+const schemas = require("../validations/store");
 
 //store_get
 const store_home = require("../modules/store/store_home/router")
@@ -45,14 +45,14 @@ router.get(`/store/stories`,middleware.authJwt ,storeStory.all_story)
 router.get(`/store/home_page`,middleware.authJwt ,store_home.home_page)
 
 //store_post
-router.post(`/store/register`,middleware.validate(schemas.auth.register),uploadImage.single("img"),store_auth.register)
+router.post(`/store/register`,middleware.validate(schemas.register),uploadImage.single("img"),store_auth.register)
 router.post(`/store/login`,store_auth.login)
 router.post(`/store/forgot_password`,middleware.authJwt,store_auth.forgot_password)
 router.post(`/store/reset_password`,middleware.authJwt,store_auth.reset_password)
 router.put(`/store/update_password`,middleware.authJwt,store_auth.update_password)
 router.post(`/store/advertisement`, middleware.authJwt ,middleware.ip_mid.ip2_Middleware,uploadImage.array("img"),store_advertisement.add_advertisement)
 router.delete(`/store/advertisement/:id`,middleware.idChecker(), middleware.authJwt, all_advertisement.delete_advertisement);
-router.post(`/store/products`, middleware.authJwt, uploadImage.array('img',10),products.add_products)
+router.post(`/store/products`,middleware.authJwt, uploadImage.array('img',10),products.add_products)
 router.delete(`/store/product/:id`,middleware.idChecker(), middleware.authJwt, products.delete_product)
 router.put(`/store/product/:id`,middleware.idChecker(), middleware.authJwt, products.update_product)
 router.put(`/store/panel`,middleware.authJwt,panel.update_info);

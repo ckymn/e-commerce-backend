@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "@google-cloud/storage": "^5.18.0",
+    "@hapi/joi": "^17.1.1",
     "@supercharge/request-ip": "^1.1.2",
     "bad-words": "^3.0.4",
     "bcryptjs": "^2.4.3",
@@ -22,6 +23,7 @@
     "get-distance-between-points": "^1.2.0",
     "iyzipay": "^2.0.48",
     "joi": "^17.6.0",
+    "joi-objectid": "^4.0.2",
     "jsonwebtoken": "^8.5.1",
     "mime-types": "^2.1.34",
     "mongodb": "^4.2.0",

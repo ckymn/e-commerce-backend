@@ -7,7 +7,7 @@ const { uploadImage } = require("../utils")
 //middleware
 const middleware = require("../middlewares");
 //validations
-const schemas = require("../validations/admin");
+const schemas = require("../validations/user");
 
 //user_get
 const user_auth = require("../modules/user/auth/router")
@@ -33,7 +33,7 @@ router.post(`/user/profile`, middleware.authJwt, user_profile.profile)
 
  
 // user_post
-router.post(`/user/register`,middleware.validate(schemas.auth.register),uploadImage.single("img"),user_auth.register)
+router.post(`/user/register`,middleware.validate(schemas.register),uploadImage.single("img"),user_auth.register)
 router.post(`/user/login`,user_auth.login)
 router.post(`/user/forgot_password`,middleware.authJwt,user_auth.forgot_password)
 router.post(`/user/reset_password`,middleware.authJwt,user_auth.reset_password)

@@ -12,7 +12,6 @@ const route = async (req, res, next) => {
         if(!_admin)
             return next(new ApiError("Admin not found",404));
         let match = await bcrypt.compare(password, _admin.password)
-        console.log(match)
         if(!match)
             return next(new ApiError("Password or email invalid",400));
         let access_token = await jwt.sign({ id: _admin.id, role: _admin.role }, process.env.JWT_ACCESS_SECRET,{ expiresIn: process.env.JWT_ACCESS_TIME });
