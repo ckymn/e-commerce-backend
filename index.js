@@ -38,6 +38,11 @@ app.use(store);
 app.use(user);
 
 //! Error Handler
+app.use((req,res,next) =>{
+  let err = new Error("Not Found");
+  err.status = 404;
+  next(err);
+})
 app.use(errorHandler);  
 
 //run

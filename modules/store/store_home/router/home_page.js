@@ -13,6 +13,7 @@ const route = async (req, res, next) => {
   try {
     let { userData } = req;
     let current_time = new Date();
+    let store = await Data.findOne({ _id: userData.id }).lean();
 
     let total_followers = await StoreFollow.find({ store_id: userData.id })
     .count()
@@ -23,7 +24,7 @@ const route = async (req, res, next) => {
       .count()
       .lean()
       .exec();
-
+    //avg
     let s_avg = await Store_Star.aggregate([
       { $match: { store_id: ObjectId(userData.id) } },
       { $group: { _id: "avg_rate", rate: { $avg: "$rate" } } },
@@ -34,124 +35,64 @@ const route = async (req, res, next) => {
       { $match: { store_id: ObjectId(userData.id) } },
       { $group: { _id: "avg_rate", rate: { $avg: "$rate" } } },
     ]);
-    
     let total_product_point =  p_avg[0] ? p_avg[0].rate : 0
     
-    //whatsapp_view
-    let wp = await Store.findOne({ _id: userData.id }).lean();
-    //last_view [ burda da $dayOfMonth array de calismiyor]
-    let v_1 = await Store.aggregate([
+    //sells
+    let seller = await Payment.aggregate([
+      {$addFields:{"day":{$dayOfMonth:"$date"}}},
+      {$match:{ day: current_time.getDate()}}
+    ])
+    let total_daily_seller = seller.map(i => i._id);
+    await Data.findOneAndUpdate(
       {
-        $match: {
-          $and: [
-            { _id: ObjectId(userData.id) },
-            { "view.date": { $lte: new Date() } },
-          ],
-        },
+        $and: [
+          { _id: userData.id },
+          { last_sells_weekly: { $nin: [total_daily_seller] } },
+        ],
       },
       {
-        $project: {
-          _id: 0,
-          total_daily: { $size: "$view"}
+        $push: {
+          last_sells_weekly: total_daily_seller,
+          last_sells_monthly: total_daily_seller,
         },
       }
-    ]);
-    let v_2 = await Store.aggregate([
-      {
-        $match: {
-          $and: [
-            { _id: ObjectId(userData.id) },
-            { "view.date": { $gte: new Date() , $lte: new Date(+new Date() +7 * 24 * 60 * 60 * 1000) } },
-          ],
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          total_weekly: { $size: "$view"}
-        },
-      }
-    ]);
-    let v_3 = await Store.aggregate([
-      {
-        $match: {
-          $and: [
-            { _id: ObjectId(userData.id) },
-            { "view.date": { $gte: new Date(+new Date() +7 * 24 * 60 * 60 * 1000) , $lte: new Date(+new Date() +30 * 24 * 60 * 60 * 1000) } },
-          ],
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          total_monthly: { $size: "$view"}
-        },
-      }
-    ]);
-    // last_seller [ burda author:ObjectId(calismiyor)]
-    let s_1 = await Payment.aggregate([
-      {
-        $project:{
-          day: { $dayOfMonth: "$created_at"}
-        }
-      },
-      {
-        $match: {
-          $and: [
-            { author: ObjectId(userData.id) },
-            { day: { $eq: current_time.getDate() } },
-          ],
-        },
-      },
-      {
-        $count: "total_daily" 
-      }
-    ]);
-    let s_2 = await Payment.aggregate([
-      {
-        $match: {
-          $and: [
-            { author: ObjectId(userData.id) },
-            { date: { $gte: new Date() , $lte: new Date(+new Date() +7 * 24 * 60 * 60 * 1000) } },
-          ],
-        },
-      },
-      {
-        $count: "total_weekly" 
-      }
-    ]);
-    let s_3 = await Payment.aggregate([
-      {
-        $match: {
-          $and: [
-            { author: ObjectId(userData.id) },
-            { date: { $gte: new Date(+new Date() +7 * 24 * 60 * 60 * 1000) , $lte: new Date(+new Date() +30 * 24 * 60 * 60 * 1000) } },
-          ],
-        },
-      },
-      {
-        $count: "total_monthly" 
-      }
-    ]);
-    // search_count
-    let sc_lc = await Store.findOne({ _id: userData.id }).lean();
-    
-    
-    const r = await Store.findOneAndUpdate({ _id: userData.id },
-      { $set: { 
-        "last_views.daily": v_1[0] ? v_1[0].total_daily : 0,
-        "last_views.weekly": v_2[0] ? v_2[0].total_weekly : 0,
-        "last_views.monthly": v_3[0] ? v_3[0].total_monthly : 0,
-        "last_sells.daily": s_1[0] ? s_1[0].total_daily : 0,
-        "last_sells.weekly": s_2[0] ? s_2[0].total_weekly : 0,
-        "last_sells.monthly": s_3[0] ? s_3[0].total_monthly : 0,
-      } }
     );
-    let last_views = [ r.last_views.monthly, r.last_views.weekly, r.last_views.daily];
-    let last_sells = [ r.last_sells.monthly, r.last_sells.weekly, r.last_sells.daily];
-    let wp_msg_count = Object.values(wp.wp_msg_count);
-    let search_count = Object.values(sc_lc.search_count);
-    let location_search_count = Object.values(sc_lc.location_search_count)
+    if(Math.abs(current_time.getDate() - store.counter_weekly.getDate()) === 7){
+      console.log("haftada")
+      await Data.findOneAndUpdate({_id: userData.id },{
+        $set: {
+          "counter_weekly": new Date(+new Date()+7*24*3600*1000), 
+          "last_sells_weekly": [],
+          "last_views_weekly": []
+        }
+      })
+    }
+    if(Math.abs(current_time.getDate() - store.counter_monthly.getDate()) === 28){
+      console.log("ayda")
+      await Data.findOneAndUpdate({_id: userData.id },{
+        $set: { 
+          "counter_weekly": new Date(+new Date()+30*24*3600*1000),
+          "last_sells_weekly": [],
+          "last_sells_monthly": [],
+          "last_views_weekly": [],
+          "last_views_monthly": [] 
+        }
+      })
+    }
+
+    let monthly_sells = store.last_sells_monthly.length;
+    let weekly_sells = store.last_sells_weekly.length;
+    let daily_sells = total_daily_seller.length;
+    let last_sells = [monthly_sells,weekly_sells,daily_sells];
+
+    let monthly_views = store.last_views_monthly.length;
+    let weekly_views = store.last_views_weekly.length;
+    let daily_views = store.view.length;
+    let last_views = [ monthly_views,weekly_views,daily_views];
+
+    let wp_msg_count = Object.values(store.wp_msg_count);
+    let search_count = Object.values(store.search_count);
+    let location_search_count = Object.values(store.location_search_count)
 
     return res.status(200).send({
       status: true,
@@ -169,6 +110,7 @@ const route = async (req, res, next) => {
       },
     });
   } catch (error) {
+    console.log(error)
     if (error.name === "MongoError" && error.code === 11000) {
       next(new ApiError(error?.message, 422));
     }

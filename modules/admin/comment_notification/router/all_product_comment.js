@@ -3,9 +3,9 @@ const ApiError = require("../../../../errors/ApiError")
 
 const route = async (req, res) => { 
     try {
-        let d_w = await Store_Comment.find({"is_approved": { $in: "wait" }}).lean();
-        let d_n = await Store_Comment.find({"is_approved": { $in: "no" }}).lean();
-        let d_y = await Store_Comment.find({"is_approved": { $in: "yes" }}).lean();
+        let d_w = await Store_Comment.find({}).lean();
+        let d_n = await Store_Comment.find({}).lean();
+        let d_y = await Store_Comment.find({}).lean();
 
         if(!d_w.length && !d_n.length && !d_y.length)
             return next(new ApiError("All product comment not found",404));

@@ -6,7 +6,7 @@ const store_storie = new Schema({
 	author_img: { type: Schema.Types.String},
 	story_time: { type: Schema.Types.Date, default:new Date(+new Date() + 24*60*60*1000) },
 	img: [{ type: Schema.Types.String, required: true }],
-	vide: { type: Schema.Types.String, require: false },
+	video: { type: Schema.Types.String, require: false },
 	view: [{ type: Schema.Types.ObjectId, ref:"user" }],
 	country: { type: Schema.Types.String, require: true },
 	city: { type: Schema.Types.String, require: true },

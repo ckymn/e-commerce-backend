@@ -23,7 +23,7 @@ const route = async (req, res, next) => {
             //     const str = await storage.vUpload(files,_data._id);
             //     await Data.updateOne({_id: _data._id},{
             //         $push: {
-            //             img: str.publicUrl
+            //             video: str.publicUrl
             //         }
             //     })
             //     return res.status(200).send({ status: true, message: "Add Store story worked", data: _data })

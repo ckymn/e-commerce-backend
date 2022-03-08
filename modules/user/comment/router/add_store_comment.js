@@ -1,10 +1,28 @@
 const { Store_Comment } = require("../model")
 const Store = require("../../../store/auth/model")
 const User = require("../../auth/model")
+const ApiError = require("../../../../errors/ApiError")
+const BadWords = require("../../../admin/bad_words/model")
+const Filter = require("bad-words")
 
 const route = async( req,res,next) => {
     try {
         let { body ,kuserData , params } = req;
+
+        // comment
+        let filter = new Filter();
+        let data = await BadWords.find({}).select("words -_id").lean();
+        let words = data[0].words;
+        await filter.addWords(...words);
+        let _comment = filter.clean(body.comment).split("").filter(i => {
+            if(i === "*")
+                return true
+            return false
+        })
+        if(_comment.length > 0)
+            return next(new ApiError(" Your comment not available",200))
+        
+        //store comment
         let _data = await new Store_Comment({
             ...body,
             store_id: params.id,
@@ -31,11 +49,13 @@ const route = async( req,res,next) => {
         await _data.save();
         return res.status(200).send({ status: true, message: "User add Store Comment Success", data: _data })
     } catch (error) {
-        if(error){
-            if(error.name === "MongoError" && error.code === 11000)
-                return res.status(500).send({ status: false, message: `Mongo Error ${error}`})
+        if (error.name === "MongoError" && error.code === 11000) {
+          next(new ApiError(error?.message, 422));
         }
-        return res.status(500).send({ status: false, message: `User add Store Comment, Something Missing Error : ${error}`})
+        if (error.code === 27) {
+          next(new ApiError("We Don't Have Any Data", 500, null));
+        }
+        next(new ApiError(error?.message));
     }
 }
 

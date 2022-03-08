@@ -3,21 +3,20 @@ const Product = require("../../../store/products/model")
 const { ObjectId } = require("mongodb");
 const { Store_Star } = require("../../star/model");
 const ApiError = require("../../../../errors/ApiError");
+const doviz = require("../../../../utils/doviz")
 
 const route = async (req, res, next) => {
     try {
         let { kuserData ,params, query } = req; 
         let current_time = new Date();
 
-        // ! BURDA YAPILAMASI GEREKENLER VAR ..
-
         let _data = await Store.findOne({ _id: params.id }).lean();
         if(!_data)
           return next(new ApiError("Store not Found !",404))
-        
-        let start_store = _data.created_at.getDate();
+        let start_store = _data.counter_weekly.getDate();
+
         // search count - location search count
-        if(current_time.getDate() - start_store === 0){
+        if(Math.abs(current_time.getDate() - start_store) === 0){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -25,7 +24,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if(current_time.getDate() - start_store === 1){
+        if(Math.abs(current_time.getDate() - start_store) === 1){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -33,7 +32,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if(current_time.getDate() - start_store === 2){
+        if(Math.abs(current_time.getDate() - start_store) === 2){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -41,7 +40,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if(current_time.getDate() - start_store === 3 || 6){
+        if(Math.abs(current_time.getDate() - start_store) === 3){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -49,7 +48,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if(current_time.getDate() - start_store=== 4 || 8){
+        if(Math.abs(current_time.getDate() - start_store)=== 4){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -57,7 +56,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if(current_time.getDate() - start_store=== 5 || 10){
+        if(Math.abs(current_time.getDate() - start_store)=== 5){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -65,7 +64,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if(current_time.getDate() - start_store=== 6 || 12){
+        if(Math.abs(current_time.getDate() - start_store)=== 6){
             await Store.findOneAndUpdate(
               { _id: params.id },
               {
@@ -73,7 +72,7 @@ const route = async (req, res, next) => {
               }
             );
         }
-        if (current_time.getDate() - start_store === 7 || 14) {
+        if (Math.abs(current_time.getDate() - start_store) === 7){
           await Store.findOneAndUpdate(
             { _id: params.id },
             {
@@ -91,12 +90,24 @@ const route = async (req, res, next) => {
                 "location_search_count.4": 0,
                 "location_search_count.5": 0,
                 "location_search_count.6": 0,
-                "location_search_count.7":0
+                "location_search_count.7":0,
+                "counter_weekly": new Date(+new Date()+7*24*3600*1000)
               },
             }
           );
         }
-     
+        // store view
+        await Store.findOneAndUpdate(
+          { $and: [{ _id: params.id }, { $nin: [kuserData.id] }] },
+          { $push: { 
+              view: kuserData.id,
+              last_views_weekly: kuserData.id,
+              last_views_monthly: kuserData.id 
+            } 
+          }
+        )
+          .lean()
+          .exec();
         // store 
         let store = await Store.aggregate([
           {
@@ -108,7 +119,7 @@ const route = async (req, res, next) => {
               spherical: true,
               maxDistance: query.dst
                 ? parseFloat(query.dst) * 1609.34
-                : 10 * 1609.34,
+                : 900 * 1609.34,
               distanceMultiplier: 1 / 1609.34,
               distanceField: "StoreDst",
             },
@@ -157,6 +168,8 @@ const route = async (req, res, next) => {
             }
           }
         ])
+        // doviz
+        let currency = await doviz();
 
         return res.status(200).send({
           status: true,
@@ -165,6 +178,7 @@ const route = async (req, res, next) => {
             store,
             store_star_avg,
             product,
+            currency
           },
         });
     }catch (error) {

@@ -9,9 +9,9 @@ const route = async (req, res, next) => {
     if(!_data)
       return next(new ApiError("Store Not found",404));
       
-    let start_store = _data.created_at.getDate();
+    let start_store = _data.counter_weekly.getDate();
     
-    if(start_store - current_time.getDate() === 0){
+    if(Math.abs(current_time.getDate() - start_store) === 0){
         await Data.findOneAndUpdate(
           { _id: params.id },
           {
@@ -19,7 +19,7 @@ const route = async (req, res, next) => {
           }
         );
     }
-    if(start_store - current_time.getDate() === 1){
+    if(Math.abs(current_time.getDate() - start_store) === 1){
         await Store.findOneAndUpdate(
           { _id: params.id },
           {
@@ -27,7 +27,7 @@ const route = async (req, res, next) => {
           }
         );
     }
-    if(start_store - current_time.getDate() === 2){
+    if(Math.abs(current_time.getDate() - start_store) === 2){
         await Data.findOneAndUpdate(
           { _id: params.id },
           {
@@ -35,7 +35,7 @@ const route = async (req, res, next) => {
           }
         );
     }
-    if(start_store - current_time.getDate() === 3){
+    if(Math.abs(current_time.getDate() - start_store) === 3){
         await Data.findOneAndUpdate(
           { _id: params.id },
           {
@@ -43,7 +43,7 @@ const route = async (req, res, next) => {
           }
         );
     }
-    if(start_store - current_time.getDate() === 4){
+    if(Math.abs(current_time.getDate() - start_store) === 4){
         await Data.findOneAndUpdate(
           { _id: params.id },
           {
@@ -51,7 +51,7 @@ const route = async (req, res, next) => {
           }
         );
     }
-    if(start_store - current_time.getDate() === 5){
+    if(Math.abs(current_time.getDate() - start_store) === 5){
         await Data.findOneAndUpdate(
           { _id: params.id },
           {
@@ -59,7 +59,7 @@ const route = async (req, res, next) => {
           }
         );
     }
-    if(start_store - current_time.getDate() === 6){
+    if(Math.abs(current_time.getDate() - start_store) === 6){
         await Data.findOneAndUpdate(
           { _id: params.id },
           {
@@ -67,7 +67,7 @@ const route = async (req, res, next) => {
           }
         );
     }
-    if (start_store - current_time.getDate() === 7) {
+    if (Math.abs(current_time.getDate() - start_store) === 7) {
       await Data.findOneAndUpdate(
         { _id: params.id },
         {
@@ -79,6 +79,7 @@ const route = async (req, res, next) => {
             "wp_msg_count.5": 0,
             "wp_msg_count.6": 0,
             "wp_msg_count.7": 0,
+            "counter_weekly": new Date(+new Date()+7*24*3600*1000)
           },
         }
       );

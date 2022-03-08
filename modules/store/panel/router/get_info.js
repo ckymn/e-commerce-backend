@@ -8,8 +8,6 @@ const route = async (req, res, next) => {
         let data = await Data.findOne({ _id: id }).lean();
         if(!data)
             return next(new ApiError("Store not found",404));
-        // let remain_day = 30 - (Math.round(Math.abs((data.created_at-current_time)/(24 * 3600 * 1000))))
-        
         await Data.findOne({ _id: id }).lean().exec((_,data) => {
             if(!data)
                 return next(new ApiError("Store update not found",404));

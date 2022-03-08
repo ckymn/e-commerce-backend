@@ -7,7 +7,7 @@ const route = async (req, res, next) => {
         let { files , body , adminData} = req;
         let { ads_time } = body;
         if(files.length === 0){
-            return next(new ApiError("No file uploaded",404));
+            return next(new ApiError("No file uploaded",400));
         }
         else{
             if(ads_time === "1d"){
@@ -17,14 +17,13 @@ const route = async (req, res, next) => {
                         coordinates: [parseFloat(body.long),parseFloat(body.lat)]
                     },
                     banner_story_time: new Date(+new Date()+24*60*60*1000)
-                }).save();
-                if(!data)
-                    return next(new ApiError("Admin create advertisement",400));
+                });
                 const imagesUrl = await storage.Upload(files,data._id);
                 let str = await Promise.all(imagesUrl).then(d => d );
                 await data.set({
                     img: str.map( i => i)
                 })
+                await data.save();
                 return res.status(200).send({ status: true, message: "Admin Add Advertisement success", data })
             }
             if(ads_time === "5d"){
@@ -34,14 +33,13 @@ const route = async (req, res, next) => {
                         coordinates: [parseFloat(body.long),parseFloat(body.lat)]
                     },
                     banner_story_time: new Date(+new Date()+5*24*60*60*1000)
-                }).save();
-                if(!data)
-                    return next(new ApiError("Admin create advertisement",400));
+                })
                 const imagesUrl = await storage.Upload(files,data._id);
                 let str = await Promise.all(imagesUrl).then(d => d );
                 await data.set({
                     img: str.map( i => i)
                 })
+                await data.save();
                 return res.status(200).send({ status: true, message: "Admin Add Advertisement success", data })
             }
             if(ads_time === "1w"){
@@ -51,7 +49,7 @@ const route = async (req, res, next) => {
                         coordinates: [parseFloat(body.long),parseFloat(body.lat)]
                     },
                     banner_story_time: new Date(+new Date()+7*24*60*60*1000)
-                }).save();
+                })
                 if(!data)
                     return next(new ApiError("Admin create advertisement",400));
                 const imagesUrl = await storage.Upload(files,data._id);
@@ -59,6 +57,7 @@ const route = async (req, res, next) => {
                 await data.set({
                     img: str.map( i => i)
                 })
+                await data.save();
                 return res.status(200).send({ status: true, message: "Admin Add Advertisement success", data })
             }
             if(ads_time === "2w"){
@@ -68,14 +67,13 @@ const route = async (req, res, next) => {
                         coordinates: [parseFloat(body.long),parseFloat(body.lat)]
                     },
                     banner_story_time: new Date(+new Date()+14*24*60*60*1000)
-                }).save();
-                if(!data)
-                    return next(new ApiError("Admin create advertisement",400));
+                })
                 const imagesUrl = await storage.Upload(files,data._id);
                 let str = await Promise.all(imagesUrl).then(d => d );
                 await data.set({
                     img: str.map( i => i)
                 })
+                await data.save();
                 return res.status(200).send({ status: true, message: "Admin Add Advertisement success", data})
             }
             if(ads_time === "1m"){
@@ -85,7 +83,7 @@ const route = async (req, res, next) => {
                         coordinates: [parseFloat(body.long),parseFloat(body.lat)]
                     },
                     banner_story_time: new Date(+new Date()+30*24*60*60*1000)
-                }).save();
+                })
                 if(!data)
                     return next(new ApiError("Admin create advertisement",400));
                 const imagesUrl = await storage.Upload(files,data._id);
@@ -93,6 +91,7 @@ const route = async (req, res, next) => {
                 await data.set({
                     img: str.map( i => i)
                 })
+                await data.save();
                 return res.status(200).send({ status: true, message: "Admin Add Advertisement success", data })
             }
         }

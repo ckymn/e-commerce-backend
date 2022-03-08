@@ -5,6 +5,7 @@ const ActiveUser = require("../../../../middlewares")
 const AdminAdsStory = require("../../../admin/advertisement/model")
 const ApiError = require("../../../../errors/ApiError")
 const { ObjectId } = require("mongodb")
+const doviz = require("../../../../utils/doviz")
 
 const route = async (req,res,next) => {
     try {
@@ -125,13 +126,13 @@ const route = async (req,res,next) => {
               },
             },
           ]);
-          
+          let currency = await doviz();
           return res
           .status(200)
           .send({
             status: true,
             message: "Products and StoreStory are success ",
-            data: { product_data, admin_ads_story },
+            data: { product_data, admin_ads_story ,currency},
           });
         }else{
           let product_data = await Products.aggregate([
@@ -204,13 +205,13 @@ const route = async (req,res,next) => {
               },
             },
           ]);
-
+          let currency = await doviz();
           return res
           .status(200)
           .send({
             status: true,
             message: "Products and StoreStory are success ",
-            data: { product_data, admin_ads_story },
+            data: { product_data, admin_ads_story ,currency},
           });
         }
     } catch (error) {

@@ -35,7 +35,7 @@ const store_register = new Schema(
     remain_date: { 
       created_at : { type: Schema.Types.Date, default: new Date() },
       updated_at : { type: Schema.Types.Date },
-      time: { type: Schema.Types.Number, default: 0}, 
+      time: { type: Schema.Types.Number, default: 30}, 
     },
     sector_name: { type: Schema.Types.String, required: true },
     store_open_hour: { type: Schema.Types.Number },
@@ -47,17 +47,6 @@ const store_register = new Schema(
     star: [{ type: Schema.Types.ObjectId, ref: "store_star" }],
     follow: [{ type: Schema.Types.ObjectId, ref: "users" }],
     is_follow: { type: Schema.Types.Boolean, default: false },
-    view: [
-      {
-        who: {
-          type: Schema.Types.ObjectId,
-          ref: "users",
-        },
-        date: {
-          type: Schema.Types.Date,
-        },
-      },
-    ],
     search_count: {
       1: {
         type: Schema.Types.Number,default: 0,
@@ -127,28 +116,13 @@ const store_register = new Schema(
         type: Schema.Types.Number,default:0
       },
     },
-    last_sells: {
-      daily: {
-        type: Schema.Types.Number,default:0
-      },
-      weekly: {
-        type: Schema.Types.Number,default:0
-      },
-      monthly: {
-        type: Schema.Types.Number,default:0
-      },
-    },
-    last_views: {
-      daily: {
-        type: Schema.Types.Number,default:0
-      },
-      weekly: {
-        type: Schema.Types.Number,default:0
-      },
-      monthly: {
-        type: Schema.Types.Number,default:0
-      },
-    },
+    view: [{ type: Schema.Types.ObjectId }],
+    last_sells_weekly: [{ type: Schema.Types.ObjectId }],
+    last_sells_monthly: [{ type: Schema.Types.ObjectId }],
+    last_views_weekly: [{ type: Schema.Types.ObjectId }],
+    last_views_monthly: [{ type: Schema.Types.ObjectId }],
+    counter_weekly: { type: Schema.Types.Date , default: new Date()},
+    counter_monthly: { type: Schema.Types.Date , default: new Date()},
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );

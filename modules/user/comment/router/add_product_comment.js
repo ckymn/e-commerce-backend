@@ -21,7 +21,7 @@ const route = async( req,res,next) => {
             return false
         })
         if(_comment.length > 0)
-            return next(new ApiError(" Your comment not available"))
+            return next(new ApiError(" Your comment not available",200))
 
         // product comment
         let user = await User.findOne({ _id: kuserData.id }).lean();

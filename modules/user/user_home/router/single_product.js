@@ -1,6 +1,7 @@
 const { ObjectId } = require("mongodb");
 const ApiError = require("../../../../errors/ApiError");
 const Products = require("../../../store/products/model")
+const doviz = require("../../../../utils/doviz")
 
 const route = async (req,res,next) => {
     try {
@@ -15,7 +16,7 @@ const route = async (req,res,next) => {
               pipeline: [
                 {
                   $match: {
-                    $and: [{ $expr: { $in: ["$_id", "$$comments"] } }, { is_approved: "yes" }],
+                    $expr: { $in: ["$_id", "$$comments"] },
                   },
                 },
                 { $project: { _id: 0 } }, // suppress _id
@@ -54,13 +55,15 @@ const route = async (req,res,next) => {
           },
         ]);
         if(data.length === 0)
-          return next(new ApiError("Single Product Not Found",404))
+          return next(new ApiError("Single Product Not Found",200,data))
+        let currency = await doviz();
         return res
           .status(200)
           .send({
             status: true,
             message: "Single Products and Stories are success ",
             data,
+            currency
           });
     } catch (error) {
       if (error.name === "MongoError" && error.code === 11000) {

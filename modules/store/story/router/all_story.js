@@ -7,20 +7,32 @@ const route = async (req, res, next) => {
         let { userData } = req
         let current_time = new Date();
 
-        let data = await Data.find({ $and:[ {author: userData.id},{story_time: { $gte: current_time }} ]})
-        if(!data)
-            return next(new ApiError("All story not found",404));
-        // let o_data = await Data.find({ story_time: { $lte : current_time } });
-        // if(!outdate_storys)
-        //     return next(new ApiError(""))
-        // if(outdate_storys.length > 0){
-        //     await Data.deleteMany({ story_time: { $lte: current_time }});
-        //     let n_data = await Data.find({ author: userData.id });
-        //     outdate_storys.map(async i => {
-        //         storage.Delete(i._id)
-        //     })
-        return res.status(200).send({ status: true, message: "All Store Storys success", data })
-        
+        let outdate_stories = await Data.find({ story_time: { $lte: current_time }})
+        if(outdate_stories.length === 0){
+          let data = await Data.find({
+            $and: [
+              { author: userData.id },
+              { story_time: { $gte: current_time } },
+            ],
+          });
+          if(data.length === 0)
+            return next(new ApiError("All story not found",200,data))
+          return res.status(200).send({ status: true, message: "All advertisement data success", data })
+        }
+        if (outdate_stories.length > 0) {
+            await Data.deleteMany({ story_time: { $lte: current_time } });
+            let outdate_stories_id = outdate_stories.map(i => i._id);
+            await storage.Delete(outdate_stories_id);
+            let data = await Data.find({
+              $and: [
+                { author: userData.id },
+                { story_time: { $gte: current_time } },
+              ],
+            });
+            if(data.length === 0)
+              return next(new ApiError("All story not found",200,data))
+            return res.status(200).send({ status: true, message: "All advertisement data success", data })
+        }
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));

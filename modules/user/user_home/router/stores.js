@@ -11,10 +11,7 @@ const route = async (req, res, next) => {
       let { kuserData, query } = req;
       let current_time = new Date();
 
-      let _data = await Data.findOne({ _id: kuserData.id });
-      if(!_data)
-        return next(new ApiError("User not found",404))
-
+      // magaza banner
       let store_ads_banner = await StoreBanner.aggregate([
         {
           $geoNear: {
@@ -40,7 +37,8 @@ const route = async (req, res, next) => {
           },
         },
       ]);
-      let admin_ads_story = await AdminAdsStory.aggregate([
+      // admin banner
+      let admin_ads_banner = await AdminAdsStory.aggregate([
         {
           $geoNear: {
             near: {
@@ -64,6 +62,7 @@ const route = async (req, res, next) => {
           },
         },
       ]);
+      // magaza reklam story
       let store_ads_story = await StoreAds.aggregate([
         {
           $geoNear: {
@@ -89,31 +88,7 @@ const route = async (req, res, next) => {
           }
         }
       ])
-      //? eski
-      // let store_story = await StoreStory.aggregate([
-      //   {
-      //     $geoNear: {
-      //       near: {
-      //         type: "Point",
-      //         coordinates: [parseFloat(query.long), parseFloat(query.lat)],
-      //       },
-      //       spherical: true,
-      //       maxDistance: query.dst
-      //         ? parseFloat(query.dst) * 1609.34
-      //         : 900 * 1609.34,
-      //       distanceMultiplier: 1 / 1609.34,
-      //       distanceField: "StoreStoryDst",
-      //     },
-      //   },
-      //   {
-      //     $match: {
-      //       $and: [
-      //         { language: _data.language },
-      //         { story_time: { $gte: current_time } },
-      //       ],
-      //     },
-      //   }, 
-      // ]);
+      // magaza story
       let store_story = await Data.aggregate([
         { $match: { _id: ObjectId(kuserData.id) } },
         {
@@ -150,6 +125,7 @@ const route = async (req, res, next) => {
           }
         }
       ]);
+      // magazalar
       let stores = await Stores.aggregate([
         {
           $geoNear: {
@@ -208,13 +184,39 @@ const route = async (req, res, next) => {
         { $skip: parseInt(query.skip) },
         { $limit: parseInt(query.limit) },
       ]);
+      //? eski
+      // let store_story = await StoreStory.aggregate([
+      //   {
+      //     $geoNear: {
+      //       near: {
+      //         type: "Point",
+      //         coordinates: [parseFloat(query.long), parseFloat(query.lat)],
+      //       },
+      //       spherical: true,
+      //       maxDistance: query.dst
+      //         ? parseFloat(query.dst) * 1609.34
+      //         : 900 * 1609.34,
+      //       distanceMultiplier: 1 / 1609.34,
+      //       distanceField: "StoreStoryDst",
+      //     },
+      //   },
+      //   {
+      //     $match: {
+      //       $and: [
+      //         { language: _data.language },
+      //         { story_time: { $gte: current_time } },
+      //       ],
+      //     },
+      //   }, 
+      // ]);
+      
   
       return res.status(200).send({
         status: true,
         message: "Stores Success",
         data: {
           store_ads_banner,
-          admin_ads_story,
+          admin_ads_banner,
           store_ads_story,
           store_story,
           stores,

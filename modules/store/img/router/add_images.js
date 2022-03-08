@@ -33,7 +33,6 @@ const route = async (req, res, next) => {
           let data = await Data.create({ author: userData.id });
           if(!data)
             return next(new ApiError("Create store images didn't work",400));
-          // ! GCS HATA YAKALAMA
           const str = await storage.Upload(i, data._id);
           let u_img = await Data.updateOne({ _id: data._id },
             {

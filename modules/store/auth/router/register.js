@@ -36,7 +36,6 @@ const route = async (req, res, next) => {
         next(new ApiError("We Don't Have Any Data", 500, null));
       }
       next(new ApiError(error?.message));
-      // !MONGODB VALIDATION YAP
     }
     
 }

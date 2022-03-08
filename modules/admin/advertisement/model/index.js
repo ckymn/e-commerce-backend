@@ -4,6 +4,7 @@ const admin_ads = new Schema({
     type: { type: Schema.Types.String, default: "admin_ads"},
     ads_time: { type: Schema.Types.String,enum:["1d","5d","1w","2w","1m"], required: true },
     ads_which: { type: Schema.Types.String, enum:["Banner","Story"],required: true },
+    title: { type: Schema.Types.String},
     banner_story_time: { type: Schema.Types.Date, require: false, default: new Date(+new Date()+24*3600*1000) },
     ads_description : { type: Schema.Types.String, require: true },
     img: [{ type: Schema.Types.String, require: false }],
