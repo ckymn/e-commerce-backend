@@ -3,12 +3,28 @@ const { Product_Star } = require("../../star/model")
 const Product = require("../../../store/products/model")
 const User = require("../../auth/model")
 const ApiError = require("../../../../errors/ApiError")
+const BadWords = require("../../../admin/bad_words/model")
+const Filter = require("bad-words")
 
 const route = async( req,res,next) => {
     try {
         let { body ,kuserData , params} = req;
-        let user = await User.findOne({ _id: kuserData.id }).lean();
+        
+        // comment
+        let filter = new Filter();
+        let data = await BadWords.find({}).select("words -_id").lean();
+        let words = data[0].words;
+        await filter.addWords(...words);
+        let _comment = filter.clean(body.comment).split("").filter(i => {
+            if(i === "*")
+                return true
+            return false
+        })
+        if(_comment.length > 0)
+            return next(new ApiError(" Your comment not available"))
+
         // product comment
+        let user = await User.findOne({ _id: kuserData.id }).lean();
         let _data = await new Product_Comment({
             ...body,
             product_id: params.id,

@@ -8,7 +8,7 @@ const { uploadImage } = require("../utils")
 //middleware
 const middleware = require("../middlewares");
 //validations
-const schemas = require("../validations/project");
+const schemas = require("../validations/admin");
 
 //admin_get
 const admin_home = require("../modules/admin/admin_home/router")
@@ -27,6 +27,7 @@ const admin_advertisement  = require("../modules/admin/advertisement/router")
 const login = require("../modules/admin/login/router")
 const subscribe = require("../modules/admin/subscriptions/router")
 const solutionPartner = require("../modules/admin/solution_partners/router");
+const bad_words = require("../modules/admin/bad_words/router");
 
 //admin_get
 router.get(`/admin/homePage`, middleware.authJwt,admin_home.admin_panel);
@@ -56,12 +57,12 @@ router.get(`/admin/app_notification/:id`,middleware.idChecker(), middleware.auth
 router.get(`/admin/logout`, middleware.authJwt,login.logout)
 
 //admin_post
-router.post(`/admin/register`,middleware.validate(schemas.createValidation),uploadImage.single("img"),login.register)
+router.post(`/admin/register`,middleware.validate(schemas.auth.register),uploadImage.single("img"),login.register)
 router.post(`/admin/login`,login.login)
 router.post(`/admin/forgot_password`,middleware.authJwt,login.forgot_password)
 router.post(`/admin/reset_password`,middleware.authJwt,login.reset_password)
 router.put(`/admin/update_password`,middleware.authJwt,login.update_password)
-router.post(`/admin/register_admin`, middleware.authJwt,login.admin_ekle)
+router.post(`/admin/register_admin`,middleware.validate(schemas.auth.register), middleware.authJwt,login.admin_ekle)
 router.delete(`/admin/delete_admin/:id`,middleware.idChecker(), middleware.authJwt,login.admin_delete)
 router.put(`/admin/update_admin/:id`,middleware.idChecker(), middleware.authJwt,login.admin_update)
 router.post(`/admin/sector`, middleware.authJwt, sector.createSector);
@@ -82,5 +83,6 @@ router.delete(`/admin/partner/:id`,middleware.idChecker(),middleware.authJwt, so
 router.put(`/admin/partner/:id`,middleware.idChecker(),middleware.authJwt, solutionPartner.update_partner)
 router.post(`/admin/app_notification`,middleware.authJwt, app_notification.add_notification)
 router.post(`/admin/how_i_use`, middleware.authJwt, userPanel.how_i_use)
+router.post(`/admin/bad_words`, middleware.authJwt, bad_words.add_bad_words)
 
 module.exports = router;    

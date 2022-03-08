@@ -20,6 +20,7 @@ const route = async (req, res, next) => {
               return next(new ApiError("Passwo prd or Email invalid",400));
           let access_token = await jwt.sign({ 
               id: _user.id,
+              role: _user.role,
               address: { 
                   country: _user.country,
                   city: _user.city,

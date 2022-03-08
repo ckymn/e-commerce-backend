@@ -7,6 +7,9 @@ const { uploadImage } = require("../utils")
 
 //middleware
 const middleware = require("../middlewares");
+//validations
+const schemas = require("../validations/admin");
+
 //store_get
 const store_home = require("../modules/store/store_home/router")
 const sectorSearch = require("../modules/store/auth/router")
@@ -42,7 +45,7 @@ router.get(`/store/stories`,middleware.authJwt ,storeStory.all_story)
 router.get(`/store/home_page`,middleware.authJwt ,store_home.home_page)
 
 //store_post
-router.post(`/store/register`,uploadImage.single("img"),store_auth.register)
+router.post(`/store/register`,middleware.validate(schemas.auth.register),uploadImage.single("img"),store_auth.register)
 router.post(`/store/login`,store_auth.login)
 router.post(`/store/forgot_password`,middleware.authJwt,store_auth.forgot_password)
 router.post(`/store/reset_password`,middleware.authJwt,store_auth.reset_password)

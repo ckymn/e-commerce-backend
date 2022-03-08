@@ -6,13 +6,11 @@ const ApiError = require("../../../../errors/ApiError")
 const route = async (req, res, next) => {
     try {
         let { body , file  } = req;
-        let { email, username, password ,password2 } = body;
+        let { email, username, password } = body;
         let _result = await Data.findOne({ $or: [ { email }, { username }] });
         if(_result)
           return next(new ApiError("Email or Username already exist",409));
         const hash = await bcrypt.hashSync(password, 10);
-        if(password != password2)
-          return next(new ApiError("passwords dont match",400))
         let data = await new Data({
             ...body,
             location: {

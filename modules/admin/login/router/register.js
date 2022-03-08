@@ -6,7 +6,7 @@ const ApiError = require("../../../../errors/ApiError");
 const route = async (req, res, next) => {
     try {
         let { file , body } = req;
-        let { email, username, password , password2 } = body;
+        let { email, username, password  } = body;
 
         if(!file)
             return next(new ApiError("Please upload a file",400))
@@ -14,8 +14,6 @@ const route = async (req, res, next) => {
         if(_data)
             return res.status(500).send({ status: false, message: "email or username already exists"})
         let hash = await bcrypt.hash(password, 10);
-        if(password != password2)
-            return next(new ApiError("Passwords dont match",400))
         const _user = await new Data({
             ...req.body,
             password:hash,

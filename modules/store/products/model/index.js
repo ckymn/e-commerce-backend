@@ -9,6 +9,7 @@ var Sizes = new mongoose.Schema({
     required: true,
     validate: [/[a-zA-Z0-9]/, 'Product sku Should Only Have letters and numbers']
   },
+  currency: { type: String, required: false , enum:["tr","us"]},
   price: { type: Number, required: true , min: 0 },
   min_price: { type: Number, required: true , min: 0 , default:0}
 })

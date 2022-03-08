@@ -3,8 +3,6 @@ const Products = require("../../../store/products/model")
 const AdminData = require("../../../admin/login/model")
 const ActiveUser = require("../../../../middlewares")
 const AdminAdsStory = require("../../../admin/advertisement/model")
-const StoreStory = require("../../../store/story/model")
-const StoreAds = require("../../../store/advertisement/model")
 const ApiError = require("../../../../errors/ApiError")
 const { ObjectId } = require("mongodb")
 
@@ -101,27 +99,6 @@ const route = async (req,res,next) => {
             { $skip: parseInt(query.skip) },
             { $limit: parseInt(query.limit) },
           ]);
-          let store_story =  await StoreStory.aggregate([
-            {
-              $geoNear: {
-                near: {
-                  type: "Point",
-                  coordinates: [parseFloat(query.long), parseFloat(query.lat)],
-                },
-                spherical: true,
-                maxDistance: query.dst
-                  ? parseFloat(query.dst) * 1609.34
-                  : 900 * 1609.34,
-                distanceMultiplier: 1 / 1609.34,
-                distanceField: "StoreStoryDst",
-              },
-            },
-            {
-              $match: {
-                language: _data.language,
-              },
-            },
-          ]);
           let admin_ads_story = await AdminAdsStory.aggregate([
             {
               $geoNear: {
@@ -148,38 +125,13 @@ const route = async (req,res,next) => {
               },
             },
           ]);
-          let store_ads = await StoreAds.aggregate([
-            {
-              $geoNear: {
-                near: {
-                  type: "Point",
-                  coordinates: [parseFloat(query.long), parseFloat(query.lat)],
-                },
-                spherical: true,
-                maxDistance: query.dst
-                  ? parseFloat(query.dst) * 1609.34
-                  : 900 * 1609.34,
-                distanceMultiplier: 1 / 1609.34,
-                distanceField: "StoreStoryDst",
-              },
-            },
-            {
-              $match:{
-                $and:[
-                  { is_approved: "yes" },
-                  { banner_story_time: { $gte: current_time } },
-                  { ads_which: "Story"  }
-                ]
-              }
-            }
-          ])
           
           return res
           .status(200)
           .send({
             status: true,
             message: "Products and StoreStory are success ",
-            data: { product_data, store_story, admin_ads_story, store_ads },
+            data: { product_data, admin_ads_story },
           });
         }else{
           let product_data = await Products.aggregate([
@@ -226,27 +178,6 @@ const route = async (req,res,next) => {
             { $skip: parseInt(query.skip) },
             { $limit: parseInt(query.limit) },
           ]);
-          let store_story =  await StoreStory.aggregate([
-            {
-              $geoNear: {
-                near: {
-                  type: "Point",
-                  coordinates: [parseFloat(query.long), parseFloat(query.lat)],
-                },
-                spherical: true,
-                maxDistance: query.dst
-                  ? parseFloat(query.dst) * 1609.34
-                  : 900 * 1609.34,
-                distanceMultiplier: 1 / 1609.34,
-                distanceField: "StoreStoryDst",
-              },
-            },
-            {
-              $match: {
-                language: _data.language,
-              },
-            },
-          ]);
           let admin_ads_story = await AdminAdsStory.aggregate([
             {
               $geoNear: {
@@ -273,38 +204,13 @@ const route = async (req,res,next) => {
               },
             },
           ]);
-          let store_ads = await StoreAds.aggregate([
-            {
-              $geoNear: {
-                near: {
-                  type: "Point",
-                  coordinates: [parseFloat(query.long), parseFloat(query.lat)],
-                },
-                spherical: true,
-                maxDistance: query.dst
-                  ? parseFloat(query.dst) * 1609.34
-                  : 900 * 1609.34,
-                distanceMultiplier: 1 / 1609.34,
-                distanceField: "StoreStoryDst",
-              },
-            },
-            {
-              $match:{
-                $and:[
-                  { is_approved: "yes" },
-                  { banner_story_time: { $gte: current_time } },
-                  { ads_which: "Story"  }
-                ]
-              }
-            }
-          ])
 
           return res
           .status(200)
           .send({
             status: true,
             message: "Products and StoreStory are success ",
-            data: { product_data, store_story, admin_ads_story, store_ads },
+            data: { product_data, admin_ads_story },
           });
         }
     } catch (error) {
