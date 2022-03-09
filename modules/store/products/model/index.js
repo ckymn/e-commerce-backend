@@ -20,7 +20,7 @@ var Images = new mongoose.Schema({
     required: false
   },
   url: { type: String, required: true }
-})
+});
 
 var Variants = new mongoose.Schema({
   color: { type: String },

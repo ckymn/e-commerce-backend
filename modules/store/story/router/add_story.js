@@ -10,11 +10,14 @@ const route = async (req, res, next) => {
         if (files.length === 0) {
             return next(new ApiError("No file uploaded"))
         }else{
-            let author_img = await Store.findOne({ _id: userData.id }).lean();
+            let store = await Store.findOne({ _id: userData.id }).lean();
             let _data = await new Data({
                 ...body,
                 author: userData.id,
-                author_img: author_img.storeimg,
+                author_img: store.storeimg,
+                location:{
+                    coordinates: [parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1])]
+                },
             }).save();
             if(!_data)
                 return next(new ApiError("Create store story didn't work",400));
@@ -44,6 +47,7 @@ const route = async (req, res, next) => {
             
         }
     } catch (error) {
+        console.log(error)
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));
         }

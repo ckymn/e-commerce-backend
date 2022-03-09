@@ -16,6 +16,7 @@ const route = async (req, res) => {
           .send({
             status: true,
             message: `Store Images get from product success`,
+            data
           });
       });
   } catch (error) {

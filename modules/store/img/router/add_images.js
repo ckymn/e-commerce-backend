@@ -5,13 +5,13 @@ const ApiError = require("../../../../errors/ApiError")
 
 const route = async (req, res, next) => {
     try {
-      let { file, files, userData } = req;
+      let { files, userData } = req;
 
       if(files.length === 1){
         let data = await Data.create({ author: userData.id });
         if(!data)
           return next(new ApiError("Create store image didn't work",400));
-        const str = await storage.Upload(file, data._id);
+        const str = await storage.Upload(files[0], data._id);
         if (str.status !== 200)
           return next(new ApiError(str.message,str.status));
         let u_img = await Data.updateOne({ _id: data.id },
@@ -46,7 +46,7 @@ const route = async (req, res, next) => {
         });
         return res
           .status(200)
-          .send({ status: true, message: "Upload Images Success"});
+          .send({ status: true, message: "Upload Images Success",data});
       }
     } catch (error) {
       if (error.name === "MongoError" && error.code === 11000) {
