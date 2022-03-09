@@ -15,205 +15,310 @@ const route = async (req, res, next) => {
 
         let store = await Store.findOne({ _id: userData.id });
         if(!store)
-            return next(new ApiError("Store Not Found",404))
+            return next(new ApiError("Store Not Found",400))
         
         let {card_price,card_paid_price,card_installment,card_holder_name,card_number,
             card_expire_month,card_expire_year,card_cvc,card_register,buyerName,buyerSurname,
             buyerNumber,buyerEmail,tcNo,buyerAddress,buyerCity,buyerCountry,ship_b_name,ship_b_city,
             ship_b_country,ship_b_address,items,ads_time}= body;
-        let request = await pay_form_ads(basket_id,card_price,card_paid_price,card_installment,
-            card_holder_name,card_number,card_expire_month,card_expire_year,card_cvc,
-            card_register,buyer_id,buyerName,buyerSurname,buyerNumber,buyerEmail,tcNo,
-            ship_b_name,ship_b_city,ship_b_country,ship_b_address,
-            buyerAddress,buyer_ip,buyerCity,buyerCountry,items)
-        
+        // let request = await pay_form_ads(basket_id,card_price,card_paid_price,card_installment,
+        //     card_holder_name,card_number,card_expire_month,card_expire_year,card_cvc,
+        //     card_register,buyer_id,buyerName,buyerSurname,buyerNumber,buyerEmail,tcNo,
+        //     ship_b_name,ship_b_city,ship_b_country,ship_b_address,
+        //     buyerAddress,buyer_ip,buyerCity,buyerCountry,items)
         if(ads_time === "1d"){
-            // !BURDA IP ADRESINI KONTROL ETMELISIN
-            await iyzipay.payment.create(request,async function(_,result) {
-                if(result.status === "failure")
-                    return next(new ApiError(result.errorMessage,400))
-                if(result.status === "success"){
-                    if(true){
-                        let _data = await new Data({
-                            ...body,
-                            author: userData.id,
-                            authCode: result.authCode,
-                            banner_story_time: new Date(+new Date()+24*60*60*1000),
-                            location: {
-                                coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
-                            }
-                        });
-                        if(!_data)
-                            return next(new ApiError("Create store advertisement",400))
-                        const imagesUrl = await storage.Upload(files,_data._id);
-                        let str = await Promise.all(imagesUrl).then(d => d );
-                        await _data.set({
-                            img: str.map(i =>i)
-                        });
-                        await _data.save();
-                        let p_ads = await Payment.create({
-                            author: buyer_id,
-                            basketId:basket_id,
-                            paymentId: result.paymentId,
-                            price: card_price,
-                            paid_price: card_paid_price,
-                            ads_id: _data._id,
-                            paymentTransactionId: result.itemTransactions[0].paymentTransactionId
-                        })
-                        if(!p_ads)
-                            return next(new ApiError("Create store payment",400))
-                        return res.status(200).send({ status: true, message: "Add Advertisement data save success", data: result})
-                    }
+            let data = await Data.create({
+                ...body,
+                author: userData.id,
+                banner_story_time: new Date(+new Date()+24*60*60*1000),
+                location: {
+                    coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
+                }
+            });
+            if(!data)
+                return next(new ApiError("Create store advertisement doesnt work",400))
+            const imagesUrl = await storage.Upload(files,data._id);
+            let str = await Promise.all(imagesUrl).then(d => d );
+            let u_ads = await Data.updateOne({ _id: data._id},{
+                $push: {
+                    img: str
                 }
             })
+            if(u_ads.matchedCount === 0)
+                return next(new ApiError("Create store story update didn't work",400));
+            return res.status(200).send({ status: true, message: "Add Advertisement data save success", data})
+            // !BURDA IP ADRESINI KONTROL ETMELISIN
+            // await iyzipay.payment.create(request,async function(_,result) {
+            //     if(result.status === "failure")
+            //         return next(new ApiError(result.errorMessage,400))
+            //     if(result.status === "success"){
+            //         if(true){
+            //             let data = await new Data({
+            //                 ...body,
+            //                 author: userData.id,
+            //                 authCode: result.authCode,
+            //                 banner_story_time: new Date(+new Date()+24*60*60*1000),
+            //                 location: {
+            //                     coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
+            //                 }
+            //             });
+            //             if(!data)
+            //                 return next(new ApiError("Create store advertisement",400))
+            //             const imagesUrl = await storage.Upload(files,data._id);
+            //             let str = await Promise.all(imagesUrl).then(d => d );
+            //             await data.set({
+            //                 img: str.map(i =>i)
+            //             });
+            //             await data.save();
+            //             let p_ads = await Payment.create({
+            //                 author: buyer_id,
+            //                 basketId:basket_id,
+            //                 paymentId: result.paymentId,
+            //                 price: card_price,
+            //                 paid_price: card_paid_price,
+            //                 ads_id: data._id,
+            //                 paymentTransactionId: result.itemTransactions[0].paymentTransactionId
+            //             })
+            //             if(!p_ads)
+            //                 return next(new ApiError("Create store payment",400))
+            //             return res.status(200).send({ status: true, message: "Add Advertisement data save success", data: result})
+            //         }
+            //     }
+            // })
         }
         if(ads_time === "5d"){
-            await iyzipay.payment.create(request,async function(err,result) {
-                if(result.status === "failure")
-                    return next(new ApiError(result.errorMessage,400))
-                if(result.status === "success"){
-                    if(true){
-                        let _data = await Data.create({
-                            ...body,
-                            author: userData.id,
-                            authCode: result.authCode,
-                            banner_story_time: new Date(+new Date()+5*24*60*60*1000),
-                            location: {
-                                coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
-                            }
-                        });
-                        if(!_data)
-                            return next(new ApiError("Create store advertisement",400))
-                        const imagesUrl = await storage.Upload(files,_data._id);
-                        let str = await Promise.all(imagesUrl).then(d => d );
-                        await Data.updateOne({ _id: _data._id},{ $push: { img: str }})
-                        let p_ads = await Payment.create({
-                            author: buyer_id,
-                            basketId:basket_id,
-                            paymentId: result.paymentId,
-                            price: card_price,
-                            paid_price: card_paid_price,
-                            ads_id: _data._id,
-                            paymentTransactionId: result.itemTransactions[0].paymentTransactionId
-                        })
-                        if(!p_ads)
-                            return next(new ApiError("Create store payment",400))
-                        return res.status(200).send({ status: true, message: "Add Advertisement data save success", data: result})
-                    }
+            let data = await Data.create({
+                ...body,
+                author: userData.id,
+                banner_story_time: new Date(+new Date()+5*24*60*60*1000),
+                location: {
+                    coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
+                }
+            });
+            if(!data)
+                return next(new ApiError("Create store advertisement",400))
+            const imagesUrl = await storage.Upload(files,data._id);
+            let str = await Promise.all(imagesUrl).then(d => d );
+            let u_ads = await Data.updateOne({ _id: data._id},{
+                $push: {
+                    img: str
                 }
             })
+            if(u_ads.matchedCount === 0)
+                return next(new ApiError("Create store story update didn't work",400));
+            return res.status(200).send({ status: true, message: "Add Advertisement data save success", data})
+
+            // await iyzipay.payment.create(request,async function(err,result) {
+            //     if(result.status === "failure")
+            //         return next(new ApiError(result.errorMessage,400))
+            //     if(result.status === "success"){
+            //         if(true){
+            //             let data = await Data.create({
+            //                 ...body,
+            //                 author: userData.id,
+            //                 authCode: result.authCode,
+            //                 banner_story_time: new Date(+new Date()+5*24*60*60*1000),
+            //                 location: {
+            //                     coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
+            //                 }
+            //             });
+            //             if(!data)
+            //                 return next(new ApiError("Create store advertisement",400))
+            //             const imagesUrl = await storage.Upload(files,data._id);
+            //             let str = await Promise.all(imagesUrl).then(d => d );
+            //             await Data.updateOne({ _id: data._id},{ $push: { img: str }})
+            //             let p_ads = await Payment.create({
+            //                 author: buyer_id,
+            //                 basketId:basket_id,
+            //                 paymentId: result.paymentId,
+            //                 price: card_price,
+            //                 paid_price: card_paid_price,
+            //                 ads_id: data._id,
+            //                 paymentTransactionId: result.itemTransactions[0].paymentTransactionId
+            //             })
+            //             if(!p_ads)
+            //                 return next(new ApiError("Create store payment",400))
+            //             return res.status(200).send({ status: true, message: "Add Advertisement data save success", data: result})
+            //         }
+            //     }
+            // })
         }
         if(ads_time === "1w"){
-            await iyzipay.payment.create(request,async function(err,result) {
-                if(result.status === "failure")
-                    return next(new ApiError(result.errorMessage,400))
-                if(result.status === "success"){
-                    if(true){
-                        let _data = await Data.create({
-                            ...body,
-                            author: userData.id,
-                            authCode: result.authCode,
-                            banner_story_time: new Date(+new Date()+7*24*60*60*1000),
-                            location: {
-                                coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
-                            }
-                        });
-                        if(!_data)
-                            return next(new ApiError("Create store advertisement",400))
-                        const imagesUrl = await storage.Upload(files,_data._id);
-                        let str = await Promise.all(imagesUrl).then(d => d );
-                        await Data.updateOne({ _id: _data._id},{ $push: { img: str }})
-                        let p_ads = await Payment.create({
-                            author: buyer_id,
-                            basketId:basket_id,
-                            paymentId: result.paymentId,
-                            price: card_price,
-                            paid_price: card_paid_price,
-                            ads_id: _data._id,
-                            paymentTransactionId: result.itemTransactions[0].paymentTransactionId
-                        })
-                        if(!p_ads)
-                            return next(new ApiError("Create store payment",400))
-                        return res.status(200).send({ status: true, message: "Add Advertisement data save success", data: result})
-                    }
+            let data = await Data.create({
+                ...body,
+                author: userData.id,
+                banner_story_time: new Date(+new Date()+7*24*60*60*1000),
+                location: {
+                    coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
+                }
+            });
+            if(!data)
+                return next(new ApiError("Create store advertisement",400))
+            const imagesUrl = await storage.Upload(files,data._id);
+            let str = await Promise.all(imagesUrl).then(d => d );
+            let u_ads = await Data.updateOne({ _id: data._id},{
+                $push: {
+                    img: str
                 }
             })
+            if(u_ads.matchedCount === 0)
+                return next(new ApiError("Create store story update didn't work",400));
+            return res.status(200).send({ status: true, message: "Add Advertisement data save success", data})
+
+            // await iyzipay.payment.create(request,async function(err,result) {
+            //     if(result.status === "failure")
+            //         return next(new ApiError(result.errorMessage,400))
+            //     if(result.status === "success"){
+            //         if(true){
+            //             let data = await Data.create({
+            //                 ...body,
+            //                 author: userData.id,
+            //                 authCode: result.authCode,
+            //                 banner_story_time: new Date(+new Date()+7*24*60*60*1000),
+            //                 location: {
+            //                     coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
+            //                 }
+            //             });
+            //             if(!data)
+            //                 return next(new ApiError("Create store advertisement",400))
+            //             const imagesUrl = await storage.Upload(files,data._id);
+            //             let str = await Promise.all(imagesUrl).then(d => d );
+            //             await Data.updateOne({ _id: data._id},{ $push: { img: str }})
+            //             let p_ads = await Payment.create({
+            //                 author: buyer_id,
+            //                 basketId:basket_id,
+            //                 paymentId: result.paymentId,
+            //                 price: card_price,
+            //                 paid_price: card_paid_price,
+            //                 ads_id: data._id,
+            //                 paymentTransactionId: result.itemTransactions[0].paymentTransactionId
+            //             })
+            //             if(!p_ads)
+            //                 return next(new ApiError("Create store payment",400))
+            //             return res.status(200).send({ status: true, message: "Add Advertisement data save success", data: result})
+            //         }
+            //     }
+            // })
         }
         if(ads_time === "2w"){
-            await iyzipay.payment.create(request,async function(err,result) {
-                if(result.status === "failure")
-                    return next(new ApiError(result.errorMessage,400))
-                if(result.status === "success"){
-                    // burasi dogrulama kodu gelecek !
-                    if(true){
-                        let _data = await Data.create({
-                            ...body,
-                            author: userData.id,
-                            authCode: result.authCode,
-                            banner_story_time: new Date(+new Date()+2*7*24*60*60*1000),
-                            location: {
-                                coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
-                            }
-                        });
-                        if(!_data)
-                            return next(new ApiError("Create store advertisement",400))
-                        const imagesUrl = await storage.Upload(files,_data._id);
-                        let str = await Promise.all(imagesUrl).then(d => d );
-                        await Data.updateOne({ _id: _data._id},{ $push: { img: str }})
-                        let p_ads = await Payment.create({
-                            author: buyer_id,
-                            basketId:basket_id,
-                            paymentId: result.paymentId,
-                            price: card_price,
-                            paid_price: card_paid_price,
-                            ads_id: _data._id,
-                            paymentTransactionId: result.itemTransactions[0].paymentTransactionId
-                        })
-                        if(!p_ads)
-                            return next(new ApiError("Create store payment",400))
-                        return res.status(200).send({ status: true, message: "Add Advertisement data save success", data: result})
-                    }
+
+            let data = await Data.create({
+                ...body,
+                author: userData.id,
+                banner_story_time: new Date(+new Date()+2*7*24*60*60*1000),
+                location: {
+                    coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
+                }
+            });
+            if(!data)
+                return next(new ApiError("Create store advertisement",400))
+            const imagesUrl = await storage.Upload(files,data._id);
+            let str = await Promise.all(imagesUrl).then(d => d );
+            let u_ads = await Data.updateOne({ _id: data._id},{
+                $push: {
+                    img: str
                 }
             })
+            if(u_ads.matchedCount === 0)
+                return next(new ApiError("Create store story update didn't work",400));
+            return res.status(200).send({ status: true, message: "Add Advertisement data save success", data})
+
+            // await iyzipay.payment.create(request,async function(err,result) {
+            //     if(result.status === "failure")
+            //         return next(new ApiError(result.errorMessage,400))
+            //     if(result.status === "success"){
+            //         // burasi dogrulama kodu gelecek !
+            //         if(true){
+            //             let data = await Data.create({
+            //                 ...body,
+            //                 author: userData.id,
+            //                 authCode: result.authCode,
+            //                 banner_story_time: new Date(+new Date()+2*7*24*60*60*1000),
+            //                 location: {
+            //                     coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
+            //                 }
+            //             });
+            //             if(!data)
+            //                 return next(new ApiError("Create store advertisement",400))
+            //             const imagesUrl = await storage.Upload(files,data._id);
+            //             let str = await Promise.all(imagesUrl).then(d => d );
+            //             await Data.updateOne({ _id: data._id},{ $push: { img: str }})
+            //             let p_ads = await Payment.create({
+            //                 author: buyer_id,
+            //                 basketId:basket_id,
+            //                 paymentId: result.paymentId,
+            //                 price: card_price,
+            //                 paid_price: card_paid_price,
+            //                 ads_id: data._id,
+            //                 paymentTransactionId: result.itemTransactions[0].paymentTransactionId
+            //             })
+            //             if(!p_ads)
+            //                 return next(new ApiError("Create store payment",400))
+            //             return res.status(200).send({ status: true, message: "Add Advertisement data save success", data: result})
+            //         }
+            //     }
+            // })
         }
         if(ads_time === "1m"){
-            await iyzipay.payment.create(request,async function(err,result) {
-                if(result.status === "failure")
-                    return next(new ApiError(result.errorMessage,400))
-                if(result.status === "success"){
-                    if(true){
-                        let _data = await Data.create({
-                            ...body,
-                            author: userData.id,
-                            authCode: result.authCode,
-                            banner_story_time: new Date(+new Date()+30*24*60*60*1000),
-                            location: {
-                                coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
-                            }
-                        });
-                        if(!_data)
-                            return next(new ApiError("Create store advertisement",400))
-                        const imagesUrl = await storage.Upload(files,_data._id);
-                        let str = await Promise.all(imagesUrl).then(d => d );
-                        await Data.updateOne({ _id: _data._id},{ $push: { img: str }})
-                        let p_ads = await Payment.create({
-                            author: buyer_id,
-                            basketId:basket_id,
-                            paymentId: result.paymentId,
-                            price: card_price,
-                            paid_price: card_paid_price,
-                            ads_id: _data._id,
-                            paymentTransactionId: result.itemTransactions[0].paymentTransactionId
-                        })
-                        if(!p_ads)
-                            return next(new ApiError("Create store payment",400))
-                        return res.status(200).send({ status: true, message: "Add Advertisement data save success", data: result})
-                    }
+            let data = await Data.create({
+                ...body,
+                author: userData.id,
+                banner_story_time: new Date(+new Date()+30*24*60*60*1000),
+                location: {
+                    coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
+                }
+            });
+            if(!data)
+                return next(new ApiError("Create store advertisement",400))
+            const imagesUrl = await storage.Upload(files,data._id);
+            let str = await Promise.all(imagesUrl).then(d => d );
+            let u_ads = await Data.updateOne({ _id: data._id},{
+                $push: {
+                    img: str
                 }
             })
+            if(u_ads.matchedCount === 0)
+                return next(new ApiError("Create store story update didn't work",400));
+            return res.status(200).send({ status: true, message: "Add Advertisement data save success", data})
+
+            // await iyzipay.payment.create(request,async function(err,result) {
+            //     if(result.status === "failure")
+            //         return next(new ApiError(result.errorMessage,400))
+            //     if(result.status === "success"){
+            //         if(true){
+            //             let data = await Data.create({
+            //                 ...body,
+            //                 author: userData.id,
+            //                 authCode: result.authCode,
+            //                 banner_story_time: new Date(+new Date()+30*24*60*60*1000),
+            //                 location: {
+            //                     coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
+            //                 }
+            //             });
+            //             if(!data)
+            //                 return next(new ApiError("Create store advertisement",400))
+            //             const imagesUrl = await storage.Upload(files,data._id);
+            //             let str = await Promise.all(imagesUrl).then(d => d );
+            //             await Data.updateOne({ _id: data._id},{ $push: { img: str }})
+            //             let p_ads = await Payment.create({
+            //                 author: buyer_id,
+            //                 basketId:basket_id,
+            //                 paymentId: result.paymentId,
+            //                 price: card_price,
+            //                 paid_price: card_paid_price,
+            //                 ads_id: data._id,
+            //                 paymentTransactionId: result.itemTransactions[0].paymentTransactionId
+            //             })
+            //             if(!p_ads)
+            //                 return next(new ApiError("Create store payment",400))
+            //             return res.status(200).send({ status: true, message: "Add Advertisement data save success", data: result})
+            //         }
+            //     }
+            // })
         }
 
     } catch (error) {
+        console.log(error)
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));
         }
