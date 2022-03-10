@@ -39,7 +39,6 @@ const route = async (req,res,next) => {
                 }
             }
         );
-        
         if(query.search){
           let product_data = await Products.aggregate([
             {
@@ -69,12 +68,12 @@ const route = async (req,res,next) => {
                     is_approved: "yes",
                   },
                   {
-                    store_open_hour: {
+                    store_open_hour: {//6
                       $lte: query.hour ? parseInt(query.hour) : 25,
                     },
                   },
                   {
-                    store_close_hour: {
+                    store_close_hour: {//24
                       $gte: query.hour ? parseInt(query.hour) : 0,
                     },
                   },
@@ -184,6 +183,16 @@ const route = async (req,res,next) => {
                     is_approved: "yes",
                   },
                   {
+                    store_open_hour: {//6
+                      $lte: query.hour ? parseInt(query.hour) : 25,
+                    },
+                  },
+                  {
+                    store_close_hour: {//24
+                      $gte: query.hour ? parseInt(query.hour) : 0,
+                    },
+                  },
+                  {
                     "variants.sizes": {
                       $elemMatch: {
                         price: {
@@ -232,6 +241,31 @@ const route = async (req,res,next) => {
               },
             },
           ]);
+          let store_ads_story = await StoreAds.aggregate([
+            {
+              $geoNear: {
+                near: {
+                  type: "Point",
+                  coordinates: [parseFloat(query.long), parseFloat(query.lat)],
+                },
+                spherical: true,
+                maxDistance: query.dst
+                  ? parseFloat(query.dst) * 1609.34
+                  : 900 * 1609.34,
+                distanceMultiplier: 1 / 1609.34,
+                distanceField: "StoreStoryDst",
+              },
+            },
+            {
+              $match:{
+                $and:[
+                  { is_approved: "yes" },
+                  { banner_story_time: { $gte: current_time } },
+                  { ads_which: "Story"  }
+                ]
+              }
+            }
+          ])
           let currency = await doviz();
 
           return res
@@ -247,7 +281,7 @@ const route = async (req,res,next) => {
         return next(new ApiError(error?.message, 422));
       }
       if (error.code === 27) {
-        return next(new ApiError("We Don't Have Any Data", 404, {
+        return next(new ApiError("We Don't Have Any Geonear Data", 204, {
           store_ads_story:[],
           product_data:[],
           admin_ads_story:[],

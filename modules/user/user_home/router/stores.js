@@ -114,25 +114,25 @@ const route = async (req, res, next) => {
             distanceField: "StoreDst",
           },
         },
-        // {
-        //   $match: {
-        //     $and: [
-        //       {
-        //         is_approved: "yes",
-        //       },
-        //       {
-        //         store_open_hour: {
-        //           $lte: query.hour ? parseInt(query.hour) : 25,
-        //         },
-        //       },
-        //       {
-        //         store_close_hour: {
-        //           $gte: query.hour ? parseInt(query.hour) : 0,
-        //         },
-        //       },
-        //     ],
-        //   },
-        // },
+        {
+          $match: {
+            $and: [
+              {
+                is_approved: "yes",
+              },
+              {
+                store_open_hour: {//6
+                  $lte: query.hour ? parseInt(query.hour) : 25,
+                },
+              },
+              {
+                store_close_hour: {//24
+                  $gte: query.hour ? parseInt(query.hour) : 0,
+                },
+              },
+            ],
+          },
+        },
         {
           $lookup:{
             from:"product_stars",
@@ -196,12 +196,11 @@ const route = async (req, res, next) => {
         },
       });
     } catch (error) {
-      console.log(first)
       if (error.name === "MongoError" && error.code === 11000) {
         return next(new ApiError(error?.message, 422));
       }
       if (error.code === 27) {
-        return next(new ApiError("We Don't Have Any Data", 404, {
+        return next(new ApiError("We Don't Have Any GeoNear Data", 204, {
           store_ads_banner:[],
           admin_ads_banner:[],
           store_story:[],

@@ -12,20 +12,21 @@ const route = async (req, res, next) => {
         let data = await Data.create({
             ...body,
             location: {
-                coordinates: [ parseFloat(data.location.coordinates[0]),parseFloat(data.location.coordinates[1]) ]
+                coordinates: [ parseFloat(_data.location.coordinates[0]),parseFloat(_data.location.coordinates[1]) ]
             },
             categories:body.categories,
             variants: body.variants,
             futures: body.futures,
-            country: data.storecountry,
-            city: data.storecity, 
-            district: data.storedistrict,
-            language: data.storelanguage,
+            country: _data.storecountry,
+            city: _data.storecity, 
+            district: _data.storedistrict,
+            language: _data.storelanguage,
             author: userData.id,
-            phone: data.phone
+            phone: _data.phone
         });
         return res.status(200).send({ status: true, message: "Add Product worked",data})
     } catch (error) {
+        console.log(error)
         if (error.name === "MongoError" && error.code === 11000) {
           return next(new ApiError(error?.message, 422));
         }
