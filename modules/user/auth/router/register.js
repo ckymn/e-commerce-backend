@@ -8,7 +8,7 @@ const route = async (req, res, next) => {
       let { email, username, password} = body;
       let _data = await Data.findOne({ $or: [{ email }, { username }] });
       if (_data)
-        return next(new ApiError("Email and Username already exists...",400))
+        return next(new ApiError("Email and Username already exists...",200,null))
       const hash = await bcrypt.hash(password, 10);
       let _user = await new Data({
         ...body,

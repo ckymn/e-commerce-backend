@@ -3,6 +3,7 @@ const Products = require("../../../store/products/model")
 const AdminData = require("../../../admin/login/model")
 const ActiveUser = require("../../../../middlewares")
 const AdminAdsStory = require("../../../admin/advertisement/model")
+const StoreAds = require("../../../store/advertisement/model")
 const ApiError = require("../../../../errors/ApiError")
 const { ObjectId } = require("mongodb")
 const doviz = require("../../../../utils/doviz")
@@ -126,6 +127,31 @@ const route = async (req,res,next) => {
               },
             },
           ]);
+          let store_ads_story = await StoreAds.aggregate([
+            {
+              $geoNear: {
+                near: {
+                  type: "Point",
+                  coordinates: [parseFloat(query.long), parseFloat(query.lat)],
+                },
+                spherical: true,
+                maxDistance: query.dst
+                  ? parseFloat(query.dst) * 1609.34
+                  : 900 * 1609.34,
+                distanceMultiplier: 1 / 1609.34,
+                distanceField: "StoreStoryDst",
+              },
+            },
+            {
+              $match:{
+                $and:[
+                  { is_approved: "yes" },
+                  { banner_story_time: { $gte: current_time } },
+                  { ads_which: "Story"  }
+                ]
+              }
+            }
+          ])
           let currency = await doviz();
 
           return res
@@ -133,7 +159,7 @@ const route = async (req,res,next) => {
           .send({
             status: true,
             message: "Products and StoreStory are success ",
-            data: { product_data, admin_ads_story ,currency},
+            data: { product_data, admin_ads_story ,store_ads_story,currency},
           });
         }else{
           let product_data = await Products.aggregate([
@@ -207,22 +233,28 @@ const route = async (req,res,next) => {
             },
           ]);
           let currency = await doviz();
+
           return res
           .status(200)
           .send({
             status: true,
             message: "Products and StoreStory are success ",
-            data: { product_data, admin_ads_story ,currency},
+            data: { product_data, admin_ads_story ,store_ads_story,currency},
           });
         }
     } catch (error) {
       if (error.name === "MongoError" && error.code === 11000) {
-        next(new ApiError(error?.message, 422));
+        return next(new ApiError(error?.message, 422));
       }
       if (error.code === 27) {
-        next(new ApiError("We Don't Have Any Data", 500, null));
+        return next(new ApiError("We Don't Have Any Data", 404, {
+          store_ads_story:[],
+          product_data:[],
+          admin_ads_story:[],
+          currency:[]
+        }));
       }
-      next(new ApiError(error?.message));
+      return next(new ApiError(error?.message));
     }
 };
 

@@ -2,7 +2,6 @@ const Data = require("../../auth/model");
 const StoreBanner = require("../../../store/advertisement/model")
 const AdminAdsStory = require("../../../admin/advertisement/model")
 const Stores = require("../../../store/auth/model");
-const StoreAds = require("../../../store/advertisement/model")
 const { ObjectId } = require("mongodb");
 const ApiError = require("../../../../errors/ApiError");
 
@@ -62,32 +61,6 @@ const route = async (req, res, next) => {
           },
         },
       ]);
-      // magaza reklam story
-      let store_ads_story = await StoreAds.aggregate([
-        {
-          $geoNear: {
-            near: {
-              type: "Point",
-              coordinates: [parseFloat(query.long), parseFloat(query.lat)],
-            },
-            spherical: true,
-            maxDistance: query.dst
-              ? parseFloat(query.dst) * 1609.34
-              : 900 * 1609.34,
-            distanceMultiplier: 1 / 1609.34,
-            distanceField: "StoreStoryDst",
-          },
-        },
-        {
-          $match:{
-            $and:[
-              { is_approved: "yes" },
-              { banner_story_time: { $gte: current_time } },
-              { ads_which: "Story"  }
-            ]
-          }
-        }
-      ])
       // magaza story
       let store_story = await Data.aggregate([
         { $match: { _id: ObjectId(kuserData.id) } },
@@ -184,6 +157,7 @@ const route = async (req, res, next) => {
         { $skip: parseInt(query.skip) },
         { $limit: parseInt(query.limit) },
       ]);
+
       //? eski
       // let store_story = await StoreStory.aggregate([
       //   {
@@ -217,19 +191,24 @@ const route = async (req, res, next) => {
         data: {
           store_ads_banner,
           admin_ads_banner,
-          store_ads_story,
           store_story,
           stores,
         },
       });
     } catch (error) {
+      console.log(first)
       if (error.name === "MongoError" && error.code === 11000) {
-        next(new ApiError(error?.message, 422));
+        return next(new ApiError(error?.message, 422));
       }
       if (error.code === 27) {
-        next(new ApiError("We Don't Have Any Data", 500, null));
+        return next(new ApiError("We Don't Have Any Data", 404, {
+          store_ads_banner:[],
+          admin_ads_banner:[],
+          store_story:[],
+          stores:[]
+        }));
       }
-      next(new ApiError(error?.message));
+      return next(new ApiError(error?.message));
     }
 }
 module.exports = route
