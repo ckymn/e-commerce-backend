@@ -12,7 +12,7 @@ const {
   validate,
   errorHandler,
 } = require("../middlewares");
-//validations
+//validationss
 const schemas = require("../validations/admin");
 
 //admin_get
@@ -67,12 +67,12 @@ router.get(`/admin/bad_words`, authJwt, bad_words.all_bad_words)
 
 
 //admin_post
-router.post(`/admin/register`,validate(schemas.register),uploadImage.array("img"),login.register)
+router.post(`/admin/register`,uploadImage.array("img"),login.register)
 router.post(`/admin/login`,login.login)
 router.post(`/admin/forgot_password`,authJwt,login.forgot_password)
 router.post(`/admin/reset_password`,authJwt,login.reset_password)
 router.put(`/admin/update_password`,authJwt,login.update_password)
-router.post(`/admin/register_admin`,validate(schemas.register), authJwt,login.admin_ekle)
+router.post(`/admin/register_admin`, authJwt,login.admin_ekle)
 router.delete(`/admin/delete_admin/:id`,idChecker(), authJwt,login.admin_delete)
 router.put(`/admin/update_admin/:id`,idChecker(), authJwt,login.admin_update)
 router.post(`/admin/sector`, authJwt, sector.createSector);
