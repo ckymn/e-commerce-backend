@@ -22,7 +22,9 @@ const route = async (req, res, next) => {
             district: _data.storedistrict,
             language: _data.storelanguage,
             author: userData.id,
-            phone: _data.phone
+            phone: _data.phone,
+            store_open_hour: _data.store_open_hour,
+            store_close_hour: _data.store_close_hour,
         });
         return res.status(200).send({ status: true, message: "Add Product worked",data})
     } catch (error) {

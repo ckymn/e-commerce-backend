@@ -268,12 +268,13 @@ const route = async (req,res,next) => {
           ])
           let currency = await doviz();
 
+          let story = admin_ads_story.concat(store_ads_story);
           return res
           .status(200)
           .send({
             status: true,
             message: "Products and StoreStory are success ",
-            data: { product_data, admin_ads_story ,store_ads_story,currency},
+            data: { product_data, story ,currency},
           });
         }
     } catch (error) {

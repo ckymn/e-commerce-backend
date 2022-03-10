@@ -157,40 +157,13 @@ const route = async (req, res, next) => {
         { $skip: parseInt(query.skip) },
         { $limit: parseInt(query.limit) },
       ]);
-
-      //? eski
-      // let store_story = await StoreStory.aggregate([
-      //   {
-      //     $geoNear: {
-      //       near: {
-      //         type: "Point",
-      //         coordinates: [parseFloat(query.long), parseFloat(query.lat)],
-      //       },
-      //       spherical: true,
-      //       maxDistance: query.dst
-      //         ? parseFloat(query.dst) * 1609.34
-      //         : 900 * 1609.34,
-      //       distanceMultiplier: 1 / 1609.34,
-      //       distanceField: "StoreStoryDst",
-      //     },
-      //   },
-      //   {
-      //     $match: {
-      //       $and: [
-      //         { language: _data.language },
-      //         { story_time: { $gte: current_time } },
-      //       ],
-      //     },
-      //   }, 
-      // ]);
       
-  
+      let banner = admin_ads_banner.concat(store_ads_banner)
       return res.status(200).send({
         status: true,
         message: "Stores Success",
         data: {
-          store_ads_banner,
-          admin_ads_banner,
+          banner,
           store_story,
           stores,
         },

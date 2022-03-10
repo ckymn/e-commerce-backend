@@ -69,7 +69,9 @@ const products = new mongoose.Schema(
     comments: [{ type: ObjectId, ref: "product_comment" }],
     star: [{ type: ObjectId, ref: "product_star" }],
     favorite: [{ type: ObjectId, ref: "users" }],
-    is_favorite: { type: Boolean, default: false}
+    is_favorite: { type: Boolean, default: false},
+    store_open_hour: { type: Number },
+    store_close_hour: { type: Number },
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
