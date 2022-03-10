@@ -25,7 +25,7 @@ const route = async (req,res,next) => {
           }
         );
         if(!_data)
-          return next(new ApiError("Didn't find User",404));
+          return next(new ApiError("Didn't find User",404,_data));
         // active users find
         await ActiveUser.active.active_control(req.active);
         for(let [key,value] of req.active){
