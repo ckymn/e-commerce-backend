@@ -25,8 +25,7 @@ const route = async (req,res,next) => {
           }
         );
         if(!_data)
-          // return next(new ApiError("Didn't find User",404,_data));
-          return res.status(404).send({ message:"not found", data:[]})
+          return next(new ApiError("Didn't find User",204,_data));
         // active users find
         await ActiveUser.active.active_control(req.active);
         for(let [key,value] of req.active){
@@ -128,6 +127,7 @@ const route = async (req,res,next) => {
             },
           ]);
           let currency = await doviz();
+
           return res
           .status(200)
           .send({
