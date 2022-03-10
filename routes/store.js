@@ -50,19 +50,19 @@ router.get(`/store/stories`,authJwt ,storeStory.all_story)
 router.get(`/store/home_page`,authJwt ,store_home.home_page)
 
 //store_post
-router.post(`/store/register`,uploadImage.array("img"),store_auth.register)
+router.post(`/store/register`,store_auth.register)
 router.post(`/store/login`,store_auth.login)
 router.post(`/store/forgot_password`,authJwt,store_auth.forgot_password)
 router.post(`/store/reset_password`,authJwt,store_auth.reset_password)
 router.put(`/store/update_password`,authJwt,store_auth.update_password)
-router.post(`/store/advertisement`, authJwt ,ip_mid.ip2_Middleware,uploadImage.array("img"),store_advertisement.add_advertisement)
+router.post(`/store/advertisement`, authJwt ,ip_mid.ip2_Middleware,store_advertisement.add_advertisement)
 router.delete(`/store/advertisement/:id`,idChecker(), authJwt, all_advertisement.delete_advertisement);
-router.post(`/store/products`,authJwt, uploadImage.array('img',10),products.add_products)
+router.post(`/store/products`,authJwt,products.add_products)
 router.delete(`/store/product/:id`,idChecker(), authJwt, products.delete_product)
 router.put(`/store/product/:id`,idChecker(), authJwt, products.update_product)
 router.put(`/store/panel`,authJwt,panel.update_info);
 router.post(`/store/payment`,authJwt,ip_mid.ip2_Middleware,store_payment.store_date_payment)
-router.post(`/store/storie`,authJwt, uploadImage.array("img",5),storeStory.add_story)
+router.post(`/store/storie`,authJwt,storeStory.add_story)
 router.delete(`/store/storie/:id`,idChecker(),authJwt,storeStory.delete_story);
 router.post(`/store/image/upload`,authJwt,uploadImage.array("img"),store_images.uploader);
 router.delete(`/store/image/delete`,authJwt,store_images.delete_images);

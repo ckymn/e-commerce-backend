@@ -4,11 +4,9 @@ const ApiError = require("../../../../errors/ApiError");
 
 const route = async (req, res, next) => {
     try {
-        let { file , body } = req;
+        let { body } = req;
         let { email, username, password  } = body;
-
-        if(!file)
-            return next(new ApiError("Please upload a file",400))
+        console.log(body.img)
         let user = await Data.findOne({ $and: [ { email }, { username }] });
         if(user)
             return res.status(500).send({ status: false, message: "email or username already exists", user})
@@ -16,7 +14,8 @@ const route = async (req, res, next) => {
         let data = await Data.create({
             ...req.body,
             password:hash,
-        }).save();
+            img: body.img ? body.img : "https://storage.googleapis.com/vitrin_images/WhatsApp%20Image%202022-03-05%20at%2018.37.57.jpeg"
+        });
         return res.status(200).send({ status: true, message: "admin register success",data})
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {

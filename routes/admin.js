@@ -78,8 +78,8 @@ router.put(`/admin/update_admin/:id`,idChecker(), authJwt,login.admin_update)
 router.post(`/admin/sector`, authJwt, sector.createSector);
 router.put(`/admin/product_permission/:id`,idChecker(),authJwt,product_notificatios.update_product_permission)
 router.put(`/admin/notification_store/:id`,idChecker(),authJwt, store_notifications.update_store)
-router.put(`/admin/notification_advertisement/:id`,idChecker(), authJwt, uploadImage.array("img",2),advertisement_notification.update_advertisement_store);
-router.post(`/admin/advertisement`,authJwt, uploadImage.array("img"),admin_advertisement.advertisement)
+router.put(`/admin/notification_advertisement/:id`,idChecker(), authJwt,advertisement_notification.update_advertisement_store);
+router.post(`/admin/advertisement`,authJwt,admin_advertisement.advertisement)
 router.delete(`/admin/advertisement/:id`,idChecker(),authJwt,admin_advertisement.delete_advertisement);
 router.delete(`/admin/store/:id`,idChecker(), authJwt ,storePanel.delete_store);
 router.put(`/admin/store/:id`,idChecker(), authJwt ,storePanel.update_store);
