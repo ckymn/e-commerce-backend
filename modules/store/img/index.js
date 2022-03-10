@@ -1,5 +1,6 @@
 module.exports = {
     get_images : require("./get_images"),
+    single_image: require("./single_image"),
     delete_images: require("./delete_images"),
-    add_images: require("./add_images")
+    uploader: require("./uploader")
 }

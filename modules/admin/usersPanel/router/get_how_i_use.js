@@ -8,12 +8,12 @@ const route = async (req, res, next) => {
       .exec((_, data) => {
         if (!data) {
           return res
-            .status(400)
-            .send({ status: false, message: "Don't Find How I Use Page" });
+            .status(404)
+            .send({ status: false, message: "Don't Find How I Use Page",data});
         } else {
           return res
             .status(200)
-            .send({ status: true, message: "Find How I Use Page Success" });
+            .send({ status: true, message: "Find How I Use Page Success",data});
         }
       });
   } catch (error) {
@@ -21,7 +21,7 @@ const route = async (req, res, next) => {
       next(new ApiError(error?.message, 422));
     }
     if (error.code === 27) {
-      next(new ApiError("We Don't Have Any Data", 500, null));
+      next(new ApiError("We Don't Have Any Data", 500));
     }
     next(new ApiError(error?.message, 500));
   }

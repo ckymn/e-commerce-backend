@@ -5,12 +5,12 @@ const store_storie = new Schema({
     type: { type: Schema.Types.String, default: "store_storie"},
 	author_img: { type: Schema.Types.String},
 	story_time: { type: Schema.Types.Date, default:new Date(+new Date() + 24*60*60*1000) },
-	img: [{ type: Schema.Types.String, required: true }],
-	video: { type: Schema.Types.String, require: false },
+	img:[{ 
+		_id: { type: Schema.Types.String },
+		url: { type: Schema.Types.String },
+	}],
+	video: { type: Schema.Types.String, require: false , default:""},
 	view: [{ type: Schema.Types.ObjectId, ref:"user" }],
-	country: { type: Schema.Types.String, require: true },
-	city: { type: Schema.Types.String, require: true },
-	district: { type: Schema.Types.String, require: true },
 	location: {
 		type: {
 		  type: Schema.Types.String,

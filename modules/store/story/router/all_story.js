@@ -1,5 +1,5 @@
 const Data = require("../model")
-const storage = require("../../../../uploads/storeStorys");
+const storage = require("../../../../uploads/images");
 const ApiError = require("../../../../errors/ApiError");
 
 const route = async (req, res, next) => {
@@ -8,6 +8,7 @@ const route = async (req, res, next) => {
         let current_time = new Date();
 
         let outdate_stories = await Data.find({ story_time: { $lte: current_time }})
+        
         if(outdate_stories.length === 0){
           let data = await Data.find({
             $and: [
@@ -16,22 +17,25 @@ const route = async (req, res, next) => {
             ],
           });
           if(data.length === 0)
-            return next(new ApiError("All story not found",200,data))
+            return next(new ApiError("All story not found",400,data))
           return res.status(200).send({ status: true, message: "All advertisement data success", data })
         }
         if (outdate_stories.length > 0) {
-            await Data.deleteMany({ story_time: { $lte: current_time } });
-            let outdate_stories_id = outdate_stories.map(i => i._id);
-            await storage.Delete(outdate_stories_id);
-            let data = await Data.find({
-              $and: [
-                { author: userData.id },
-                { story_time: { $gte: current_time } },
-              ],
-            });
-            if(data.length === 0)
-              return next(new ApiError("All story not found",200,data))
-            return res.status(200).send({ status: true, message: "All advertisement data success", data })
+          for(let i = 0; i < outdate_ads.length; i++){
+            data[i].img.map(async i => {
+                await storage.Delete(i._id);
+            })
+          }
+          await Data.deleteMany({ $and: [{ author: userData.id }, { story_time :{ $lte: current_time } }] });
+          let data = await Data.find({
+            $and: [
+              { author: userData.id },
+              { story_time: { $gte: current_time } },
+            ],
+          });
+          if(data.length === 0)
+            return next(new ApiError("All story not found",404,data))
+          return res.status(200).send({ status: true, message: "All advertisement data success", data })
         }
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {

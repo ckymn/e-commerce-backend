@@ -7,6 +7,8 @@ const route = async (req, res, next) => {
         let { body , userData} = req;
         
         let _data = await Store.findOne({ _id: userData.id }).lean();
+        if(!_data)
+            return next(new ApiError("Store not found",404))
         let p_create = await new Data({
             ...body,
             location: {

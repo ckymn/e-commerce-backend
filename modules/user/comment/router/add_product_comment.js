@@ -21,7 +21,7 @@ const route = async( req,res,next) => {
             return false
         })
         if(_comment.length > 0)
-            return next(new ApiError(" Your comment not available",200))
+            return next(new ApiError(" Your comment not available",400,null))
 
         // product comment
         let user = await User.findOne({ _id: kuserData.id }).lean();
@@ -67,7 +67,7 @@ const route = async( req,res,next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500, null));
+          next(new ApiError("We Don't Have Any Data", 500));
         }
         next(new ApiError(error?.message));
     }

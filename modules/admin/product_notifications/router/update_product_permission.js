@@ -10,16 +10,16 @@ const route = async (req, res, next) => {
       if(!data)
         return next(new ApiError("Product permissions not found",404));
         if(is_approved === "no"){
-          let n_data = await Data.findOneAndUpdate({ _id : params.id }, { $set: { is_approved: "no" }}, { new: true })
-          if(!n_data) 
+          let data = await Data.findOneAndUpdate({ _id : params.id }, { $set: { is_approved: "no" }}, { new: true })
+          if(!data) 
             return next(new ApiError("Product permissions didnt match",409));
-          return res.status(200).send({ status: true, message: "get single notification change success NO"})
+          return res.status(200).send({ status: true, message: "get single notification change success NO",data})
         }
         if(is_approved === "yes"){
-          let n_data = await Data.findOneAndUpdate({ _id : params.id }, { $set: { is_approved: "yes" }}, { new: true })
-          if(!n_data) 
+          let data = await Data.findOneAndUpdate({ _id : params.id }, { $set: { is_approved: "yes" }}, { new: true })
+          if(!data) 
             return next(new ApiError("Product permissions didnt match",409));
-          return res.status(200).send({ status: true, message: "get single notification change success YES"})
+          return res.status(200).send({ status: true, message: "get single notification change success YES",data})
       }
       // if(data.is_approved === "no"){
       //   if(is_approved === "wait"){
@@ -55,7 +55,7 @@ const route = async (req, res, next) => {
       next(new ApiError(error?.message, 422));
     }
     if (error.code === 27) {
-      next(new ApiError("We Don't Have Any Data", 500, null));
+      next(new ApiError("We Don't Have Any Data", 500));
     }
     next(new ApiError(error?.message, 500));
   }

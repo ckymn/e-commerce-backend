@@ -1,5 +1,5 @@
 const Data = require("../model")
-const storage = require("../../../../uploads/storeAds");
+const storage = require("../../../../uploads/images");
 const ApiError = require("../../../../errors/ApiError");
 
 const route = async (req,res,next) => {
@@ -7,32 +7,37 @@ const route = async (req,res,next) => {
         let { userData } = req;
         let current_time = new Date();
 
-        let outdate_ads = await Data.find({banner_story_time:{ $lte: current_time } })
+        let outdate_ads = await Data.find({ $and: [{ author: userData.id }, { banner_story_time:{ $lte: current_time } }] }).lean();
+
         if(outdate_ads.length === 0){
             let data = await Data.find({ 
                 $and:[
-                    { _id: userData.id },
+                    { author: userData.id },
                     { is_approved: "yes" },
                     { banner_story_time: { $gte: current_time } }
                 ]
             });
             if(data.length === 0)
-                return next(new ApiError("All Advertisement not found",200,data));    
+                return next(new ApiError("All Advertisement not found",404,data));    
             return res.status(200).send({ status: true, message: "All advertisement data success", data })
         }
         if(outdate_ads.length > 0){
-            await Data.deleteMany({ banner_story_time: { $lte: current_time }});
-            let outdate_ads_id = outdate_ads.map(i => i._id);
-            await storage.Delete(outdate_ads_id);
+            for(let i = 0; i < outdate_ads.length; i++){
+                data[i].img.map(async i => {
+                    await storage.Delete(i._id);
+                })
+            }
+            await Data.deleteMany({ $and: [{ author: userData.id }, { banner_story_time:{ $lte: current_time } }] });
+            
             let data = await Data.find({ 
                 $and:[
-                    { _id: userData.id },
+                    { author: userData.id },
                     { is_approved: "yes" },
                     { banner_story_time: { $gte: current_time } }
                 ]
             });
             if(data.length === 0)
-                return next(new ApiError("All Advertisement not found",200,data));    
+                return next(new ApiError("All Advertisement not found",404,data));    
             return res.status(200).send({ status: true, message: "All advertisement data success", data })
         }
 
@@ -41,7 +46,7 @@ const route = async (req,res,next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500, null));
+          next(new ApiError("We Don't Have Any Data", 500));
         }
         next(new ApiError(error?.message));
     }

@@ -1,10 +1,9 @@
 const { Schema, model } = require("mongoose")
 
 const route = new model("subscription", new Schema({
-    sub_name: { type: Schema.Types.String, enum: ["1Month","3Month","1Year"]},
-    sub_description: { type: Schema.Types.String, require: true },
-    sub_price: { type: Schema.Types.Number, require: true },
-    img: [{ type: Schema.Types.String, require: true }]
+    title: { type: Schema.Types.String, enum: ["1Month","3Month","1Year"], required: true },
+    description: { type: Schema.Types.String, required: true },
+    price: { type: Schema.Types.Number, required: true },
 },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at"}}
 ));

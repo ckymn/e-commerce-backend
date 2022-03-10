@@ -10,13 +10,14 @@ const route = async (req, res, next) => {
         let d_y = await Data.find({ $and: [{ author: id }, { is_approved: { $in: "yes" } }] })
           .populate({
             path: "comments",
-            populate: {
-              path: "author",
-              select: "name surname",
-            },
+            select: "comment rate author_name -_id",
             options: { lean: true },
           })
-          .populate({ path: "star", select: "rate", options: { lean: true } })
+          .populate({ 
+            path: "star", 
+            select: "rate -_id", 
+            options: { lean: true } 
+          })
           .lean()
        
         if(!d_w.length && !d_n.length && !d_y.length)

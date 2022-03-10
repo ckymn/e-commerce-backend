@@ -6,8 +6,8 @@ const ApiError = require("../../../../errors/ApiError")
 
 const route = async (req, res, next) => {
    try {
-        let { email , username, password,registration_token } = req.body;
-        const _user = await Data.findOneAndUpdate({ $or: [{ email }, { username }]},{
+        let { email, password,registration_token } = req.body;
+        const _user = await Data.findOneAndUpdate({ email },{
           $set:{
             registration_token
           }

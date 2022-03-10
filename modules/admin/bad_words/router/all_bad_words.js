@@ -4,10 +4,11 @@ const ApiError = require("../../../../errors/ApiError")
 const route = async (req,res,next) => {
     try {
         let { body } = req;
-        let data = await new Data({
-            ...body
-        }).save();
-        return res.status(200).send({ status: true, message: "Solution Partner Data Success ", data })
+
+        let data = await Data.find({}).lean();
+        if(!data)
+        return next(new ApiError("Bad words update dont match", 404, data));
+        return res.status(200).send({ status: true, message: "Bad words update success",data})
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));
@@ -19,4 +20,4 @@ const route = async (req,res,next) => {
     }
 };
 
-module.exports = route
+module.exports = route;

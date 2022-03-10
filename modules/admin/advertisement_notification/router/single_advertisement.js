@@ -7,7 +7,7 @@ const route = async (req, res) => {
 
     let data = await Data.findOne({ _id: params.id }).lean();
     if(!data) 
-      return next(new ApiError("Admin single advertisement notification not found",404));
+      return next(new ApiError("Admin single advertisement notification not found",404,data));
     return res
       .status(200)
       .send({
@@ -20,7 +20,7 @@ const route = async (req, res) => {
       next(new ApiError(error?.message, 422));
     }
     if (error.code === 27) {
-      next(new ApiError("We Don't Have Any Data", 500, null));
+      next(new ApiError("We Don't Have Any Data", 500));
     }
     next(new ApiError(error?.message, 500));
   }

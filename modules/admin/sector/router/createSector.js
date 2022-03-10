@@ -7,22 +7,20 @@ const route = async (req, res,next) => {
         let { sector_name, category_one,category_two,category_three,category_four,category_five } = body;
 
             await Sector.findOne({ sector_name }).lean().exec(async (err,data) => {
+                let c_sector;
                 if(!data || data.length === 0){
-                    let c_sector = await new Sector({ sector_name }).save();
-                    if(!c_sector)
-                        return next(new ApiError("Create sector dont work",400));
+                  c_sector = await Sector.create({ sector_name });
                 }
                 if(category_one){
                     await Category_One.findOne({ category_one }).lean().exec(async (err,data) => {
+                        let c_category_one;
                         if(!data || data.length === 0){
                             let sectorId = await Sector.findOne({ sector_name }).lean();
-                            let c_category_one = await new Category_One({ 
+                            c_category_one = await Category_One.create({ 
                                 category_one,
                                 futures: body.category_one_futures,
                                 parent_id: sectorId._id
-                            }).save();
-                            if(!c_category_one)
-                                return next(new ApiError("Create category_one dont work",400));
+                            })
                             let o_sector = await Sector.findOneAndUpdate( { sector_name },
                               {
                                 $push: {
@@ -37,15 +35,14 @@ const route = async (req, res,next) => {
                         }
                         if(category_two){
                             await Category_Two.findOne({ category_two }).lean().exec(async (err,data) => {
+                                let c_category_two;
                                 if(!data || data.length === 0){
                                     let category_one_Id = await Category_One.findOne({ category_one }).lean();
-                                    let c_category_two = await new Category_Two({ 
+                                    c_category_two = await Category_Two.create({ 
                                         category_two,
                                         futures: body.category_two_futures,
                                         parent_id: category_one_Id._id
-                                    }).save();
-                                    if(!c_category_two)
-                                        return next(new ApiError("Category Two dont work",400));
+                                    })
                                     let o_category_one = await Category_One.findOneAndUpdate({ category_one },
                                         {
                                           $push: {
@@ -60,15 +57,14 @@ const route = async (req, res,next) => {
                                 }
                                 if(category_three){
                                     await Category_Three.findOne({ category_three }).lean().exec(async (err,data) => {
+                                        let c_category_three;
                                         if(!data || data.length === 0){
                                             let category_two_Id = await Category_Two.findOne({ category_two }).lean();
-                                            let c_category_three = await new Category_Three({ 
+                                            c_category_three = await Category_Three.create({ 
                                                 category_three,
                                                 futures: body.category_three_futures,
                                                 parent_id: category_two_Id._id 
-                                            }).save();
-                                            if(!c_category_three)
-                                                return next(new ApiError("Category_Three dont work",400));
+                                            })
                                             let o_caegory_two = await Category_Two.findOneAndUpdate({ category_two },
                                                 {
                                                   $push: {
@@ -83,15 +79,14 @@ const route = async (req, res,next) => {
                                         }
                                         if(category_four){
                                             await Category_Four.findOne({ category_four }).lean().exec(async (err,data) => {
+                                                let c_category_four;
                                                 if(!data || data.length === 0){
                                                     let category_three_Id = await Category_Three.findOne({ category_three }).lean();
-                                                    let c_category_four = await new Category_Four({ 
+                                                    c_category_four = await Category_Four.create({ 
                                                         category_four ,
                                                         futures: body.category_four_futures,
                                                         parent_id: category_three_Id._id 
-                                                    }).save();
-                                                    if(!c_category_four)
-                                                        return next(new ApiError("Category Four dont work",400));
+                                                    });
                                                     let o_category_four = await Category_Three.findOneAndUpdate({ category_three },
                                                         {
                                                           $push: {
@@ -106,15 +101,14 @@ const route = async (req, res,next) => {
                                                 }
                                                 if(category_five){
                                                     await Category_Five.findOne({ category_five }).lean().exec(async (err,data) => {
+                                                    let c_category_five;
                                                     if(!data || data.length === 0){
                                                         let category_four_Id = await Category_Four.findOne({ category_four }).lean();
-                                                        let c_category_five = await new Category_Five({ 
+                                                        c_category_five = await Category_Five.create({ 
                                                             category_five ,
                                                             futures: body.category_five_futures.map(i => i),
                                                             parent_id: category_four_Id._id 
-                                                        }).save();
-                                                        if(!c_category_five)
-                                                            return next(new ApiError("Category Five dont work",400)); 
+                                                        })
                                                         let o_category_five = await Category_Four.findOneAndUpdate({ category_four },
                                                             {
                                                               $push: {
@@ -125,24 +119,40 @@ const route = async (req, res,next) => {
                                                           );
                                                         if(!o_category_five)
                                                             return next(new ApiError("Category Four dont match",400)); 
+                                                    }else{
+                                                        return res.status(200).send({ status: true, message: "Sectors Success" , data: { c_sector , c_category_two, c_category_three, c_category_four }});
                                                     }
                                                 })}
+                                                if(!category_five){
+                                                    return res.status(200).send({ status: true, message: "Sectors Success" , data: { c_sector , c_category_two, c_category_three, c_category_four }})
+                                                }
                                             })
+                                        }
+                                        if(!category_four){
+                                          return res.status(200).send({ status: true, message: "Sectors Success" , data: { c_sector , c_category_two, c_category_three }})
                                         }
                                     })
                                 }
+                                if(!category_three){
+                                  return res.status(200).send({ status: true, message: "Sectors Success" , data: { c_sector , c_category_one, c_category_two }})
+                                }
                             });
+                        }
+                        if(!category_two){
+                          return res.status(200).send({ status: true, message: "Sectors Success" , data: { c_sector,c_category_one }})
                         }
                     });
                 }
+                if(!category_one){
+                  return res.status(200).send({ status: true, message: "Sectors Success" , data: { c_sector }})
+                }
             })
-            return res.status(200).send({ status: true, message: "Sectors Success" })
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500, null));
+          next(new ApiError("We Don't Have Any Data", 500));
         }
         next(new ApiError(error?.message, 500));
     }

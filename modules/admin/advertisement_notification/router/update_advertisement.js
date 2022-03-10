@@ -3,96 +3,84 @@ const Payment = require("../../../store/payment/model")
 const { iyzipay , Iyzipay} = require("../../../../utils/iyzipay");
 const ApiError = require('../../../../errors/ApiError');
 
-const route = async (req, res) => {
+const route = async (req, res, next) => {
   try { 
     let { files , body , params  } = req;
     let { is_approved  } = body;
     let buyer_ip = "192.168.1.37"
-    console.log(body)
+
     await Data.findOne({ _id: params.id }).lean().exec(async(err,data) => {
       if(!data)
-        return res.status(404).send({ status: false, message: "Not Found any Data"})
+        return res.status(404).send({ status: false, message: "Not Found any Data", data})
+
       if(data.is_approved === "wait"){
         if(is_approved === "no"){
-          let _pay = await Payment.findOne({ads_id: data._id})
-          if(!_pay)
-            return next(new ApiError("Payment data not found",404));
-          // ? IADE
-          iyzipay.refund.create({
-            ip: "192.168.1.37",
-            price: _pay.price,
-            paymentTransactionId: _pay.paymentTransactionId,
-        }, async function (_, result) {
-            if(result.status === "failure"){  
-              return next(new ApiError(result.errorMessage,400));
-            }else{
-              let u_store_ads = await Data.findOneAndUpdate({ _id : params.id }, { $set: { is_approved: "no" }})
-              if(!u_store_ads)
-                return next(new ApiError("Update store advertisement status not found",404));
-              return res.status(200).send({ status: true, message: "Magazanin Parasi Geri Odendi"});
-            }
-          });
+          let data = await Data.findOneAndUpdate(
+            { _id: params.id },
+            { $set: { is_approved: "no" } }
+          );
+          if(!data)
+              return next(new ApiError("Update store advertisement status not found",404,data));
+          return res.status(200).send({ status: true, message: "Magazanin Parasi Geri Odendi, Reklam askiya alindi",data});
         }
         if(is_approved === "yes"){
-          let n_data = await Data.updateOne({ _id : params.id },
+          let data = await Data.findOneAndUpdate({ _id : params.id },
             { 
               $set: { 
                 is_approved: "yes",
               }
             })
-          if(!n_data) 
+          if(!data) 
             return next(new ApiError("Admin update advertisement notification didn't match",409));
-          return res.status(200).send({ status: true, message: "get single notification change success YES"})
+          return res.status(200).send({ status: true, message: "get single notification change success YES",data})
+        }
+        if(is_approved === "wait"){
+          return next(new ApiError("Already wait ",400,data))
         }
       }
       if(data.is_approved === "no"){
         if(is_approved === "wait"){
-          let n_data = await Data.findOneAndUpdate({ _id: params.id },
+          let data = await Data.findOneAndUpdate({ _id: params.id },
             { $set: { is_approved: "wait" } },
             { new: true }
           );
-          if(!n_data) 
-            return next(new ApiError("Admin update advertisemnt didn't match",404));
-          return res.status(200).send({ status: true, message: "get single notification change success WAIT"})
+          if(!data) 
+            return next(new ApiError("Admin update advertisemnt didn't match",404,data));
+          return res.status(200).send({ status: true, message: "get single notification change success WAIT",data})
         }
         if(is_approved === "yes"){
-          let u_data = await Data.updateOne({ _id: params.id },
+          let data = await Data.findOneAndUpdate({ _id: params.id },
             { $set: { is_approved: "yes" } }
           );
-          if(u_data.matchedCount === 0) 
+          if(data.matchedCount === 0) 
             return next(new ApiError("Admin update advertisement didn't match",409));
-          return res.status(200).send({ status: true, message: "get single notification change success YES"})
+          return res.status(200).send({ status: true, message: "get single notification change success YES",data})
+        }
+        if(is_approved === "no"){
+          return next(new ApiError("Already no ",400,data))
         }
       }
       if(data.is_approved === "yes"){
         if(is_approved === "no"){
-          let _pay = await Payment.findOne({ads_id: data._id})
-          if(!_pay)
-            return next(new ApiError("Payment data not found",404));
-          // ? IADE
-          iyzipay.refund.create({
-            ip: "192.168.1.37",
-            price: _pay.price,
-            paymentTransactionId: _pay.paymentTransactionId,
-        }, async function (_, result) {
-            if(result.status === "failure"){  
-              return next(new ApiError(result.errorMessage,400));
-            }else{
-              let u_store_ads = await Data.findOneAndUpdate({ _id : params.id }, { $set: { is_approved: "no" }})
-              if(!u_store_ads)
-                return next(new ApiError("Update store advertisement status not found",404));
-              return res.status(200).send({ status: true, message: "Magazanin Parasi Geri Odendi"});
-            }
-          });
+          let data = await Data.findOneAndUpdate(
+            { _id: params.id },
+            { $set: { is_approved: "no" } }
+          );
+          if(!data)
+            return next(new ApiError("Update store advertisement status not found",404,data));
+          return res.status(200).send({ status: true, message: "Magazanin Parasi Geri Odendi , hesabiniz askiya alindi",data});
         }
         if(is_approved === "wait"){
-          let n_data = await Data.findOneAndUpdate({ _id: params.id },
+          let data = await Data.findOneAndUpdate({ _id: params.id },
             { $set: { is_approved: "wait" } },
             { new: true }
           );
-          if(!n_data) 
+          if(!data) 
             return next(new ApiError("Admin update advertisement didn't match",409))
-          return res.status(200).send({ status: true, message: "get single notification change success WAIT"})
+          return res.status(200).send({ status: true, message: "get single notification change success WAIT",data})
+        }
+        if(is_approved === "yes"){
+          return next(new ApiError("Already yes ",400,data))
         }
       }
     })
@@ -101,7 +89,7 @@ const route = async (req, res) => {
       next(new ApiError(error?.message, 422));
     }
     if (error.code === 27) {
-      next(new ApiError("We Don't Have Any Data", 500, null));
+      next(new ApiError("We Don't Have Any Data", 500));
     }
     next(new ApiError(error?.message, 500));
   }

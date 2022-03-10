@@ -14,9 +14,15 @@ const route = async (req,res,next) => {
               ],
             },
           },
+          {
+            $project: {
+              _id: 1,
+              storename: 1
+            }
+          }
         ]);
         if(data.length === 0)
-            return next(new ApiError("Search store not found",404)) 
+            return next(new ApiError("Search store not found",404,data)) 
         return res
           .status(200)
           .send({
@@ -29,7 +35,7 @@ const route = async (req,res,next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500, null));
+          next(new ApiError("We Don't Have Any Data", 500));
         }
         next(new ApiError(error?.message, 500));
     }

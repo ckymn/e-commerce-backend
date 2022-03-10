@@ -9,25 +9,30 @@ const route = async (req,res,next) => {
 
         let result = await Data.findOne({ $or: [ { email }, { username }] }).lean();
         if(!result)
-            return next(new ApiError("email or username already exists",409));
+            return next(new ApiError("email or username already exists",404,null));
         const hash = await bcrypt.hash(password, 10);
-        if(adminData.role[0] === "admin"){
-            let data = await new Data({
-                ...body,
-                role: "",
-                password: hash,
-                menu_permissions: permission.map(i => i)
-            }).save();
-            if(!data)
-                return next(new ApiError("Create admin didn't work",400));
-            return res.status(200).send({ status: true, message: "Admin Add Sub Admin Success ", data })
+        if(adminData){
+            if(adminData.role[0] === "admin"){
+                let data = await Data.create({
+                    ...body,
+                    role: "",
+                    password: hash,
+                    menu_permissions: permission.map(i => i)
+                })
+                return res.status(200).send({ status: true, message: "Admin Add Sub Admin Success ", data })
+            }else{
+                return next(new ApiError("you are not admin",400, null))
+            }
+        }else{
+            return next(new ApiError("Admin not found", 404, null))
         }
+        
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500, null));
+          next(new ApiError("We Don't Have Any Data", 500));
         }
         next(new ApiError(error?.message, 500));
     }

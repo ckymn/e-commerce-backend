@@ -1,78 +1,66 @@
 const {Storage } = require("@google-cloud/storage");
 const { format } = require("util");
 const path = require("path")
+const uuid = require("uuid")
+const mimes = require("mime-types");
+const { ERRORS:{FileApiErrors} } = require("../../utils/isFileExists");
 
-// creates a client 
 const storage = new Storage({ 
 	keyFilename: path.join(__dirname, "../../key.json"),
 	projectId: "famous-hull-332022"
 });
+const bucketname = process.env.BUCKET_IMAGES;
+const bucket = storage.bucket(bucketname);
 
-const bucket_name = String(process.env.BUCKET_IMAGES)
-const bucket = storage.bucket(bucket_name);
+const Upload = async (file, folder_path, file_name) => {
+  try {
+    // const file_path = path.resolve(folder_path, file_name);
+    // if (!fs.existsSync(file_path)) {
+    //   return FileApiErrors.FILE_NOT_EXISTS;
+    // }
 
-const MultiUpload = (files, imgId) => {
-    const promises = [];
-    files.forEach(i => {
-        promises.push(
-            new Promise((resolve, reject) => {
-                const blob = bucket.file(imgId+"/"+i.originalname.replace(/ /g, "_"));
-                const blobStream = blob.createWriteStream({
-                    resumable: false
-                });
-                blobStream.on("finish", ()=> {
-                    const publicUrl = format(
-                        `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-                    );
-                    resolve(publicUrl,imgId)
-                })
-                .on("error", () => {
-                    reject("Unable to upload image, something went wrong")
-                })
-                .end(i.buffer)
-            }).then(d => { return d })
-        )
-    })
-    return promises
-};
-const Upload = (file, imgId) => {
-    try {
+    let imgId = uuid.v4();
+    const blob = bucket.file(
+      imgId + "/" + file.originalname.replace(/ /g, "_")
+    );
+    const blobStream = blob.createWriteStream({
+      resumable: false,
+    });
 
-        if(!file)
-          return { status: 400, message: "Please upload a file!" }
-        const blob = bucket.file(imgId+"/"+file.originalname.replace(/ /g, "_"));
-        const blobStream = blob.createWriteStream({
-          resumable: false,
-        });
-    
-        blobStream.on("error", (err) => {
-          return { 
-            staus: 500, 
-            message: err.message 
-          }
-        });
-        let b =  blobStream.on("finish", async () => {
-          const publicUrl = format(
-            `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-          );
-          return {
-            status: 200,
-            message: "Uploaded the file successfully: " + file.originalname,
-            publicUrl
-          }
-        });
-        blobStream.end(file.buffer);
-        return  b._events.finish()
-      } catch (error) {
-        return {
-          status: 500,
-          message: `Could not upload the file: ${file.originalename}`,
-        }
+    blobStream.on("error", (err) => {
+      return { staus: 500, message: err.message };
+    });
+    let b = blobStream.on("finish", () => {
+      const publicUrl = format(
+        `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+      );
+      return {
+        publicUrl,
+        imgId,
       };
+    });
+    blobStream.end(file.buffer);
+    // await Clean_up({file_path})
+    return b._events.finish();
+  } catch (e) {
+    console.log("BUCKET CREATION FAILED:", e)
+  }
 };
 
 const Delete = async (imgId) => {
-   await bucket.deleteFiles({ prefix: `${imgId}/`})
+  try {
+    await bucket.deleteFiles({ prefix: `${imgId}/`})
+  } catch (e) {
+    console.log("BUCKET DELETION FAILED",e)
+  }
 }
 
-module.exports = { Upload, Delete , MultiUpload }
+// const Clean_up = async ({file_path}) => {
+//   return new Promise((resolve) => {
+//       fs.unlink(file_path, () => {
+//           resolve(true);
+//       })
+//   })
+// }
+
+module.exports = { Upload, Delete }

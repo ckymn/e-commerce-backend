@@ -8,7 +8,7 @@ const route = async (req, res) => {
 
     await Data.findOne({ _id: id }).lean().exec(async(err,data) => {
       if(!data)
-        return next(new ApiError("Store update not found", 404));
+        return next(new ApiError("Store update not found", 404,FormData));
       if(data.is_approved === "wait"){
         if(is_approved === "no"){
           let n_data = await Data.findOneAndUpdate({ _id : id }, { $set: { is_approved: "no" }}, { new: true })
@@ -57,7 +57,7 @@ const route = async (req, res) => {
       next(new ApiError(error?.message, 422));
     }
     if (error.code === 27) {
-      next(new ApiError("We Don't Have Any Data", 500, null));
+      next(new ApiError("We Don't Have Any Data", 500));
     }
     next(new ApiError(error?.message, 500));
   }

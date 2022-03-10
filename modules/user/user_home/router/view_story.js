@@ -7,22 +7,22 @@ const route = async (req,res,next) => {
     try {
         let { params, kuserData,query } = req;
         if(!query.type){
-            return next(new ApiError("query type is necessary", 400))
+            return next(new ApiError("query type is necessary", 400,null))
         }else{
             if(query.type === "admin_ads"){
                 await AdminStoryAds.findOne({ $and: [ {_id: params.id}, { view: { $in : [ kuserData.id ]}}] })
-                .lean().exec(async(err,data) => {
-                    if(!data){
+                .lean().exec(async(_,result) => {
+                    if(!result){
                         let data = await AdminStoryAds.findOneAndUpdate({ _id: params.id }, {
                             $push: { 
                                 view: kuserData.id
                             }
                         })
                         if(!data)
-                            return next(new ApiError("Admin advertisement story Not found",404))
+                            return next(new ApiError("Admin advertisement story Not found",404,data))
                         return res.status(200).send({ status: true, message: "Find Single Stories success and View story set ", data })
                     }else{
-                        return res.status(200).send({ status: true, message: "Find Single Stories success", data })
+                        return res.status(200).send({ status: true, message: "You already saw story", result })
                     }
                 })
             }
@@ -66,7 +66,7 @@ const route = async (req,res,next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500, null));
+          next(new ApiError("We Don't Have Any Data", 500));
         }
         next(new ApiError(error?.message));
     }

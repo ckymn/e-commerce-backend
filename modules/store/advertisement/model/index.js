@@ -8,15 +8,24 @@ const ads = new Schema({
     banner_story_time: { type: Schema.Types.Date, require: false, default: new Date(+new Date()+24*3600*1000) },
     ads_price: { type: Schema.Types.Number, require: true },
     ads_description : { type: Schema.Types.String, require: true },
-    img: [{ type: Schema.Types.String, require: false }],
-    video: { type: Schema.Types.String, require: false },
+    img: [{ 
+      _id: { type: Schema.Types.String },
+      url: { type: Schema.Types.String },
+    }],
+    video:[{ 
+      _id: { type: Schema.Types.String },
+      url: { type: Schema.Types.String },
+    }],
     link: { type: Schema.Types.String, require: false },
     country: { type: Schema.Types.String, require: true },
     city: { type: Schema.Types.String, require: true },
     district: { type: Schema.Types.String, require: true },
     is_approved: { type: Schema.Types.String, default: "wait" },
     authCode: { type: Schema.Types.String, default: ""},
-    view:[{ type: Schema.Types.ObjectId, ref:"user" }],
+    view:[{ 
+      who: { type: Schema.Types.ObjectId, ref:"user" },
+      date: { type: Schema.Types.Date, default: new Date() }
+    }],
     location: {
         type: {
           type: Schema.Types.String,

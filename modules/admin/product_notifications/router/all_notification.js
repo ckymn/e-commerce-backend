@@ -8,7 +8,7 @@ const route = async (req, res) => {
         let d_y = await Data.find({"is_approved": { $in: "yes" }}).lean();
 
         if(!d_w.length && !d_n.length && !d_y.length)
-            return next(new ApiError("All notification not found",404));
+            return next(new ApiError("All notification not found",404,null));
         return res
           .status(200)
           .send({
@@ -21,7 +21,7 @@ const route = async (req, res) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500, null));
+          next(new ApiError("We Don't Have Any Data", 500));
         }
         next(new ApiError(error?.message, 500));
     }

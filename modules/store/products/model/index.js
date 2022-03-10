@@ -15,6 +15,7 @@ var Sizes = new mongoose.Schema({
 })
 
 var Images = new mongoose.Schema({
+  _id: { type: String, required: true},
   kind: { 
     type: String, 
     required: false
@@ -67,7 +68,7 @@ const products = new mongoose.Schema(
   },
     comments: [{ type: ObjectId, ref: "product_comment" }],
     star: [{ type: ObjectId, ref: "product_star" }],
-    favorite: [{ type: ObjectId, ref: "user" }],
+    favorite: [{ type: ObjectId, ref: "users" }],
     is_favorite: { type: Boolean, default: false}
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }

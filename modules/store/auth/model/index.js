@@ -2,13 +2,16 @@ const { Schema, model } = require("mongoose")
 
 const store_register = new Schema(
   {
-    name: { type: Schema.Types.String, require: true },
+    name: { type: Schema.Types.String, required: true },
     surname: { type: Schema.Types.String, require: true },
     email: { type: Schema.Types.String, require: true, unique: true },
     phone: { type: Schema.Types.String, require: true, unique: true },
     username: { type: Schema.Types.String, require: true, unique: true },
     description: { type: Schema.Types.String, required: true, },
-    storeimg: { type: Schema.Types.String, require: true },
+    storeimg: [{ 
+      _id: { type: Schema.Types.String },
+      url: { type: Schema.Types.String },
+    }],
     password: { type: Schema.Types.String, require: true },
     resetCode: { type: Schema.Types.String, require: true, default: "" },
     role: { type: Schema.Types.String, require: true, default: "store" },
