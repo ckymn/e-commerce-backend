@@ -67,7 +67,7 @@ router.get(`/admin/bad_words`, authJwt, bad_words.all_bad_words)
 
 
 //admin_post
-router.post(`/admin/register`,uploadImage.array("img"),login.register)
+router.post(`/admin/register`,login.register)
 router.post(`/admin/login`,login.login)
 router.post(`/admin/forgot_password`,authJwt,login.forgot_password)
 router.post(`/admin/reset_password`,authJwt,login.reset_password)
@@ -85,9 +85,9 @@ router.delete(`/admin/store/:id`,idChecker(), authJwt ,storePanel.delete_store);
 router.put(`/admin/store/:id`,idChecker(), authJwt ,storePanel.update_store);
 router.delete(`/admin/store_comment/:id`,idChecker(), authJwt, comment_notifications.delete_store_comments);
 router.delete(`/admin/product_comment/:id`,idChecker(), authJwt, comment_notifications.delete_product_comments);
-router.post(`/admin/subscribe`, authJwt, uploadImage.array("img",5),subscribe.add_subscription);
+router.post(`/admin/subscribe`, authJwt,subscribe.add_subscription);
 router.delete(`/admin/subscribe/:id`,idChecker(), authJwt, subscribe.delete_subscription);
-router.put(`/admin/update_subscribe/:id`,idChecker(), authJwt, uploadImage.array("img"),subscribe.update_subscription);
+router.put(`/admin/update_subscribe/:id`,idChecker(), authJwt,subscribe.update_subscription);
 router.post(`/admin/partner`,authJwt, solutionPartner.add_partner)
 router.delete(`/admin/partner/:id`,idChecker(),authJwt, solutionPartner.delete_partner)
 router.put(`/admin/partner/:id`,idChecker(),authJwt, solutionPartner.update_partner)

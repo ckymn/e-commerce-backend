@@ -38,7 +38,7 @@ router.post(`/user/profile`, authJwt, user_profile.profile)
 
  
 // user_post
-router.post(`/user/register`,uploadImage.single("img"),user_auth.register)
+router.post(`/user/register`,user_auth.register)
 router.post(`/user/login`,user_auth.login)
 router.post(`/user/forgot_password`,authJwt,user_auth.forgot_password)
 router.post(`/user/reset_password`,authJwt,user_auth.reset_password)
