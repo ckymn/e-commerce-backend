@@ -31,7 +31,7 @@ const route = async (req, res,next) => {
                               { new: true }
                             );
                             if(!o_sector)
-                                return next(new ApiError("Sector dont match",400));
+                                return next(new ApiError("Sector dont match",400,[]));
                         }
                         if(category_two){
                             await Category_Two.findOne({ category_two }).lean().exec(async (err,data) => {
@@ -53,7 +53,7 @@ const route = async (req, res,next) => {
                                         { new: true }
                                       );
                                     if(!o_category_one)
-                                        return next(new ApiError("Category One  dont match",400));
+                                        return next(new ApiError("Category One  dont match",400,[]));
                                 }
                                 if(category_three){
                                     await Category_Three.findOne({ category_three }).lean().exec(async (err,data) => {
@@ -75,7 +75,7 @@ const route = async (req, res,next) => {
                                                 { new: true }
                                               );
                                             if(!o_caegory_two)
-                                                return next(new ApiError("Category Two dont match",400));
+                                                return next(new ApiError("Category Two dont match",400,[]));
                                         }
                                         if(category_four){
                                             await Category_Four.findOne({ category_four }).lean().exec(async (err,data) => {
@@ -97,7 +97,7 @@ const route = async (req, res,next) => {
                                                         { new: true }
                                                       );
                                                     if(!o_category_four)
-                                                        return next(new ApiError("Category Three dont match",400));
+                                                        return next(new ApiError("Category Three dont match",400,[]));
                                                 }
                                                 if(category_five){
                                                     await Category_Five.findOne({ category_five }).lean().exec(async (err,data) => {
@@ -118,7 +118,7 @@ const route = async (req, res,next) => {
                                                             { new: true }
                                                           );
                                                         if(!o_category_five)
-                                                            return next(new ApiError("Category Four dont match",400)); 
+                                                            return next(new ApiError("Category Four dont match",400,[])); 
                                                     }else{
                                                         return res.send({ status: 200, message: "Sectors Success" , data: { c_sector , c_category_two, c_category_three, c_category_four }});
                                                     }
@@ -144,7 +144,11 @@ const route = async (req, res,next) => {
                     });
                 }
                 if(!category_one){
-                  return res.send({ status: 200, message: "Sectors Success" , data: { c_sector }})
+                  return res.send({
+                    status: 200,
+                    message: "Sectors Success",
+                    data: { c_sector },
+                  });
                 }
             })
     } catch (error) {
@@ -152,9 +156,9 @@ const route = async (req, res,next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 204, null));
+          next(new ApiError("We Don't Have Any Data", 204, []));
         }
-        next(new ApiError(error?.message, 500));
+        next(new ApiError(error?.message));
     }
   
 };

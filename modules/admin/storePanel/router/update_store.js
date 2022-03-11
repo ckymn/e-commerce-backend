@@ -13,9 +13,9 @@ const route = async (req, res, next) => {
                 },
             });
             if(data.matchedCount === 0){
-                return next(new ApiError("Admin update store dont match",409,nill))
+                return next(new ApiError("Admin update store dont match",409,[]))
             }else{
-                return res.status(200).send({status: true, message: "Update Store Remain Date Success",data})
+                return res.send({status: 200, message: "Update Store Remain Date Success",data:[]})
             }
         }
         if(suspension_status){
@@ -23,7 +23,7 @@ const route = async (req, res, next) => {
                 await Data.findOneAndUpdate({ _id: params.id },{ $set:{ is_approved:"yes" }})
                 .lean().exec(async(err,data) => {
                     if(!data){
-                        return res.status(404).send({ status: false, message: "Store wait-no to yes don't work",data})
+                        return res.send({ status: 404, message: "Store wait-no to yes don't work",data})
                     }else{
                         return res.send({ status: 200, message: "Store wait-no to yes successed",data})
                     }
@@ -32,7 +32,7 @@ const route = async (req, res, next) => {
                 await Data.findOneAndUpdate({_id: params.id },{ $set:{ is_approved:"wait" }})
                 .lean().exec(async(err,data) => {
                     if(!data){
-                        return res.status(404).send({ status: false, message: "Store yes-no to wait don't work",data})
+                        return res.send({ status: 404, message: "Store yes-no to wait don't work",data})
                     }else{
                         return res.send({ status: 200, message: "Store yes-no to wait successed",data})
                     }
@@ -44,9 +44,9 @@ const route = async (req, res, next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 204, null));
+          next(new ApiError("We Don't Have Any Data", 204, []));
         }
-        next(new ApiError(error?.message, 500));
+        next(new ApiError(error?.message));
     }
 }
 

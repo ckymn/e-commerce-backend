@@ -98,7 +98,7 @@ router.post(`/admin/partner`,authJwt, solutionPartner.add_partner)
 router.delete(`/admin/partner/:id`,idChecker(),authJwt, solutionPartner.delete_partner)
 router.put(`/admin/partner/:id`,idChecker(),authJwt, solutionPartner.update_partner)
 router.post(`/admin/app_notification`,authJwt, app_notification.add_notification)
-router.post(`/admin/how_i_use`, authJwt, userPanel.how_i_use)
+router.post(`/admin/guide`, authJwt, userPanel.guide)
 router.post(`/admin/bad_words`, authJwt, bad_words.add_bad_words)
 router.post(`/admin/image/upload`,authJwt,uploadImage.array("img"),admin_image.uploader);
 

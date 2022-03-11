@@ -5,7 +5,7 @@ const route = async(req,res,next) => {
     try {
         let { body ,params, userData } = req;
 
-        let _data = await Data.findOneAndUpdate(
+        let data = await Data.findOneAndUpdate(
           {
             $and: [{ author: userData.id }, { _id: params.id }],
           },
@@ -17,15 +17,15 @@ const route = async(req,res,next) => {
             },
           }
         );
-        if(!_data)
-          return next(new ApiError("Product update not found",404));
+        if(!data)
+          return next(new ApiError("Product update not found",404,[]));
         return res.send({ status: 200, message: "Update Data Product Success", data})
     } catch (error) {
       if (error.name === "MongoError" && error.code === 11000) {
         next(new ApiError(error?.message, 422));
       }
       if (error.code === 27) {
-        next(new ApiError("We Don't Have Any Data", 204, null));
+        next(new ApiError("We Don't Have Any Data", 204, []));
       }
       next(new ApiError(error?.message));
     }

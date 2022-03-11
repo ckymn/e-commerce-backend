@@ -26,7 +26,7 @@ const route = async (req, res) => {
         // ODEME
         await iyzipay.payment.create(request, async function(err,result) {
             if(result.status === "failure")
-                return next(new ApiError(result.errorMessage,400));     
+                return next(new ApiError(result.errorMessage,400,[]));     
             if(result.status === "success"){
                 let time = items.time
                 if(true){
@@ -40,7 +40,7 @@ const route = async (req, res) => {
                         paymentTransactionId: result.itemTransactions[0].paymentTransactionId
                     })
                     if(!_data)
-                        return next(new ApiError("Odeme Gerceklesti ama Veri Tabanina kaydedilmedi",400));
+                        return next(new ApiError("Odeme Gerceklesti ama Veri Tabanina kaydedilmedi",400,[]));
                     let _register = await Register.findOneAndUpdate({_id: buyer_id}, 
                         {
                             $set:{
@@ -50,19 +50,23 @@ const route = async (req, res) => {
                         },
                         { new: true })
                     if(!_register)
-                        return next(new ApiError("Store date payment not found",404));
+                        return next(new ApiError("Store date payment not found",404,[]));
                     await _data.save();
                     return res.send({ status: 200, message: "Islem Devam ediyor", data: result})
                 }
+                return res.send({
+                  status: 400,
+                  message: "Girdiginiz Kod Uyusmusyor .Tekrar deneyin",
+                  data: [],
+                });
             }
-            return res.status(500).send({ status: false, message:"Girdiginiz Kod Uyusmusyor .Tekrar deneyin"})
         })
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500, null));
+          next(new ApiError("We Don't Have Any Data", 204, []));
         }
         next(new ApiError(error?.message));
     }

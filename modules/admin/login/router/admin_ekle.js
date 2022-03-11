@@ -9,7 +9,7 @@ const route = async (req,res,next) => {
 
         let result = await Data.findOne({ $or: [ { email }, { username }] }).lean();
         if(!result)
-            return next(new ApiError("email or username already exists",404,null));
+            return next(new ApiError("email or username already exists",404,[]));
         const hash = await bcrypt.hash(password, 10);
         if(adminData){
             if(adminData.role[0] === "admin"){
@@ -21,10 +21,10 @@ const route = async (req,res,next) => {
                 })
                 return res.send({ status: 200, message: "Admin Add Sub Admin Success ", data })
             }else{
-                return next(new ApiError("you are not admin",400, null))
+                return next(new ApiError("you are not admin",400, []))
             }
         }else{
-            return next(new ApiError("Admin not found", 404, null))
+            return next(new ApiError("Admin not found", 404, []))
         }
         
     } catch (error) {
@@ -32,9 +32,9 @@ const route = async (req,res,next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 204, null));
+          next(new ApiError("We Don't Have Any Data", 204, []));
         }
-        next(new ApiError(error?.message, 500));
+        next(new ApiError(error?.message));
     }
 };
 

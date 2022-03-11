@@ -14,9 +14,9 @@ const route = async (req, res, next) => {
 
         let match = await bcrypt.compare(password, data.password)
         if(!match)
-            return next(new ApiError("Password or email invalid",400));
+            return next(new ApiError("Password or email invalid",400,[]));
         let access_token = await jwt.sign(
-          { id: data.id, role: data.role , img: data.img },
+          { id: data.id, role: data.role, img: data.img },
           process.env.JWT_ACCESS_SECRET,
           { expiresIn: process.env.JWT_ACCESS_TIME }
         );
@@ -26,9 +26,9 @@ const route = async (req, res, next) => {
       next(new ApiError(error?.message, 422));
     }
     if (error.code === 27) {
-      next(new ApiError("We Don't Have Any Data", 204, null));
+      next(new ApiError("We Don't Have Any Data", 204, []));
     }
-    next(new ApiError(error?.message, 500));
+    next(new ApiError(error?.message));
    }
 }
 module.exports = route

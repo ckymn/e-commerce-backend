@@ -1,10 +1,8 @@
 const { ObjectId } = require("mongodb");
 const Data = require("../../auth/model"),
   { Store_Comment } = require("../../../user/comment/model"),
-  Store = require("../../auth/model"),
   StoreFollow = require("../../../user/follow/model"),
   { Store_Star , Product_Star} = require("../../../user/star/model"),
-  mongoose = require("mongoose"),
   Payment = require("../../payment/model"),
   ApiError = require("../../../../errors/ApiError");
 
@@ -94,8 +92,8 @@ const route = async (req, res, next) => {
     let search_count = Object.values(store.search_count);
     let location_search_count = Object.values(store.location_search_count)
 
-    return res.status(200).send({
-      status: true,
+    return res.send({
+      status: 200,
       message: "Store Home Page Success",
       data: {
         search_count,
@@ -106,7 +104,7 @@ const route = async (req, res, next) => {
         total_followers,
         total_comments,
         total_product_point,
-        total_store_point, 
+        total_store_point,
       },
     });
   } catch (error) {
@@ -115,7 +113,7 @@ const route = async (req, res, next) => {
       next(new ApiError(error?.message, 422));
     }
     if (error.code === 27) {
-      next(new ApiError("We Don't Have Any Data", 500, null));
+      next(new ApiError("We Don't Have Any Data", 204, []));
     }
     next(new ApiError(error?.message));
   }

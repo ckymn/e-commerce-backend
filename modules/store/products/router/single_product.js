@@ -20,16 +20,18 @@ const route = async (req, res, next) => {
       })
       .lean()
       .exec();
-    if (!data) return next(new ApiError("Single Product not found", 404));
-    return res
-      .status(200)
-      .send({ status: true, message: "Single product search success", data });
+    if (!data) return next(new ApiError("Single Product not found", 404, []));
+    return res.send({
+      status: 200,
+      message: "Single product search success",
+      data,
+    });
   } catch (error) {
     if (error.name === "MongoError" && error.code === 11000) {
       next(new ApiError(error?.message, 422));
     }
     if (error.code === 27) {
-      next(new ApiError("We Don't Have Any Data", 500, null));
+      next(new ApiError("We Don't Have Any Data", 204, []));
     }
     next(new ApiError(error?.message));
   }

@@ -10,9 +10,9 @@ const route = async (req,res,next) => {
         }else{
             if(query.type === "admin_ads"){
                 await AdminStoryAds.findOne({ $and: [ {_id: params.id}, { "view.who": { $in : [ kuserData.id ]}}] })
-                .lean().exec(async(_,result) => {
-                    if(!result){
-                        let data = await AdminStoryAds.findOneAndUpdate({ _id: params.id }, {
+                .lean().exec(async(_,data) => {
+                    if(!data){
+                        await AdminStoryAds.findOneAndUpdate({ _id: params.id }, {
                             $push: { 
                                 view: {
                                     who: kuserData.id,
@@ -20,11 +20,9 @@ const route = async (req,res,next) => {
                                 }
                             }
                         })
-                        if(!data)
-                            return next(new ApiError("Admin advertisement story Not found",404,null))
                         return res.send({ status: 200, message: "Find Single Stories success and View story set ", data })
                     }else{
-                        return res.send({ status: 200, message: "You already saw story", result })
+                        return res.send({ status: 200, message: "You already saw story", data: null})
                     }
                 })
             }

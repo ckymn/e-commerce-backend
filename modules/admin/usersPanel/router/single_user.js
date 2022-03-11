@@ -9,14 +9,14 @@ const route = async (req, res, next) => {
             .select("-password")
             .lean().exec();
         if(!data)
-            return res.status(404).send({ status: false, message: "Not Found Any Store User", data})
-        return res.status(200).send({status: true, message: "Single Users Success", data })
+            return res.send({ status: 404, message: "Not Found Any Store User", data})
+        return res.send({status: 200, message: "Single Users Success", data })
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 204, null));
+          next(new ApiError("We Don't Have Any Data", 204, []));
         }
         next(new ApiError(error?.message, 500));
     }

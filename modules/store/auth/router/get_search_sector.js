@@ -11,7 +11,7 @@ const route = async (req, res) => {
   try {
     let { global } = req.body;
 
-    let _sector_name = await Sector.aggregate([
+    let sector_name = await Sector.aggregate([
       {
         $match: {
           $or: [
@@ -22,7 +22,7 @@ const route = async (req, res) => {
       },
       { $project: { sector_name: 1, category_one: 1 , parent_id: 1, child_id: 1} },
     ]);
-    let _category_one = await Category_One.aggregate([
+    let category_one = await Category_One.aggregate([
       { $match: {
         $or: [
           // { $text: { $search: global } },
@@ -31,7 +31,7 @@ const route = async (req, res) => {
       }, },
       { $project: { category_one: 1, category_two: 1 , parent_id: 1, child_id: 1} },
     ]);
-    let _category_two = await Category_Two.aggregate([
+    let category_two = await Category_Two.aggregate([
       { $match: {
         $or: [
           // { $text: { $search: global } },
@@ -40,7 +40,7 @@ const route = async (req, res) => {
       }, },
       { $project: { category_two: 1, category_three: 1 , parent_id: 1, child_id: 1} },
     ]);
-    let _category_three = await Category_Three.aggregate([
+    let category_three = await Category_Three.aggregate([
       { $match: {
         $or: [
           // { $text: { $search: global } },
@@ -49,7 +49,7 @@ const route = async (req, res) => {
       }, },
       { $project: { category_three: 1, category_four: 1 , parent_id: 1, child_id: 1} },
     ]);
-    let _category_four = await Category_Four.aggregate([
+    let category_four = await Category_Four.aggregate([
       { $match: {
         $or: [
           // { $text: { $search: global } },
@@ -58,7 +58,7 @@ const route = async (req, res) => {
       }, },
       { $project: { category_four: 1, category_five: 1 , parent_id: 1, child_id: 1} },
     ]);
-    let _category_five = await Category_Five.aggregate([
+    let category_five = await Category_Five.aggregate([
       { $match: {
         $or: [
           // { $text: { $search: global } },
@@ -68,29 +68,26 @@ const route = async (req, res) => {
       { $project: { parent_id : 1, category_five: 1 } },
     ]);
     
-    return res.status(200).send({
-      status: true,
+    return res.send({
+      status: 200,
       message: "Search Categories success",
       data: {
-        _sector_name,
-        _category_one,
-        _category_two,
-        _category_three,
-        _category_four,
-        _category_five,
+        sector_name,
+        category_one,
+        category_two,
+        category_three,
+        category_four,
+        category_five,
       },
     });
   } catch (error) {
     if (error.name === "MongoError" && error.code === 11000) {
-      return res
-        .status(422)
-        .send({ status: false, message: `File Already exists!  : ${error}` });
-    } else {
-      return res.status(422).send({
-        status: false,
-        message: `Store Search Sector Error , Something Missing => ${error}`,
-      });
+      next(new ApiError(error?.message, 422));
     }
+    if (error.code === 27) {
+      next(new ApiError("We Don't Have Any Data", 204, null));
+    }
+    next(new ApiError(error?.message));
   }
 };
 

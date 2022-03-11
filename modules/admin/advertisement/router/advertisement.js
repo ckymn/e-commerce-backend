@@ -6,6 +6,8 @@ const route = async (req, res, next) => {
         let { body, adminData } = req;
         let { ads_time } = body;
        
+        if(!adminData)
+            return next(new ApiError("login",401,[]))
         if(ads_time === "1d"){
             let data = await Data.create({
                 ...body,
@@ -66,6 +68,7 @@ const route = async (req, res, next) => {
             return res.send({ status: 200, message: "Admin Add Advertisement success", data })
         }
     } catch (error) {
+        console.log(error)
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));
         }

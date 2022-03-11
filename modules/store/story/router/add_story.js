@@ -8,8 +8,8 @@ const route = async (req, res, next) => {
     
         let store = await Store.findOne({ _id: userData.id }).lean();
         if(!store)
-            return next(new ApiError("Store not found", 404));
-        let _data = await Data.create({
+            return next(new ApiError("Store not found", 404,[]));
+        let data = await Data.create({
             ...body,
             author: userData.id,
             author_img: store.storeimg,
@@ -17,14 +17,18 @@ const route = async (req, res, next) => {
                 coordinates: [parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1])]
             },
         })
-        return res.send({ status: 200, message: "Add Store story worked", data: _data })
+        return res.send({
+          status: 200,
+          message: "Add Store story worked",
+          data,
+        });
     } catch (error) {
         console.log(error)
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500 ));
+          next(new ApiError("We Don't Have Any Data", 204, [] ));
         }
         next(new ApiError(error?.message));
     }

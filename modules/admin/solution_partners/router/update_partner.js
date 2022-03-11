@@ -14,8 +14,8 @@ const route = async (req,res,next) => {
           .exec((err, data) => {
             if (!data)
               return next(new ApiError("Partner not found",404,data));
-            return res.status(200).send({
-              status: true,
+            return res.send({
+              status: 200,
               message: "Update Solution Partner success ",
               data,
             });
@@ -25,9 +25,9 @@ const route = async (req,res,next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 204, null));
+          next(new ApiError("We Don't Have Any Data", 204, []));
         }
-        next(new ApiError(error?.message, 500));
+        next(new ApiError(error?.message));
     }
 };
 

@@ -8,7 +8,7 @@ const route = async (req, res, next) => {
         
         let _data = await Store.findOne({ _id: userData.id }).lean();
         if(!_data)
-            return next(new ApiError("Store not found",404,_data))
+            return next(new ApiError("Store not found",404,_data,[]))
 
         function makeid(length) {
             var result           = '';
@@ -46,7 +46,7 @@ const route = async (req, res, next) => {
           return next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          return next(new ApiError("We Don't Have Any Data", 400, null));
+          return next(new ApiError("We Don't Have Any Data", 204, []));
         }
         return next(new ApiError(error?.message));
     }
