@@ -216,12 +216,14 @@ const route = async (req,res,next) => {
                     banner_story_time: { $gte: current_time },
                   },
                   { ads_which: "Story" },
-                  {
-                    $or:[
-                      {  "view.who": { $nin : [ kuserData.id ]}},
-                      { $and: [ {"view.who": { $in : [ kuserData.id ]} } , { "view.date": { $gte: new Date(+new Date()-24*3600*1000) }} ]}
-                    ]
-                  }
+                  { "view.date": { $gte: new Date(+new Date()-24*3600*1000) }}
+                  // { $and: [ {"view.who": { $in : [ kuserData.id ]} } , { "view.date": { $gte: new Date(+new Date()-24*3600*1000) }} ]}
+                  // {
+                  //   $or:[
+                  //     {  "view.who": { $nin : [ kuserData.id ]}},
+                  //     { $and: [ {"view.who": { $in : [ kuserData.id ]} } , { "view.date": { $gte: new Date(+new Date()-24*3600*1000) }} ]}
+                  //   ]
+                  // }
                 ],
               },
             },

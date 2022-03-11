@@ -9,10 +9,10 @@ const route = async (req, res, next) => {
         let _data = await Data.findOne({ _id: kuserData.id }).lean().exec();
         let decoded = await bcrypt.compare(body.old_password,_data.password);
         if(!decoded){
-            return next(new ApiError("Your old password incorrectly.",400, []))
+            return next(new ApiError("Your old password incorrectly.",408, []))
         }else{
             if(body.new_password != body.new_again_password){
-                return next(new ApiError("Don't match new_password and new_again_password incorrectly.",400, []))
+                return next(new ApiError("Don't match new_password and new_again_password incorrectly.",409, []))
             }else{
                 let encode = await bcrypt.hash(body.new_password,10);
                 await Data.findOneAndUpdate({ _id: kuserData.id }, {$set: { password: encode }},{new: true});

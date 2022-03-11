@@ -12,7 +12,7 @@ const route = async (req, res, next) => {
         let data = await Data.create({
             ...body,
             author: userData.id,
-            author_img: store.storeimg,
+            author_img: store.storeimg[0].url,
             location:{
                 coordinates: [parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1])]
             },
