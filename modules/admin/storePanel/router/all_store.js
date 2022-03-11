@@ -3,7 +3,24 @@ const ApiError  = require("../../../../errors/ApiError")
 
 const route = async (req, res, next) => {
     try {
-        let data = await Data.find({}).select("-password").lean();
+        let { global } = req.body;
+        let data = await Data.aggregate([
+            {
+                $match: {
+                    $or:[
+                        { storecountry: global },
+                        { storecity: global},
+                        { storedistrict: global},
+                        { sector_name: global },
+                    ]
+                }
+            },
+            {
+                $project: {
+                    password: 0
+                }
+            }
+        ])
         if(!data){
             return res.status(404).send({ status: false, message: "Not Found Store User", data})
         }else{
@@ -14,7 +31,7 @@ const route = async (req, res, next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500));
+          next(new ApiError("We Don't Have Any Data", 204,null));
         }
         next(new ApiError(error?.message, 500));
     }

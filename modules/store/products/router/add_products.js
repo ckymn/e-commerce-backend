@@ -9,8 +9,21 @@ const route = async (req, res, next) => {
         let _data = await Store.findOne({ _id: userData.id }).lean();
         if(!_data)
             return next(new ApiError("Store not found",404,_data))
+
+        function makeid(length) {
+            var result           = '';
+            var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for ( var i = 0; i < length; i++ ) {
+                result += characters.charAt(Math.floor(Math.random() * 
+            charactersLength));
+            }
+            return result
+        }
+        const productName = `${body.title}-${makeid(10)}`
         let data = await Data.create({
             ...body,
+            title: productName,
             location: {
                 coordinates: [ parseFloat(_data.location.coordinates[0]),parseFloat(_data.location.coordinates[1]) ]
             },

@@ -12,6 +12,8 @@ const {
   validate,
   errorHandler,
 } = require("../middlewares");
+//utils
+const { country, city, state } = require("../utils/getCountry")
 //validationss
 const schemas = require("../validations/admin");
 
@@ -63,7 +65,10 @@ router.get(`/admin/app_notifications`, authJwt,app_notification.all_notification
 router.get(`/admin/app_notification/:id`,idChecker(), authJwt,app_notification.single_notification)
 router.get(`/admin/logout`, authJwt,login.logout)
 router.get(`/admin/search_store`, authJwt ,storePanel.search_store);
-router.get(`/admin/bad_words`, authJwt, bad_words.all_bad_words)
+
+router.get(`/countries`, country)
+// router.get(`/countries/${selected?.country}`, country)
+// router.get(`/countries/${selected?.country}/districts/${selected?.city}`, country)
 
 
 //admin_post

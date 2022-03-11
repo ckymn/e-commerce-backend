@@ -39,6 +39,7 @@ const route = async (req,res,next) => {
                 }
             }
         );
+
         if(query.search){
           let product_data = await Products.aggregate([
             {
@@ -122,35 +123,16 @@ const route = async (req,res,next) => {
                     banner_story_time: { $gte: current_time },
                   },
                   { ads_which: "Story" },
+                  {
+                    $or:[
+                      {  "view.who": { $nin : [ kuserData.id ]}},
+                      { $and: [ {"view.who": { $in : [ kuserData.id ]} } , { "view.date": { $gte: new Date(+new Date()-24*3600*1000) }} ]}
+                    ]
+                  }
                 ],
               },
             },
           ]);
-          let store_ads_story = await StoreAds.aggregate([
-            {
-              $geoNear: {
-                near: {
-                  type: "Point",
-                  coordinates: [parseFloat(query.long), parseFloat(query.lat)],
-                },
-                spherical: true,
-                maxDistance: query.dst
-                  ? parseFloat(query.dst) * 1609.34
-                  : 900 * 1609.34,
-                distanceMultiplier: 1 / 1609.34,
-                distanceField: "StoreStoryDst",
-              },
-            },
-            {
-              $match:{
-                $and:[
-                  { is_approved: "yes" },
-                  { banner_story_time: { $gte: current_time } },
-                  { ads_which: "Story"  }
-                ]
-              }
-            }
-          ])
           let currency = await doviz();
 
           return res
@@ -158,7 +140,7 @@ const route = async (req,res,next) => {
           .send({
             status: true,
             message: "Products and StoreStory are success ",
-            data: { product_data, admin_ads_story ,store_ads_story,currency},
+            data: { product_data, admin_ads_story ,currency},
           });
         }else{
           let product_data = await Products.aggregate([
@@ -237,6 +219,12 @@ const route = async (req,res,next) => {
                     banner_story_time: { $gte: current_time },
                   },
                   { ads_which: "Story" },
+                  {
+                    $or:[
+                      {  "view.who": { $nin : [ kuserData.id ]}},
+                      { $and: [ {"view.who": { $in : [ kuserData.id ]} } , { "view.date": { $gte: new Date(+new Date()-24*3600*1000) }} ]}
+                    ]
+                  }
                 ],
               },
             },
@@ -246,45 +234,14 @@ const route = async (req,res,next) => {
               }
             }
           ]);
-          let store_ads_story = await StoreAds.aggregate([
-            {
-              $geoNear: {
-                near: {
-                  type: "Point",
-                  coordinates: [parseFloat(query.long), parseFloat(query.lat)],
-                },
-                spherical: true,
-                maxDistance: query.dst
-                  ? parseFloat(query.dst) * 1609.34
-                  : 900 * 1609.34,
-                distanceMultiplier: 1 / 1609.34,
-                distanceField: "StoreStoryDst",
-              },
-            },
-            {
-              $match:{
-                $and:[
-                  { is_approved: "yes" },
-                  { banner_story_time: { $gte: current_time } },
-                  { ads_which: "Story"  }
-                ]
-              }
-            },
-            {
-              $project:{
-                video:0
-              }
-            }
-          ])
           let currency = await doviz();
 
-          let story = admin_ads_story.concat(store_ads_story);
           return res
           .status(200)
           .send({
             status: true,
             message: "Products and StoreStory are success ",
-            data: { product_data, story ,currency},
+            data: { product_data, admin_ads_story ,currency},
           });
         }
     } catch (error) {
