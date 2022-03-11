@@ -35,7 +35,6 @@ const login = require("../modules/admin/login/router")
 const subscribe = require("../modules/admin/subscriptions/router")
 const solutionPartner = require("../modules/admin/solution_partners/router");
 const bad_words = require("../modules/admin/bad_words/router");
-const admin_image = require("../modules/admin/img");
 
 //admin_get
 router.get(`/admin/homePage`, authJwt,admin_home.admin_panel);
@@ -100,7 +99,6 @@ router.put(`/admin/partner/:id`,idChecker(),authJwt, solutionPartner.update_part
 router.post(`/admin/app_notification`,authJwt, app_notification.add_notification)
 router.post(`/admin/guide`, authJwt, userPanel.guide)
 router.post(`/admin/bad_words`, authJwt, bad_words.add_bad_words)
-router.post(`/admin/image/upload`,authJwt,uploadImage.array("img"),admin_image.uploader);
 
 
 module.exports = router;    

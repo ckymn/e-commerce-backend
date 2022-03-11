@@ -11,7 +11,7 @@ const route = async (req,res,next) => {
                 return next(new ApiError("Store find comment not found",404));  
             await Product_Comment.findOneAndDelete({ _id: params.id }).lean().exec(async(err,data) => {
                 if(!data)
-                return next(new ApiError("Update store comment didn't match",409));
+                    return next(new ApiError("Update store comment didn't match",404,data));
                 await Store.updateOne({ _id: data.store_id },
                     {
                         $pull: {
@@ -20,11 +20,7 @@ const route = async (req,res,next) => {
                             }
                         }
                     }
-                ).lean().exec(async(err,data) =>{
-                    console.log(data)
-                    if(err)
-                        return res.status(400).send({ status: false, message: "Delete Comment of Store by Admin Failed"})
-                })
+                )
                 await User.updateOne({ _id: data.author },
                     {
                         $pull: {
@@ -33,10 +29,7 @@ const route = async (req,res,next) => {
                             }
                         }
                     }
-                ).lean().exec(async(err,data) =>{
-                    if(data.matchedCount === 0)
-                        return next(new ApiError("Update store comment on User didn't match",409));
-                })
+                )
             })
             return res.send({ status: 200, message: "Store Comments Changing by Admin success " })
         })
@@ -45,9 +38,9 @@ const route = async (req,res,next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500, null));
+          next(new ApiError("We Don't Have Any Data", 204, []));
         }
-        next(new ApiError(error?.message, 500));
+        next(new ApiError(error?.message));
     }
 };
 

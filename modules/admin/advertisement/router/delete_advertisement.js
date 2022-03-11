@@ -8,7 +8,7 @@ const route = async (req, res, next) => {
 
         let data = await Data.findOneAndDelete({ _id: params.id  });
         if(!data)
-            return next(new ApiError("Delete advertisement didn't match",404,data));
+            return next(new ApiError("Delete advertisement didn't match",404,[]));
 
         for(let i = 0; i < data.img.length; i++){
           await storage.Delete(data.img[i]._id)
@@ -21,9 +21,9 @@ const route = async (req, res, next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 204, null));
+          next(new ApiError("We Don't Have Any Data", 204, []));
         }
-        next(new ApiError(error?.message, 500));
+        next(new ApiError(error?.message));
     }
 }
 

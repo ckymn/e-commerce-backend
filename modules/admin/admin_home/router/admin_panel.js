@@ -80,10 +80,10 @@ const route = async (req, res, next) => {
     });
   } catch (error) {
     if (error.name === "MongoError" && error.code === 11000) {
-      return next(new ApiError(error?.message, 422,null));
+      return next(new ApiError(error?.message, 422));
     }
     if (error.code === 27) {
-      return next(new ApiError("We Don't Have Any Data", 204,null));
+      return next(new ApiError("We Don't Have Any Data", 204,[]));
     }
     return next(new ApiError(error?.message));
   }
