@@ -31,7 +31,7 @@ const route = async( req,res,next) => {
             ...body,
             product_id: params.id,
             author: kuserData.id,
-            author_name: user.username
+            email: user.email
         })
         // product comments update
         let p_data = await Product.findOneAndUpdate(

@@ -8,9 +8,9 @@ const route = async (req, res, next) => {
         
         let _data = await Data.findOne({ _id: kuserData.id }).lean().exec();
         if(!_data)
-            return next(new ApiError("Not Found",404))
+            return next(new ApiError("Not Found",404,_data))
         if(body.code != _data.code){
-            return next(new ApiError("Don't Match Code. Try Again",400))
+            return next(new ApiError("Don't Match Code. Try Again",400,null))
         }else{
             if(body.new_password != body.new_again_password){
                 return next(new ApiError("New password don't match !",400))
