@@ -13,7 +13,7 @@ const {
   errorHandler,
 } = require("../middlewares");
 //utils
-const { country, city, state } = require("../utils/getCountry")
+const { country, city, state , singleCity } = require("../utils/getCountry")
 //validationss
 const schemas = require("../validations/admin");
 
@@ -64,11 +64,11 @@ router.get(`/admin/partner/:id`, authJwt,solutionPartner.single_partner)
 router.get(`/admin/app_notifications`, authJwt,app_notification.all_notification)
 router.get(`/admin/app_notification/:id`,idChecker(), authJwt,app_notification.single_notification)
 router.get(`/admin/logout`, authJwt,login.logout)
-router.get(`/admin/search_store`, authJwt ,storePanel.search_store);
+router.get(`/admin/search_store`, authJwt ,storePanel.search_store); 
 
-router.get(`/countries`, country)
-// router.get(`/countries/${selected?.country}`, country)
-// router.get(`/countries/${selected?.country}/districts/${selected?.city}`, country)
+router.get(`/countries`, country)// tum ulkeler ve tekil ulke
+router.get(`/countries/city`, city)// tum iller ve tekil il
+router.get(`/countries/city/district`, state)
 
 
 //admin_post

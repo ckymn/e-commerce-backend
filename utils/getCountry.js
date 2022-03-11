@@ -7,27 +7,32 @@ const State = require('country-state-city').State;
 // [1:58 PM, 3/9/2022] +90 545 925 64 22: /store/countries/${selected?.country}/districts/${selected?.city}
 
 const country = async (req, res) => {
-    let { countryCode, cityCode, stateCode } = req.query;
+    let { countryCode }= req.query;
 
-    // let data = await Country.getAllCountries();
-    let data = await Country.getCountryByCode(countryCode)
-    let city = await City.getCitiesOfCountry(cityCode)
-    let district = await State.getStatesOfCountry(stateCode)
-
-    return res.status(200).send({ status: true, message: "Country Success", district })
+    if(!countryCode){
+        let data = await Country.getAllCountries();
+        return res.status(200).send({ status: true, message: "Country Success", data })
+    }else if(countryCode){
+        let data = await Country.getCountryByCode(countryCode);
+        return res.status(200).send({ status: true, message: "Country Success", data })
+    }
 };
-
-
 const city = async (req, res) => {
-    let { query } = req;
-    let data = await Country.getCountry(query.country)
-    // let data = await City.getAllCities()
-    return res.status(200).send({ status: true, message: "City Success", data })
-}
-
-
+    console.log(req.params)
+    let { cityCode } = req.query;
+    let { country, city } = req.params;
+    if(country && city){   
+        console.log('girdi')
+        let data = await City.getAllCities();
+        return res.status(200).send({ status: true, message: "Country Success", data })
+    }else if(cityCode){
+        let data = await City.getCitiesOfCountry(cityCode)
+        return res.status(200).send({ status: true, message: "Country Success", data })
+    }
+};
 const state = async (req, res) => {
-    let data = await State.getAllStates()
+    let { countryCode , stateCode } = req.query;
+    let data = await State.getStateByCodeAndCountry(stateCode,countryCode)
     return res.status(200).send({ status: true, message: "State Success", data })
 }
 

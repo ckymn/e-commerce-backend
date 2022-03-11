@@ -57,6 +57,7 @@ const route = async (req,res,next) => {
 
         if(data.length === 0)
           return next(new ApiError("Single Product Not Found",200,data))
+          
         let currency = await doviz();
         return res
           .status(200)

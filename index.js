@@ -37,13 +37,14 @@ app.use(admin);
 app.use(store);
 app.use(user);
 
-//! Error Handler
+//! Not Found
 app.use((req,res,next) =>{
   let err = new Error("Not Found");
   err.status = 404;
   next(err);
 })
-app.use(errorHandler);  
+//! Error Handler
+app.use(errorHandler);   
 
 //run
 let PORT = process.env.PORT || 8080;
