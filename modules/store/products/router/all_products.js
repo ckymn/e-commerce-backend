@@ -22,7 +22,7 @@ const route = async (req, res, next) => {
        
         if(!d_w.length && !d_n.length && !d_y.length)
           return next(new ApiError("All Product not found",404));
-        return res.status(200).send({ status: true, message: "All Product status here", data: { d_w, d_n, d_y } })
+        return res.send({ status: 200, message: "All Product status here", data: { d_w, d_n, d_y } })
     } catch (error) {
       if (error.name === "MongoError" && error.code === 11000) {
         next(new ApiError(error?.message, 422));

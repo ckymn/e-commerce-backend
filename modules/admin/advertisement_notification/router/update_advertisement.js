@@ -21,7 +21,7 @@ const route = async (req, res, next) => {
           );
           if(!data)
               return next(new ApiError("Update store advertisement status not found",404,data));
-          return res.status(200).send({ status: true, message: "Magazanin Parasi Geri Odendi, Reklam askiya alindi",data});
+          return res.send({ status: 200, message: "Magazanin Parasi Geri Odendi, Reklam askiya alindi",data});
         }
         if(is_approved === "yes"){
           let data = await Data.findOneAndUpdate({ _id : params.id },
@@ -32,7 +32,7 @@ const route = async (req, res, next) => {
             })
           if(!data) 
             return next(new ApiError("Admin update advertisement notification didn't match",409));
-          return res.status(200).send({ status: true, message: "get single notification change success YES",data})
+          return res.send({ status: 200, message: "get single notification change success YES",data})
         }
         if(is_approved === "wait"){
           return next(new ApiError("Already wait ",400,data))
@@ -46,7 +46,7 @@ const route = async (req, res, next) => {
           );
           if(!data) 
             return next(new ApiError("Admin update advertisemnt didn't match",404,data));
-          return res.status(200).send({ status: true, message: "get single notification change success WAIT",data})
+          return res.send({ status: 200, message: "get single notification change success WAIT",data})
         }
         if(is_approved === "yes"){
           let data = await Data.findOneAndUpdate({ _id: params.id },
@@ -54,7 +54,7 @@ const route = async (req, res, next) => {
           );
           if(data.matchedCount === 0) 
             return next(new ApiError("Admin update advertisement didn't match",409));
-          return res.status(200).send({ status: true, message: "get single notification change success YES",data})
+          return res.send({ status: 200, message: "get single notification change success YES",data})
         }
         if(is_approved === "no"){
           return next(new ApiError("Already no ",400,data))
@@ -68,7 +68,7 @@ const route = async (req, res, next) => {
           );
           if(!data)
             return next(new ApiError("Update store advertisement status not found",404,data));
-          return res.status(200).send({ status: true, message: "Magazanin Parasi Geri Odendi , hesabiniz askiya alindi",data});
+          return res.send({ status: 200, message: "Magazanin Parasi Geri Odendi , hesabiniz askiya alindi",data});
         }
         if(is_approved === "wait"){
           let data = await Data.findOneAndUpdate({ _id: params.id },
@@ -77,7 +77,7 @@ const route = async (req, res, next) => {
           );
           if(!data) 
             return next(new ApiError("Admin update advertisement didn't match",409))
-          return res.status(200).send({ status: true, message: "get single notification change success WAIT",data})
+          return res.send({ status: 200, message: "get single notification change success WAIT",data})
         }
         if(is_approved === "yes"){
           return next(new ApiError("Already yes ",400,data))

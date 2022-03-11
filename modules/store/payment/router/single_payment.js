@@ -16,7 +16,7 @@ const route = async (req, res, next) => {
             if(result.status === "failure")
                 return next(new ApiError(result.errorMessage,400));
             if(result.status === "success"){
-                return res.status(200).send({ status: true, message: "Single Payment Success", data: result })
+                return res.send({ status: 200, message: "Single Payment Success", data: result })
             }
         })
     } catch (error) {

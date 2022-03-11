@@ -22,7 +22,7 @@ const route = async (req, res, next) => {
       storeimg: _store.storeimg
     }, process.env.JWT_ACCESS_SECRET, { expiresIn: process.env.JWT_ACCESS_TIME });
 
-    return res.status(200).send({ status: true, message: "token was created", data : { access_token ,remain_date } })
+    return res.send({ status: 200, message: "token was created", data : { access_token ,remain_date } })
   } catch (error) {
     if (error.name === "MongoError" && error.code === 11000) {
       next(new ApiError(error?.message, 422));

@@ -15,7 +15,7 @@ const route = async (req, res, next) => {
                 banner_story_time: new Date(+new Date()+24*60*60*1000),
                 authorImg: adminData.img
             });
-            return res.status(200).send({ status: true, message: "Admin Add Advertisement success", data })
+            return res.send({ status: 200, message: "Admin Add Advertisement success", data })
         }
         if(ads_time === "5d"){
             let data = await new Data({
@@ -27,7 +27,7 @@ const route = async (req, res, next) => {
                 authorImg: adminData.img
 
             })
-            return res.status(200).send({ status: true, message: "Admin Add Advertisement success", data })
+            return res.send({ status: 200, message: "Admin Add Advertisement success", data })
         }
         if(ads_time === "1w"){
             let data = await new Data({
@@ -39,7 +39,7 @@ const route = async (req, res, next) => {
                 authorImg: adminData.img
 
             })
-            return res.status(200).send({ status: true, message: "Admin Add Advertisement success", data })
+            return res.send({ status: 200, message: "Admin Add Advertisement success", data })
         }
         if(ads_time === "2w"){
             let data = await new Data({
@@ -51,7 +51,7 @@ const route = async (req, res, next) => {
                 authorImg: adminData.img
 
             })
-            return res.status(200).send({ status: true, message: "Admin Add Advertisement success", data})
+            return res.send({ status: 200, message: "Admin Add Advertisement success", data})
         }
         if(ads_time === "1m"){
             let data = await new Data({
@@ -63,14 +63,14 @@ const route = async (req, res, next) => {
                 authorImg: adminData.img
 
             })
-            return res.status(200).send({ status: true, message: "Admin Add Advertisement success", data })
+            return res.send({ status: 200, message: "Admin Add Advertisement success", data })
         }
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500));
+          next(new ApiError("We Don't Have Any Data", 204, null));
         }
         next(new ApiError(error?.message));
     }

@@ -10,7 +10,7 @@ const route = async (req, res) => {
         .status(404)
         .send({ status: false, message: "There is no matching images data" });
     }else{
-      return res.status(200).send({ status: true, message:"All Images success", data })
+      return res.send({ status: 200, message:"All Images success", data })
     }
   } catch (error) {
     if (error.name === "MongoError" && error.code === 11000) {

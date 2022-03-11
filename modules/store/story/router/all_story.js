@@ -18,7 +18,7 @@ const route = async (req, res, next) => {
           });
           if(data.length === 0)
             return next(new ApiError("All story not found",400,data))
-          return res.status(200).send({ status: true, message: "All advertisement data success", data })
+          return res.send({ status: 200, message: "All advertisement data success", data })
         }
         if (outdate_stories.length > 0) {
           for(let i = 0; i < outdate_ads.length; i++){
@@ -35,7 +35,7 @@ const route = async (req, res, next) => {
           });
           if(data.length === 0)
             return next(new ApiError("All story not found",404,data))
-          return res.status(200).send({ status: true, message: "All advertisement data success", data })
+          return res.send({ status: 200, message: "All advertisement data success", data })
         }
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {

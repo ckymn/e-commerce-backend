@@ -3,14 +3,13 @@ const Products = require("../../../store/products/model")
 const AdminData = require("../../../admin/login/model")
 const ActiveUser = require("../../../../middlewares")
 const AdminAdsStory = require("../../../admin/advertisement/model")
-const StoreAds = require("../../../store/advertisement/model")
 const ApiError = require("../../../../errors/ApiError")
 const { ObjectId } = require("mongodb")
 const doviz = require("../../../../utils/doviz")
 
 const route = async (req,res,next) => {
     try {
-        let { kuserData ,params, query ,body } = req;
+        let { kuserData, query } = req;
         let actives = [];
         let current_time = new Date();
         
@@ -26,7 +25,7 @@ const route = async (req,res,next) => {
           }
         );
         if(!_data)
-          return next(new ApiError("Didn't find User",204,_data));
+          return next(new ApiError("Didn't find User",404,null));
         // active users find
         await ActiveUser.active.active_control(req.active);
         for(let [key,value] of req.active){
@@ -135,12 +134,10 @@ const route = async (req,res,next) => {
           ]);
           let currency = await doviz();
 
-          return res
-          .status(200)
-          .send({
-            status: true,
+          return res.send({
+            status: 200,
             message: "Products and StoreStory are success ",
-            data: { product_data, admin_ads_story ,currency},
+            data: { product_data, admin_ads_story, currency },
           });
         }else{
           let product_data = await Products.aggregate([
@@ -236,12 +233,10 @@ const route = async (req,res,next) => {
           ]);
           let currency = await doviz();
 
-          return res
-          .status(200)
-          .send({
-            status: true,
+          return res.send({
+            status: 200,
             message: "Products and StoreStory are success ",
-            data: { product_data, admin_ads_story ,currency},
+            data: { product_data, admin_ads_story, currency },
           });
         }
     } catch (error) {
@@ -249,12 +244,7 @@ const route = async (req,res,next) => {
         return next(new ApiError(error?.message, 422));
       }
       if (error.code === 27) {
-        return next(new ApiError("We Don't Have Any Geonear Data", 204, {
-          store_ads_story:[],
-          product_data:[],
-          admin_ads_story:[],
-          currency:[]
-        }));
+        return next(new ApiError("We Don't Have Any Geonear Data", 204, null));
       }
       return next(new ApiError(error?.message));
     }

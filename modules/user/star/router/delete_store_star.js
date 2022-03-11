@@ -8,7 +8,7 @@ const route = async( req,res,next) => {
         await Store_Star.findOneAndRemove({ $and:[{ product_id: params.id }, { author: kuserData.id }] })
             .lean().exec(async(err,data) => {
                 if(!data)
-                    return next(new ApiError("Delete store star Not Found",404));
+                    return next(new ApiError("Delete store star Not Found",404,[]));
                 let p_data = await Store.updateOne({ _id: params.id },
                     {
                         $pull: {
@@ -18,8 +18,8 @@ const route = async( req,res,next) => {
                         }
                     })
                 if(p_data.matchedCount === 0)
-                    return next(new ApiError("Update store star field didn't match",404))
-                return res.status(200).send({ status: true, message: "User Delete Store Comment Success"})
+                    return next(new ApiError("Update store star field didn't match",404,[]))
+                return res.send({ status: 200, message: "User Delete Store Comment Success",data})
             })
         
     } catch (error) {
@@ -27,7 +27,7 @@ const route = async( req,res,next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500, null));
+          next(new ApiError("We Don't Have Any Data", 204, null));
         }
         next(new ApiError(error?.message));
     }

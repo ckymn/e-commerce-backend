@@ -12,7 +12,7 @@ const route = async (req, res, next) => {
 
         let _data = await Store.findOne({ _id: params.id }).lean();
         if(!_data)
-          return next(new ApiError("Store not Found !",404))
+          return next(new ApiError("Store not Found !",404,[]))
         let start_store = _data.counter_weekly.getDate();
 
         // search count - location search count
@@ -171,14 +171,14 @@ const route = async (req, res, next) => {
         // doviz
         let currency = await doviz();
 
-        return res.status(200).send({
-          status: true,
+        return res.send({
+          status: 200,
           message: "Single Store and Products of Store find Success",
           data: {
             store,
             store_star_avg,
             product,
-            currency
+            currency,
           },
         });
     }catch (error) {
@@ -186,12 +186,7 @@ const route = async (req, res, next) => {
         next(new ApiError(error?.message, 422));
       }
       if (error.code === 27) {
-        next(new ApiError("We Don't Have Any Data", 204, {
-          store: [],
-          store_star_avg: [],
-          product:[],
-          currency:[]
-        }));
+        next(new ApiError("We Don't Have Any Data", 204, null));
       }
       next(new ApiError(error?.message));
     }

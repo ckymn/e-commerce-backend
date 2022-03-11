@@ -21,7 +21,7 @@ const route = async (req, res, next) => {
             store_close_hour: parseInt(body.store_close_hour),
             password : hash,
         })
-        return res.status(200).send({ status: true, message: "user register success" })
+        return res.send({ status: 200, message: "user register success" })
     } catch (error) {
       if (error.name === "MongoError" && error.code === 11000) {
         next(new ApiError(error?.message, 422));

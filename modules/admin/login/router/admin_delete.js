@@ -11,7 +11,7 @@ const route = async (req,res,next) => {
                     await Data.deleteOne({ _id: params.id  }).lean().exec((err,data) => {
                         if(data.deletedCount === 0)
                         return next(new ApiError("Delete admin didn't match",404,data));
-                     return res.status(200).send({ status: true, message: "Sub Admin Delete by Admin is success ",})
+                     return res.send({ status: 200, message: "Sub Admin Delete by Admin is success ",})
                     })
                 }}
             else{
@@ -25,7 +25,7 @@ const route = async (req,res,next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500));
+          next(new ApiError("We Don't Have Any Data", 204, null));
         }
         next(new ApiError(error?.message, 500));
     }

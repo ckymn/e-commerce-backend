@@ -39,7 +39,7 @@ const route = async (req, res, next) => {
             store_open_hour: _data.store_open_hour,
             store_close_hour: _data.store_close_hour,
         });
-        return res.status(200).send({ status: true, message: "Add Product worked",data})
+        return res.send({ status: 200, message: "Add Product worked",data})
     } catch (error) {
         console.log(error)
         if (error.name === "MongoError" && error.code === 11000) {

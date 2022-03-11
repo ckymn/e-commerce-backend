@@ -14,7 +14,7 @@ const route = async( req,res,next) => {
         let filter = new Filter();
         let comment_word = await BadWords.find({}).select("words -_id").lean();
         if(comment_word.length === 0)
-            return next(new ApiError("Not found any words",200,comment_word))
+            return next(new ApiError("Not found any words",200,[]))
         let words = comment_word[0].words;
         await filter.addWords(...words);
         let _comment = filter.clean(body.comment).split("").filter(i => {
@@ -23,7 +23,7 @@ const route = async( req,res,next) => {
             return false
         })
         if(_comment.length > 0)
-            return next(new ApiError(" Your comment not available",400,null))
+            return next(new ApiError(" Your comment not available",400,[]))
 
         // product comment create
         let user = await User.findOne({ _id: kuserData.id }).lean();
@@ -62,7 +62,6 @@ const route = async( req,res,next) => {
         });
         return res.status(200).send({ message: "User to Product Comment Success", data })
     } catch (error) {
-        console.log(error)
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));
         }

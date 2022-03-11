@@ -52,7 +52,7 @@ const route = async (req, res) => {
                     if(!_register)
                         return next(new ApiError("Store date payment not found",404));
                     await _data.save();
-                    return res.status(200).send({ status: true, message: "Islem Devam ediyor", data: result})
+                    return res.send({ status: 200, message: "Islem Devam ediyor", data: result})
                 }
             }
             return res.status(500).send({ status: false, message:"Girdiginiz Kod Uyusmusyor .Tekrar deneyin"})

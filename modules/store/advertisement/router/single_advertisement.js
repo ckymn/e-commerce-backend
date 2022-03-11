@@ -5,10 +5,12 @@ const route = async (req, res, next) => {
     try {
         let { params, userData } = req;
 
-        let data = await Data.findOne({ $and: [ { author: userData.id }, { _id: params.id } ] }).lean();
+        let data = await Data.findOne({
+          $and: [{ author: userData.id }, { _id: params.id }]
+        }).lean();
         if(!data)    
             return next(new ApiError("Single advertiement not found",200,data));
-        return res.status(200).send({ status: true, message: "Single Advertisement search success", data })
+        return res.send({ status: 200, message: "Single Advertisement search success", data })
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));

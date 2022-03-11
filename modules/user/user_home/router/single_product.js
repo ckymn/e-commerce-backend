@@ -59,14 +59,12 @@ const route = async (req,res,next) => {
           return next(new ApiError("Single Product Not Found",200,data))
           
         let currency = await doviz();
-        return res
-          .status(200)
-          .send({
-            status: true,
-            message: "Single Products and Stories are success ",
-            data,
-            currency
-          });
+        return res.send({
+          status: 200,
+          message: "Single Products and Stories are success ",
+          data,
+          currency,
+        });
     } catch (error) {
       if (error.name === "MongoError" && error.code === 11000) {
         next(new ApiError(error?.message, 422));

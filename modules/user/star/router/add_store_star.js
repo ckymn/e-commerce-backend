@@ -14,7 +14,7 @@ const route = async( req,res,next) => {
                         store_id: params.id
                     },async (err,data) => {
                         if(err)
-                            return next(new ApiError("Create star store !",400))
+                            return next(new ApiError("Create star store !",400,[]))
                         let s_data = await Store.findOneAndUpdate({ _id: params.id },
                             {
                                 $push: {
@@ -22,18 +22,18 @@ const route = async( req,res,next) => {
                                 }
                             }, { new: true })
                         if(!s_data) 
-                            return next(new ApiError("Update store star Not found !",404))
+                            return next(new ApiError("Update store star Not found !",404,[]))
                     })
-                    return res.status(200).send({ status: true, message: "User to Store Comment Success" })
+                    return res.send({ status: 200, message: "User to Store Comment Success" ,data})
                 }
-                return next(new ApiError("Store star already exist !",400))
+                return next(new ApiError("Store star already exist !",200, data))
             })
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500, null));
+          next(new ApiError("We Don't Have Any Data", 204, null));
         }
         next(new ApiError(error?.message));
     }

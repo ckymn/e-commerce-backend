@@ -19,7 +19,7 @@ const route = async (req, res, next) => {
                 let u_pas_data = await Data.findOneAndUpdate({ _id: userData.id }, {$set: { password: hash , code:"" }},{new: true})
                 if(!u_pas_data)
                     return next(new ApiError("Store clean code and update password not found",404));
-                return res.status(200).send({ status: true, message: "Reset Password Success"})
+                return res.send({ status: 200, message: "Reset Password Success"})
             }
         }
     } catch (error) {

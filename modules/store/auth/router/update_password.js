@@ -20,7 +20,7 @@ const route = async (req, res, next) => {
                 let u_data = await Data.findOneAndUpdate({ _id: userData.id }, {$set: { password: encode }},{new: true});
                 if(!u_data)
                     return next(new ApiError("Update password didn't match",409));
-                return res.status(200).send({ status: true, message: "Update Password Success"})
+                return res.send({ status: 200, message: "Update Password Success"})
             }
         }
     } catch (error) {

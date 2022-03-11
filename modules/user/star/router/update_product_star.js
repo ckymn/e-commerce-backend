@@ -11,8 +11,8 @@ const route = async( req,res,next) => {
         }, { new: true })
         .lean().exec(async(err,data) => {
             if(data.matchedCount === 0)
-                return next(new ApiError("Update product star didn't match",404));
-            return res.status(200).send({ status: true, message: "User Update Product Comment Success"})
+                return next(new ApiError("Update product star didn't match",404,null));
+            return res.send({ status: 200, message: "User Update Product Comment Success",data})
         })
         
     } catch (error) {
@@ -20,7 +20,7 @@ const route = async( req,res,next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500, null));
+          next(new ApiError("We Don't Have Any Data", 204, null));
         }
         next(new ApiError(error?.message));
     }

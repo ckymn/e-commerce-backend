@@ -21,10 +21,10 @@ const route = async (req,res,next) => {
                             }
                         })
                         if(!data)
-                            return next(new ApiError("Admin advertisement story Not found",404,data))
-                        return res.status(200).send({ status: true, message: "Find Single Stories success and View story set ", data })
+                            return next(new ApiError("Admin advertisement story Not found",404,null))
+                        return res.send({ status: 200, message: "Find Single Stories success and View story set ", data })
                     }else{
-                        return res.status(200).send({ status: true, message: "You already saw story", result })
+                        return res.send({ status: 200, message: "You already saw story", result })
                     }
                 })
             }
@@ -41,10 +41,10 @@ const route = async (req,res,next) => {
                             }
                         })
                         if(!data)
-                            return next(new ApiError("Store story Not found",404))
-                        return res.status(200).send({ status: true, message: "Find Single Stories success and View story set ", data })
+                            return next(new ApiError("Store story Not found",404,null))
+                        return res.send({ status: 200, message: "Find Single Stories success and View story set ", data })
                     }else{
-                        return res.status(200).send({ status: true, message: "Find Single Stories success", data })
+                        return res.send({ status: 200, message: "Find Single Stories success", data })
                     }
                 })
             }

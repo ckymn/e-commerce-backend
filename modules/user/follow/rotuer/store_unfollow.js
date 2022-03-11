@@ -9,7 +9,7 @@ const route = async(req,res,next) => {
         await Data.findOneAndRemove({ $and: [{ author: kuserData.id },{ store_id: params.id }] })
             .lean().exec(async (err,data) => {
                 if(!data) 
-                    return next(new ApiError("Store unfollow Not found!",404));
+                    return next(new ApiError("Store unfollow Not found!",404,null));
                 await Store.updateOne({ _id: params.id },
                     {
                         $pull: {
@@ -19,7 +19,7 @@ const route = async(req,res,next) => {
                         }
                     }).lean().exec(async(_err,_data) => {
                         if(data.matchedCount === 0)
-                            return next(new ApiError("Store unfollow update in Store didn't match",404));
+                            return next(new ApiError("Store unfollow update in Store didn't match",404,null));
                         await User.updateOne({ _id: kuserData.id },
                             {
                                 $pull: {
@@ -29,17 +29,17 @@ const route = async(req,res,next) => {
                                 }
                             }).exec((err,data) => {
                                 if(data.matchedCount === 0)
-                                    return next(new ApiError("Store unfollow update in user didn't match",404))
+                                    return next(new ApiError("Store unfollow update in user didn't match",404,null))
                             })
                     })
-                return res.status(200).send({ status: true, message: "Remove Follower in Data and Delete Follow _id filed in Data success"})
+                return res.send({ status: 200, message: "Remove Follower in Data and Delete Follow _id filed in Data success",data})
             })
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500, null));
+          next(new ApiError("We Don't Have Any Data", 204, null));
         }
         next(new ApiError(error?.message));
     }

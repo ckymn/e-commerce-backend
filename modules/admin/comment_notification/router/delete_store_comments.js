@@ -38,7 +38,7 @@ const route = async (req,res,next) => {
                         return next(new ApiError("Update store comment on User didn't match",409));
                 })
             })
-            return res.status(200).send({ status: true, message: "Store Comments Changing by Admin success " })
+            return res.send({ status: 200, message: "Store Comments Changing by Admin success " })
         })
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {

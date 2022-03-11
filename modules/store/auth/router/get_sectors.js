@@ -4,7 +4,7 @@ const route = async (req,res) => {
     try {
         let data = await Sector.find({}).lean().exec(); 
         
-        return res.status(200).send({ status: true, message: " Sector data success" , data })
+        return res.send({ status: 200, message: " Sector data success" , data })
     } catch (error) {
       if (error.name === "MongoError" && error.code === 11000) {
         return res

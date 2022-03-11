@@ -14,7 +14,7 @@ const route = async (req, res, next) => {
       { new: true }
     );
     if (!u_code_data)
-      return next(new ApiError("Not Found!",204,u_code_data))
+      return next(new ApiError("Not Found!",204,[]))
     // send email
     let email = await sendEmail(body.email, "Vitrin Update Password", _code);
     if (email.status != 200)

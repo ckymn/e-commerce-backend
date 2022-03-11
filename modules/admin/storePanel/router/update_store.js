@@ -25,7 +25,7 @@ const route = async (req, res, next) => {
                     if(!data){
                         return res.status(404).send({ status: false, message: "Store wait-no to yes don't work",data})
                     }else{
-                        return res.status(200).send({ status: true, message: "Store wait-no to yes successed",data})
+                        return res.send({ status: 200, message: "Store wait-no to yes successed",data})
                     }
                 })
             }else{
@@ -34,7 +34,7 @@ const route = async (req, res, next) => {
                     if(!data){
                         return res.status(404).send({ status: false, message: "Store yes-no to wait don't work",data})
                     }else{
-                        return res.status(200).send({ status: true, message: "Store yes-no to wait successed",data})
+                        return res.send({ status: 200, message: "Store yes-no to wait successed",data})
                     }
                 })
             }   
@@ -44,7 +44,7 @@ const route = async (req, res, next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500));
+          next(new ApiError("We Don't Have Any Data", 204, null));
         }
         next(new ApiError(error?.message, 500));
     }

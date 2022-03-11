@@ -19,7 +19,7 @@ const route = async (req, res, next) => {
                 let u_data = await Data.findOneAndUpdate({ _id: adminData.id }, {$set: { password: encode }},{new: true});
                 if(!u_data)
                     return next(new ApiError("Update password didn't match",409));
-                return res.status(200).send({ status: true, message: "Update Password Success"})
+                return res.send({ status: 200, message: "Update Password Success"})
             }
         }
     } catch (error) {
@@ -27,7 +27,7 @@ const route = async (req, res, next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500));
+          next(new ApiError("We Don't Have Any Data", 204, null));
         }
         next(new ApiError(error?.message));
     }

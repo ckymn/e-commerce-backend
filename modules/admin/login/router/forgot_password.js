@@ -18,13 +18,13 @@ const route = async (req, res, next) => {
         if(_email.status != 200){
             return next(new ApiError(_email.message,_email.status))
         }
-        return res.status(200).send({ status: true, message: "Reset Code Send Success"})
+        return res.send({ status: 200, message: "Reset Code Send Success"})
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500));
+          next(new ApiError("We Don't Have Any Data", 204, null));
         }
         next(new ApiError(error?.message, 500));
     }

@@ -13,7 +13,7 @@ const route = async( req,res,next) => {
         ).exec(async(err,data) => {
             if(data.matchedCount === 0)
                 return res.status(400).send({ status: false, message: "Update Store Comment Data Error"})
-            return res.status(200).send({ status: true, message: "User to Update Store Comment Success" })
+            return res.send({ status: 200, message: "User to Update Store Comment Success" })
         })
     } catch (error) {
         console.log(error);

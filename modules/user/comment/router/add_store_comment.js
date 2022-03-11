@@ -20,10 +20,10 @@ const route = async( req,res,next) => {
             return false
         })
         if(_comment.length > 0)
-            return next(new ApiError(" Your comment not available",200))
+            return next(new ApiError(" Your comment not available",200,[]))
         
         //store comment
-        let _data = await new Store_Comment({
+        let _data = await Store_Comment.create({
             ...body,
             store_id: params.id,
             author: kuserData.id,
@@ -47,7 +47,7 @@ const route = async( req,res,next) => {
         if(!u_data)
             return res.status(400).send({ status: false, message: "Add Store Comment Data to User success but Update Store Comment error"})
         await _data.save();
-        return res.status(200).send({ status: true, message: "User add Store Comment Success", data: _data })
+        return res.send({ status: 200, message: "User add Store Comment Success", data: _data })
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));

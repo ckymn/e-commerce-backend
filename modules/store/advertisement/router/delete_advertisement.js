@@ -10,8 +10,8 @@ const route = async (req, res, next) => {
           $and: [{ author: userData.id }, { _id: params.id }],
         })
         if(!data)
-            return next(new ApiError("Delete store advertisement not found",200,data));
-        return res.status(200).send({ status: true, message: "Delete Store story success" ,data})
+            return next(new ApiError("Delete store advertisement not found",404,data));
+        return res.send({ status: 200, message: "Delete Store story success" ,data})
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));

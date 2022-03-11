@@ -17,13 +17,13 @@ const route = async (req, res, next) => {
         
         if(!data)
           return next(new ApiError("Product delete didn't match",404));
-        return res.status(200).send({ status: true, message: "Single product delete success"})
+        return res.send({ status: 200, message: "Single product delete success"})
     } catch (error) {
       if (error.name === "MongoError" && error.code === 11000) {
         next(new ApiError(error?.message, 422));
       }
       if (error.code === 27) {
-        next(new ApiError("We Don't Have Any Data", 500));
+        next(new ApiError("We Don't Have Any Data", 204, null));
       }
       next(new ApiError(error?.message));
     }

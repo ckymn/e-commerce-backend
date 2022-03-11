@@ -1,15 +1,15 @@
 const Store = require("../../auth/model")
 const Data = require("../model")
-const Payment = require("../../payment/model")
-const {iyzipay, pay_form_ads} = require("../../../../utils/iyzipay")
-const { v4: uuidv4 } = require('uuid');
 const ApiError = require("../../../../errors/ApiError")
 const {sendEmailToVitrin} = require("../../../../utils")
+
 const route = async (req, res, next) => {
     try {
         let { body , userData ,files} = req;
 
         let user = await Store.findOne({ _id: userData.id }).lean();
+        if(!user)
+          return next(new ApiError('Store not found',404,null));
         let data = await Data.create({ 
             ... body ,
             author: userData.id
@@ -21,8 +21,8 @@ const route = async (req, res, next) => {
           `author: ${userData.id} - ads_which: ${body.ads_which} - ads_time: ${body.ads_time} - ads_price: ${body.ads_price} - phone: ${body.phone}`
         );
         if(mail != 200)
-            return next(new ApiError(mail.message,mail.status,null));
-        return res.status(200).send({ status: true , message:"Your request is success, ", data})
+            return next(new ApiError(mail.message,mail.status));
+        return res.send({ status: 200 , message:"Your advertisement request is success, ", data})
         // let store = await Store.findOne({ _id: userData.id });
         // if(!store)
         //     return next(new ApiError("Store Not Found",404))
@@ -36,7 +36,7 @@ const route = async (req, res, next) => {
         //             coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
         //         }
         //     });
-        //     return res.status(200).send({ status: true, message: "Add Advertisement data save success", data})
+        //     return res.send({ status: 200, message: "Add Advertisement data save success", data})
         // }
         // if(ads_time === "5d"){
         //     let data = await Data.create({
@@ -48,7 +48,7 @@ const route = async (req, res, next) => {
         //             coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
         //         }
         //     });
-        //     return res.status(200).send({ status: true, message: "Add Advertisement data save success", data})
+        //     return res.send({ status: 200, message: "Add Advertisement data save success", data})
         // }
         // if(ads_time === "1w"){
         //     let data = await Data.create({
@@ -60,7 +60,7 @@ const route = async (req, res, next) => {
         //             coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
         //         }
         //     });
-        //     return res.status(200).send({ status: true, message: "Add Advertisement data save success", data})
+        //     return res.send({ status: 200, message: "Add Advertisement data save success", data})
         // }
         // if(ads_time === "2w"){
 
@@ -73,7 +73,7 @@ const route = async (req, res, next) => {
         //             coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
         //         }
         //     });
-        //     return res.status(200).send({ status: true, message: "Add Advertisement data save success", data})
+        //     return res.send({ status: 200, message: "Add Advertisement data save success", data})
         // }
         // if(ads_time === "1m"){
         //     let data = await Data.create({
@@ -85,7 +85,7 @@ const route = async (req, res, next) => {
         //             coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
         //         }
         //     });
-        //     return res.status(200).send({ status: true, message: "Add Advertisement data save success", data})
+        //     return res.send({ status: 200, message: "Add Advertisement data save success", data})
         // }
 
     } catch (error) {

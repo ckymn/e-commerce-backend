@@ -120,31 +120,31 @@ const route = async (req, res,next) => {
                                                         if(!o_category_five)
                                                             return next(new ApiError("Category Four dont match",400)); 
                                                     }else{
-                                                        return res.status(200).send({ status: true, message: "Sectors Success" , data: { c_sector , c_category_two, c_category_three, c_category_four }});
+                                                        return res.send({ status: 200, message: "Sectors Success" , data: { c_sector , c_category_two, c_category_three, c_category_four }});
                                                     }
                                                 })}
                                                 if(!category_five){
-                                                    return res.status(200).send({ status: true, message: "Sectors Success" , data: { c_sector , c_category_two, c_category_three, c_category_four }})
+                                                    return res.send({ status: 200, message: "Sectors Success" , data: { c_sector , c_category_two, c_category_three, c_category_four }})
                                                 }
                                             })
                                         }
                                         if(!category_four){
-                                          return res.status(200).send({ status: true, message: "Sectors Success" , data: { c_sector , c_category_two, c_category_three }})
+                                          return res.send({ status: 200, message: "Sectors Success" , data: { c_sector , c_category_two, c_category_three }})
                                         }
                                     })
                                 }
                                 if(!category_three){
-                                  return res.status(200).send({ status: true, message: "Sectors Success" , data: { c_sector , c_category_one, c_category_two }})
+                                  return res.send({ status: 200, message: "Sectors Success" , data: { c_sector , c_category_one, c_category_two }})
                                 }
                             });
                         }
                         if(!category_two){
-                          return res.status(200).send({ status: true, message: "Sectors Success" , data: { c_sector,c_category_one }})
+                          return res.send({ status: 200, message: "Sectors Success" , data: { c_sector,c_category_one }})
                         }
                     });
                 }
                 if(!category_one){
-                  return res.status(200).send({ status: true, message: "Sectors Success" , data: { c_sector }})
+                  return res.send({ status: 200, message: "Sectors Success" , data: { c_sector }})
                 }
             })
     } catch (error) {
@@ -152,7 +152,7 @@ const route = async (req, res,next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500));
+          next(new ApiError("We Don't Have Any Data", 204, null));
         }
         next(new ApiError(error?.message, 500));
     }

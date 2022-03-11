@@ -12,8 +12,8 @@ const route = async (req,res,next) => {
                       { $push: { favorite_product: params.id } }
                     );
                     if(u_update.matchedCount === 0)
-                      return next(new ApiError("Update favorite product to user didn't match", 404))
-                    let u_product = await Product.updateOne(
+                      return next(new ApiError("Update favorite product to user didn't match", 404, null))
+                    let data = await Product.updateOne(
                       {
                         $and: [
                           { _id: params.id },
@@ -26,9 +26,9 @@ const route = async (req,res,next) => {
                         },
                       }
                     );
-                    if(u_product.matchedCount === 0)
-                      return next(new ApiError("Update favorite on Product field didn't match ",404))
-                    return res.status(200).send({ status: true, message: "Product Add Favorite Success "})
+                    if(data.matchedCount === 0)
+                      return next(new ApiError("Update favorite on Product field didn't match ",404,null))
+                    return res.send({ status: 200, message: "Product Add Favorite Success",data })
                 }else{
                     let r_user = await User.updateOne({ _id: kuserData.id },
                       {
@@ -40,8 +40,8 @@ const route = async (req,res,next) => {
                       }
                     );
                     if(r_user.matchedCount === 0)
-                      return next(new ApiError("Remove favorite product to user didn't match", 404))
-                    let r_product = await Product.updateOne(
+                      return next(new ApiError("Remove favorite product to user didn't match", 404,null))
+                    let data = await Product.updateOne(
                       {
                         $and: [
                           { _id: params.id },
@@ -56,9 +56,9 @@ const route = async (req,res,next) => {
                         },
                       }
                     );
-                    if(r_product.matchedCount === 0)
-                      return next(new ApiError("Remove favorite product didn't match", 404))
-                    return res.status(200).send({ status: true, message: "Product Delete Favorite Success "})
+                    if(data.matchedCount === 0)
+                      return next(new ApiError("Remove favorite product didn't match", 404,null))
+                    return res.send({ status: 200, message: "Product Delete Favorite Success",data })
                 }
             })
     } catch (error) {
@@ -66,9 +66,9 @@ const route = async (req,res,next) => {
         next(new ApiError(error?.message, 422));
       }
       if (error.code === 27) {
-        next(new ApiError("We Don't Have Any Data", 500, null));
+        next(new ApiError("We Don't Have Any Data", 204, null));
       }
-      next(new ApiError(error?.message));
+      next(new ApiError(error?.message));s
     }
 }
 

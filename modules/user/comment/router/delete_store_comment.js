@@ -20,7 +20,7 @@ const route = async( req,res,next) => {
                     }).lean().exec((err,data) => {
                         if(err)
                             return res.status(400).send({ status: false, message: "Delete Store Comment success but Stores Comment update faliled"})
-                        return res.status(200).send({ status: true, message: "Delete Store Comment and Stores comment success "})
+                        return res.send({ status: 200, message: "Delete Store Comment and Stores comment success "})
                     })
             })
         }

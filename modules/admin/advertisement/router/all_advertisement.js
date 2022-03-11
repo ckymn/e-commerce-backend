@@ -18,7 +18,7 @@ const route = async (req, res, next) => {
           });
           if(data.length === 0)
               return next(new ApiError("All Advertisement not found",404,data));    
-          return res.status(200).send({ status: true, message: "All advertisement data success", data })
+          return res.send({ status: 200, message: "All advertisement data success", data })
         }
         if(outdate_ads.length > 0){
           for(let i = 0; i < outdate_ads.length; i++){
@@ -35,14 +35,14 @@ const route = async (req, res, next) => {
           });
           if(data.length === 0)
               return next(new ApiError("All Advertisement not found",404,data));    
-          return res.status(200).send({ status: true, message: "All advertisement data success", data })
+          return res.send({ status: 200, message: "All advertisement data success", data })
         }
     } catch (error) {
       if (error.name === "MongoError" && error.code === 11000) {
         next(new ApiError(error?.message, 422));
       }
       if (error.code === 27) {
-        next(new ApiError("We Don't Have Any Data", 500));
+        next(new ApiError("We Don't Have Any Data", 204, null));
       }
       next(new ApiError(error?.message, 500));
     }

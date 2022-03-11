@@ -54,8 +54,8 @@ const route = async (req, res, next) => {
       .exec();
     let income_info = await Payment.find({}).lean().exec();
 
-    return res.status(200).send({
-      status: true,
+    return res,send({
+      status: 200,
       message: "Admin Home Page success",
       data: {
         total_store,
@@ -83,9 +83,9 @@ const route = async (req, res, next) => {
       return next(new ApiError(error?.message, 422,null));
     }
     if (error.code === 27) {
-      return next(new ApiError("We Don't Have Any Data", 200,null));
+      return next(new ApiError("We Don't Have Any Data", 204,null));
     }
-    return next(new ApiError(error?.message,500,null));
+    return next(new ApiError(error?.message));
   }
 };
 

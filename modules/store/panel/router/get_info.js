@@ -12,7 +12,7 @@ const route = async (req, res, next) => {
             if(!data)
                 return next(new ApiError("Store update not found",404));
         })
-        return res.status(200).send({ status: true, message: "Store Information success", data })
+        return res.send({ status: 200, message: "Store Information success", data })
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));

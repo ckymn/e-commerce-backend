@@ -18,7 +18,7 @@ const route = async (req, res, next) => {
     );
     if(!data)
       return next(new ApiError("Not Found!",404))
-    return res.status(200).send({ status: true, message:"logout was successed"})
+    return res.send({ status: 200, message:"logout was successed"})
   } catch (error) {
     if (error.name === "MongoError" && error.code === 11000) {
       next(new ApiError(error?.message, 422));

@@ -19,7 +19,7 @@ const route = async (req, res, next) => {
                 let d_payment = await Data.deleteOne({ $and: [{_id: params.id },{ author: userData.id }] })
                 if(d_payment.deletedCount === 0)    
                     return next(new ApiError("Payment delete data didn't work",400))
-                return res.status(200).send({ status: true, message: "Cancel Payment Success", data: result })
+                return res.send({ status: 200, message: "Cancel Payment Success", data: result })
             }
         })
     } catch (error) {

@@ -157,10 +157,11 @@ const route = async (req, res, next) => {
         { $skip: parseInt(query.skip) },
         { $limit: parseInt(query.limit) },
       ]);
-      
+      //banners [ admin-store]
       let banner = admin_ads_banner.concat(store_ads_banner)
-      return res.status(200).send({
-        status: true,
+
+      return res.send({
+        status: 200,
         message: "Stores Success",
         data: {
           banner,
@@ -173,12 +174,7 @@ const route = async (req, res, next) => {
         return next(new ApiError(error?.message, 422));
       }
       if (error.code === 27) {
-        return next(new ApiError("We Don't Have Any GeoNear Data", 204, {
-          store_ads_banner:[],
-          admin_ads_banner:[],
-          store_story:[],
-          stores:[]
-        }));
+        return next(new ApiError("We Don't Have Any GeoNear Data", 204, null));
       }
       return next(new ApiError(error?.message));
     }

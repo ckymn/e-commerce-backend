@@ -16,13 +16,13 @@ const route = async (req, res, next) => {
             password:hash,
             img: body.img ? body.img : "https://storage.googleapis.com/vitrin_images/WhatsApp%20Image%202022-03-05%20at%2018.37.57.jpeg"
         });
-        return res.status(200).send({ status: true, message: "admin register success",data})
+        return res.send({ status: 200, message: "admin register success",data})
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500));
+          next(new ApiError("We Don't Have Any Data", 204, null));
         }
         next(new ApiError(error?.message, 500));
     }

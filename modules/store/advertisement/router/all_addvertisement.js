@@ -6,10 +6,10 @@ const route = async (req,res,next) => {
     try {
         let { userData } = req;
 
-        let data = await Data.find({ is_approved : "yes" }).lean();
-        if(!data)
-            return res.send({ status: 200, messsage: "ads not found", data})
-        return res.send({ status: 200, message: "ads success", data });
+        let data = await Data.find({ author: userData.id }).lean();
+        if(data.length === 0)
+            return res.send({ status: 400, messsage: "ads not found", data})
+        return res.send({ status: 200, message: "advertisements success", data });
 
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {

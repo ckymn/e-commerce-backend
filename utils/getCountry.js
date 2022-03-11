@@ -11,10 +11,10 @@ const country = async (req, res) => {
 
     if(!countryCode){
         let data = await Country.getAllCountries();
-        return res.status(200).send({ status: true, message: "Country Success", data })
+        return res.send({ status: 200, message: "Country Success", data })
     }else if(countryCode){
         let data = await Country.getCountryByCode(countryCode);
-        return res.status(200).send({ status: true, message: "Country Success", data })
+        return res.send({ status: 200, message: "Country Success", data })
     }
 };
 const city = async (req, res) => {
@@ -24,16 +24,16 @@ const city = async (req, res) => {
     if(country && city){   
         console.log('girdi')
         let data = await City.getAllCities();
-        return res.status(200).send({ status: true, message: "Country Success", data })
+        return res.send({ status: 200, message: "Country Success", data })
     }else if(cityCode){
         let data = await City.getCitiesOfCountry(cityCode)
-        return res.status(200).send({ status: true, message: "Country Success", data })
+        return res.send({ status: 200, message: "Country Success", data })
     }
 };
 const state = async (req, res) => {
     let { countryCode , stateCode } = req.query;
     let data = await State.getStateByCodeAndCountry(stateCode,countryCode)
-    return res.status(200).send({ status: true, message: "State Success", data })
+    return res.send({ status: 200, message: "State Success", data })
 }
 
 module.exports = { country, city, state }

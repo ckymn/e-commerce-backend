@@ -17,7 +17,7 @@ const route = async (req, res, next) => {
                 coordinates: [parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1])]
             },
         })
-        return res.status(200).send({ status: true, message: "Add Store story worked", data: _data })
+        return res.send({ status: 200, message: "Add Store story worked", data: _data })
     } catch (error) {
         console.log(error)
         if (error.name === "MongoError" && error.code === 11000) {

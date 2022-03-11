@@ -19,7 +19,7 @@ const route = async (req,res,next) => {
                     password: hash,
                     menu_permissions: permission.map(i => i)
                 })
-                return res.status(200).send({ status: true, message: "Admin Add Sub Admin Success ", data })
+                return res.send({ status: 200, message: "Admin Add Sub Admin Success ", data })
             }else{
                 return next(new ApiError("you are not admin",400, null))
             }
@@ -32,7 +32,7 @@ const route = async (req,res,next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 500));
+          next(new ApiError("We Don't Have Any Data", 204, null));
         }
         next(new ApiError(error?.message, 500));
     }
