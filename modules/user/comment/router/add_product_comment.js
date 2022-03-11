@@ -27,7 +27,7 @@ const route = async( req,res,next) => {
 
         // product comment create
         let user = await User.findOne({ _id: kuserData.id }).lean();
-        let data = await new Product_Comment.create({
+        let data = await Product_Comment.create({
             ...body,
             product_id: params.id,
             author: kuserData.id,

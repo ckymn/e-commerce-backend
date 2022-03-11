@@ -65,6 +65,7 @@ router.get(`/admin/app_notifications`, authJwt,app_notification.all_notification
 router.get(`/admin/app_notification/:id`,idChecker(), authJwt,app_notification.single_notification)
 router.get(`/admin/logout`, authJwt,login.logout)
 router.get(`/admin/search_store`, authJwt ,storePanel.search_store); 
+router.get(`/admin/bad_words`, authJwt, bad_words.all_bad_words)
 
 router.get(`/countries`, country)// tum ulkeler ve tekil ulke
 router.get(`/countries/city`, city)// tum iller ve tekil il
