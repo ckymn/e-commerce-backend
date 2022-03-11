@@ -3,7 +3,7 @@ const ApiError = require("../../../../errors/ApiError");
 
 const route = async (req, res, next) => {
     try {
-        let { body} = req;
+        let { body, adminData } = req;
         let { ads_time } = body;
        
         if(ads_time === "1d"){
@@ -12,7 +12,8 @@ const route = async (req, res, next) => {
                 location:{
                     coordinates: [parseFloat(body.long),parseFloat(body.lat)]
                 },
-                banner_story_time: new Date(+new Date()+24*60*60*1000)
+                banner_story_time: new Date(+new Date()+24*60*60*1000),
+                authorImg: adminData.img
             });
             return res.status(200).send({ status: true, message: "Admin Add Advertisement success", data })
         }
@@ -22,7 +23,9 @@ const route = async (req, res, next) => {
                 location:{
                     coordinates: [parseFloat(body.long),parseFloat(body.lat)]
                 },
-                banner_story_time: new Date(+new Date()+5*24*60*60*1000)
+                banner_story_time: new Date(+new Date()+5*24*60*60*1000),
+                authorImg: adminData.img
+
             })
             return res.status(200).send({ status: true, message: "Admin Add Advertisement success", data })
         }
@@ -32,7 +35,9 @@ const route = async (req, res, next) => {
                 location:{
                     coordinates: [parseFloat(body.long),parseFloat(body.lat)]
                 },
-                banner_story_time: new Date(+new Date()+7*24*60*60*1000)
+                banner_story_time: new Date(+new Date()+7*24*60*60*1000),
+                authorImg: adminData.img
+
             })
             return res.status(200).send({ status: true, message: "Admin Add Advertisement success", data })
         }
@@ -42,7 +47,9 @@ const route = async (req, res, next) => {
                 location:{
                     coordinates: [parseFloat(body.long),parseFloat(body.lat)]
                 },
-                banner_story_time: new Date(+new Date()+14*24*60*60*1000)
+                banner_story_time: new Date(+new Date()+14*24*60*60*1000),
+                authorImg: adminData.img
+
             })
             return res.status(200).send({ status: true, message: "Admin Add Advertisement success", data})
         }
@@ -52,7 +59,9 @@ const route = async (req, res, next) => {
                 location:{
                     coordinates: [parseFloat(body.long),parseFloat(body.lat)]
                 },
-                banner_story_time: new Date(+new Date()+30*24*60*60*1000)
+                banner_story_time: new Date(+new Date()+30*24*60*60*1000),
+                authorImg: adminData.img
+
             })
             return res.status(200).send({ status: true, message: "Admin Add Advertisement success", data })
         }

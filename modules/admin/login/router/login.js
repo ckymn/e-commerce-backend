@@ -15,7 +15,11 @@ const route = async (req, res, next) => {
         let match = await bcrypt.compare(password, data.password)
         if(!match)
             return next(new ApiError("Password or email invalid",400));
-        let access_token = await jwt.sign({ id: data.id, role: data.role }, process.env.JWT_ACCESS_SECRET,{ expiresIn: process.env.JWT_ACCESS_TIME });
+        let access_token = await jwt.sign(
+          { id: data.id, role: data.role , img: data.img },
+          process.env.JWT_ACCESS_SECRET,
+          { expiresIn: process.env.JWT_ACCESS_TIME }
+        );
         return res.status(200).send({ status: true, message: "token was created", data:  access_token })
    } catch (error) {
     if (error.name === "MongoError" && error.code === 11000) {

@@ -7,6 +7,7 @@ const admin_ads = new Schema({
     title: { type: Schema.Types.String},
     banner_story_time: { type: Schema.Types.Date, require: false, default: new Date(+new Date()+24*3600*1000) },
     ads_description : { type: Schema.Types.String, require: true },
+    authorImg: { type: Schema.Types.String, required: true },
     img: [{ 
         _id: { type: Schema.Types.String },
         url: { type: Schema.Types.String },
