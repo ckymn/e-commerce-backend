@@ -22,7 +22,7 @@ const route = async (req,res,next) => {
                         })
                         return res.send({ status: 200, message: "Find Single Stories success and View story set ", data })
                     }else{
-                        return res.send({ status: 200, message: "You already saw story", data: null})
+                        return res.send({ status: 204, message: "You already saw story", data: null})
                     }
                 })
             }
