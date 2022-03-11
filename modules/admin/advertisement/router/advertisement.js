@@ -8,6 +8,7 @@ const route = async (req, res, next) => {
        
         if(!adminData)
             return next(new ApiError("login",401,[]))
+        console.log(adminData)
         if(ads_time === "1d"){
             let data = await Data.create({
                 ...body,

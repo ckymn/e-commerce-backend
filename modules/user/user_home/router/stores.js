@@ -10,34 +10,35 @@ const route = async (req, res, next) => {
       let { kuserData, query } = req;
       let current_time = new Date();
 
-      // magaza banner
-      let store_ads_banner = await StoreBanner.aggregate([
-        {
-          $geoNear: {
-            near: {
-              type: "Point",
-              coordinates: [parseFloat(query.long), parseFloat(query.lat)],
-            },
-            spherical: true,
-            maxDistance: query.dst
-              ? parseFloat(query.dst) * 1609.34
-              : 900 * 1609.34,
-            distanceMultiplier: 1 / 1609.34,
-            distanceField: "StoreStoryDst",
-          },
-        },
-        {
-          $match: {
-            $and: [
-              { is_approved: "yes" },
-              { banner_story_time: { $gte: current_time } },
-              { ads_which: "Banner" },
-            ],
-          },
-        },
-      ]);
+      //? magaza banner
+      // let store_ads_banner = await StoreBanner.aggregate([
+      //   {
+      //     $geoNear: {
+      //       near: {
+      //         type: "Point",
+      //         coordinates: [parseFloat(query.long), parseFloat(query.lat)],
+      //       },
+      //       spherical: true,
+      //       maxDistance: query.dst
+      //         ? parseFloat(query.dst) * 1609.34
+      //         : 900 * 1609.34,
+      //       distanceMultiplier: 1 / 1609.34,
+      //       distanceField: "StoreStoryDst",
+      //     },
+      //   },
+      //   {
+      //     $match: {
+      //       $and: [
+      //         { is_approved: "yes" },
+      //         { banner_story_time: { $gte: current_time } },
+      //         { ads_which: "Banner" },
+      //       ],
+      //     },
+      //   },
+      // ]);
       // admin banner
-      let admin_ads_banner = await AdminAdsStory.aggregate([
+      
+      let banner = await AdminAdsStory.aggregate([
         {
           $geoNear: {
             near: {
@@ -57,6 +58,7 @@ const route = async (req, res, next) => {
             $and: [
               { banner_story_time: { $gte: current_time } },
               { ads_which: "Banner" },
+              { language: query.language }
             ],
           },
         },
@@ -157,8 +159,6 @@ const route = async (req, res, next) => {
         { $skip: parseInt(query.skip) },
         { $limit: parseInt(query.limit) },
       ]);
-      //banners [ admin-store]
-      let banner = admin_ads_banner.concat(store_ads_banner)
 
       return res.send({
         status: 200,
