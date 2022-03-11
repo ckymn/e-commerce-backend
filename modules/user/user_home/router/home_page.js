@@ -240,6 +240,11 @@ const route = async (req,res,next) => {
                 ],
               },
             },
+            {
+              $project:{
+                video:0
+              }
+            }
           ]);
           let store_ads_story = await StoreAds.aggregate([
             {
@@ -263,6 +268,11 @@ const route = async (req,res,next) => {
                   { banner_story_time: { $gte: current_time } },
                   { ads_which: "Story"  }
                 ]
+              }
+            },
+            {
+              $project:{
+                video:0
               }
             }
           ])
