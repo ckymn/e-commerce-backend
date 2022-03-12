@@ -18,10 +18,11 @@ const route = async (req, res, next) => {
     // send email
     let email = await sendEmail(body.email, "Vitrin Update Password", _code);
     if (email.status != 200)
-        return next(new ApiError(email.message, email.status))
-    return res.send({ status: 200, message: "Reset Code Send Success",data:[]});
+        return next(new ApiError(email.message, email.status,null))
+    return res.send({ status: 200, message: "Reset Code Send Success"});
 
   } catch (error) {
+    console.log(error)
     if (error.name === "MongoError" && error.code === 11000) {
         next(new ApiError(error?.message, 422));
       }
