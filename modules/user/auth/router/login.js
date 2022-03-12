@@ -8,27 +8,35 @@ const route = async (req, res, next) => {
    try {
         let { email, password,registration_token } = req.body;
 
-        let _user = await Data.findOneAndUpdate({ email },{
+        let data = await Data.findOneAndUpdate({ email },{
           $set:{
             registration_token
           }
         });
-        if(!_user){
-          return next( new ApiError("You have to signup",404,_user))
+        if(!data){
+          return next( new ApiError("You have to signup",404,null))
         }else{
-          let match = await bcrypt.compare(password, _user.password)
+          let match = await bcrypt.compare(password, data.password)
           if(!match)
               return next(new ApiError("Password or Email invalid",400,null));
           let access_token = await jwt.sign({ 
-              id: _user.id,
-              role: _user.role,
+              id: data.id,
+              role: data.role,
               address: { 
-                  country: _user.country,
-                  city: _user.city,
-                  district: _user.district
+                  country: data.country,
+                  city: data.city,
+                  district: data.district
               },
-              language: _user.language
+              language: data.language
           }, process.env.JWT_ACCESS_SECRET, { expiresIn: process.env.JWT_ACCESS_TIME });
+          // return res.send({
+          //   status: 200,
+          //   message: "token was created",
+          //   data: {
+          //     access_token: generateAccessToken(user),
+          //     refresh_token: generateRefreshToken(user),
+          //   },
+          // });
           return res.send({ status: 200, message: "token was created", data: access_token })
       }
    } catch (error) {
