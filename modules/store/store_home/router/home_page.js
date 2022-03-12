@@ -2,7 +2,7 @@ const { ObjectId } = require("mongodb");
 const Data = require("../../auth/model"),
   { Store_Comment } = require("../../../user/comment/model"),
   StoreFollow = require("../../../user/follow/model"),
-  { Store_Star , Product_Star} = require("../../../user/star/model"),
+  { Star: { Product_Star }} = require("../../../user/comment/model"),
   Payment = require("../../payment/model"),
   ApiError = require("../../../../errors/ApiError");
 
@@ -22,13 +22,14 @@ const route = async (req, res, next) => {
       .count()
       .lean()
       .exec();
-    //avg
-    let s_avg = await Store_Star.aggregate([
+
+    //store avg
+    let s_avg = await Product_Star.aggregate([
       { $match: { store_id: ObjectId(userData.id) } },
       { $group: { _id: "avg_rate", rate: { $avg: "$rate" } } },
     ]);
     let total_store_point = s_avg[0] ? s_avg[0].rate : 0
-
+    //product avg
     let p_avg = await Product_Star.aggregate([
       { $match: { store_id: ObjectId(userData.id) } },
       { $group: { _id: "avg_rate", rate: { $avg: "$rate" } } },

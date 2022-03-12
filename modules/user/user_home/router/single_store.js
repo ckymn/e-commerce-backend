@@ -1,7 +1,7 @@
 const Store = require("../../../store/auth/model")
 const Product = require("../../../store/products/model")
 const { ObjectId } = require("mongodb");
-const { Store_Star } = require("../../star/model");
+const { Star:{Store_Star,Product_Star} } = require("../../comment/model");
 const ApiError = require("../../../../errors/ApiError");
 const doviz = require("../../../../utils/doviz")
 
@@ -12,7 +12,7 @@ const route = async (req, res, next) => {
 
         let _data = await Store.findOne({ _id: params.id }).lean();
         if(!_data)
-          return next(new ApiError("Store not Found !",404,[]))
+          return next(new ApiError("Store not Found !",404,null))
         let start_store = _data.counter_weekly.getDate();
 
         // search count - location search count
@@ -96,6 +96,7 @@ const route = async (req, res, next) => {
             }
           );
         }
+
         // store view
         await Store.findOneAndUpdate(
           { $and: [{ _id: params.id }, { $nin: [kuserData.id] }] },
@@ -105,9 +106,7 @@ const route = async (req, res, next) => {
               last_views_monthly: kuserData.id 
             } 
           }
-        )
-          .lean()
-          .exec();
+        );
         // store 
         let store = await Store.aggregate([
           {
@@ -143,7 +142,7 @@ const route = async (req, res, next) => {
           }
         ]);
         // store star avarage
-        let s_avg = await Store_Star.aggregate([
+        let s_avg = await Product_Star.aggregate([
           { $match: { store_id: ObjectId(params.id) } },
           { $group: { _id: "avg_rate", rate: { $avg: "$rate" } } },
         ]);
@@ -179,6 +178,8 @@ const route = async (req, res, next) => {
             store_star_avg,
             product,
             currency,
+            lat: _data.location.coordinates[1],
+            long: _data.location.coordinates[0]
           },
         });
     }catch (error) {

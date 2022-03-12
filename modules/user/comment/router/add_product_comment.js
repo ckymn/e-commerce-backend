@@ -1,5 +1,5 @@
 const { Product_Comment } = require("../model")
-const { Product_Star } = require("../../star/model")
+const { Star:{ Product_Star } } = require("../../comment/model")
 const Product = require("../../../store/products/model")
 const User = require("../../auth/model")
 const ApiError = require("../../../../errors/ApiError")
