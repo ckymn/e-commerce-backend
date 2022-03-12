@@ -65,7 +65,7 @@ const products = new mongoose.Schema(
       coordinates: {
         type: [Number],
       },
-  },
+    },
     comments: [{ type: ObjectId, ref: "product_comment" }],
     star: [{ type: ObjectId, ref: "product_star" }],
     favorite: [{ type: ObjectId, ref: "users" }],

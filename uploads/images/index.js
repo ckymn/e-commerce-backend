@@ -20,9 +20,7 @@ const Upload = async (file, folder_path, file_name) => {
     // }
 
     let imgId = uuid.v4();
-    const blob = bucket.file(
-      imgId + "/" + file.originalname.replace(/ /g, "_")
-    );
+    const blob = bucket.file(imgId + "/" + file.originalname.replace(/ /g, "_"));
     const blobStream = blob.createWriteStream({
       resumable: false,
     });

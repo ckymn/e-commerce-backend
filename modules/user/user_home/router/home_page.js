@@ -223,22 +223,31 @@ const route = async (req,res,next) => {
                     banner_story_time: { $gte: current_time },
                   },
                   { ads_which: "Story" },
-                  { "view.date": { $gte: new Date(+new Date()-24*3600*1000) }}
-                  // { $and: [ {"view.who": { $in : [ kuserData.id ]} } , { "view.date": { $gte: new Date(+new Date()-24*3600*1000) }} ]}
-                  // {
-                  //   $or:[
-                  //     {  "view.who": { $nin : [ kuserData.id ]}},
-                  //     { $and: [ {"view.who": { $in : [ kuserData.id ]} } , { "view.date": { $gte: new Date(+new Date()-24*3600*1000) }} ]}
-                  //   ]
-                  // }
+                  {
+                    $or: [
+                      {
+                        "view.who": { $nin: [kuserData.id] },
+                      },
+                      {
+                        $and: [
+                          { "view.who": { $in: [kuserData.id] } },
+                          {
+                            "view.date": { // 13
+                              $lte: new Date(+new Date() - 24 * 3600 * 1000),//11
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
                 ],
               },
             },
             {
-              $project:{
-                video:0
-              }
-            }
+              $project: {
+                video: 0,
+              },
+            },
           ]);
           let currency = await doviz();
 
