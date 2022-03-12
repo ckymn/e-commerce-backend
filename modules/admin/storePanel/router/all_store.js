@@ -4,7 +4,9 @@ const ApiError  = require("../../../../errors/ApiError")
 const route = async (req, res, next) => {
     try {
         
-        let data = await Data.find({}).select("-password -search_count -location_search_count -wp_msg_count");
+        let data = await Data.find({}).select(
+          "-password -search_count -location_search_count -wp_msg_count"
+        );
         if(!data){
             return res.send({ status: 404, message: "Not Found Store User", data})
         }else{

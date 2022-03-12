@@ -6,15 +6,19 @@ const { ObjectId } = require("mongodb");
 const route = async (req,res,next) => {
     try {
         let { userData } = req;
+        
+        let d_w = await Data.find({ $and: [ { author: userData.id }, {"is_approved" : { $in: "wait"}} ] }).lean();
+        let d_n = await Data.find({ $and: [ { author: userData.id }, {"is_approved" : { $in: "no"}} ] }).lean();
+        let d_y = await Data.find({ $and: [ { author: userData.id }, {"is_approved" : { $in: "yes"}} ] }).lean();
 
-        let data = await Data.aggregate([
-          { $match: { author: ObjectId(userData.id) } },
-          { $unwind: { path: "$is_approved" }}
-        ]);
+        if(d_w.length === 0 && d_n.length === 0 && d_y.length === 0)  
+          return next(new ApiError("all store not found",404,[]))
 
-        if(data.length === 0)
-            return res.send({ status: 400, messsage: "store ads not found", data})
-        return res.send({ status: 200, message: "store ads success", data });
+          return res.send({
+          status: 200,
+          message: "store ads success",
+          data: { d_w, d_n, d_y },
+        });
 
     } catch (error) {
         if (error.name === "MongoError" && error.code === 11000) {

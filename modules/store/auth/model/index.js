@@ -120,8 +120,6 @@ const store_register = new Schema(
       },
     },
     view: [{ type: Schema.Types.ObjectId }],
-    last_sells_weekly: [{ type: Schema.Types.ObjectId }],
-    last_sells_monthly: [{ type: Schema.Types.ObjectId }],
     last_views_weekly: [{ type: Schema.Types.ObjectId }],
     last_views_monthly: [{ type: Schema.Types.ObjectId }],
     counter_weekly: { type: Schema.Types.Date , default: new Date()},

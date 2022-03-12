@@ -1,7 +1,7 @@
 const Data = require("../../auth/model")
 const Products = require("../../../store/products/model")
 const AdminData = require("../../../admin/login/model")
-const ActiveUser = require("../../../../middlewares")
+const Active = require("../../../../middlewares")
 const AdminAdsStory = require("../../../admin/advertisement/model")
 const ApiError = require("../../../../errors/ApiError")
 const { ObjectId } = require("mongodb")
@@ -9,7 +9,7 @@ const doviz = require("../../../../utils/doviz")
 
 const route = async (req,res,next) => {
     try {
-        let { kuserData, query } = req;
+        let { kuserData, query , active } = req;
         let actives = [];
         let current_time = new Date();
         
@@ -26,17 +26,24 @@ const route = async (req,res,next) => {
         );
         if(!_data)
           return next(new ApiError("Didn't find User",404,null));
+
         // active users find
-        await ActiveUser.active.active_control(req.active);
-        for(let [key,value] of req.active){
+        await Active.active.active_control(active);
+        for(let [key,value] of active){
             actives.push(key);            
         }
-        await AdminData.findOneAndUpdate({ role: { $in: ["admin"] } },
-            { 
-                $set: {
-                    active: actives.map(i => i)
-                }
-            }
+        await AdminData.findOneAndUpdate(
+          {
+            $and: [
+              { role: { $in: ["admin"] } },
+              { active: { $nin: [kuserData.id] } },
+            ],
+          },
+          {
+            $push: {
+              active: actives,
+            },
+          }
         );
 
         if(query.search){

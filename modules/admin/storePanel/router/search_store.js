@@ -35,7 +35,7 @@ const route = async (req,res,next) => {
         if (error.code === 27) {
           next(new ApiError("We Don't Have Any Data", 204, []));
         }
-        next(new ApiError(error?.message, 500));
+        next(new ApiError(error?.message));
     }
 };
 

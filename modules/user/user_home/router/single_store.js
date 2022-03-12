@@ -13,8 +13,8 @@ const route = async (req, res, next) => {
         let _data = await Store.findOne({ _id: params.id }).lean();
         if(!_data)
           return next(new ApiError("Store not Found !",404,null))
-        let start_store = _data.counter_weekly.getDate();
 
+        let start_store = _data.counter_weekly.getDate();
         // search count - location search count
         if(Math.abs(current_time.getDate() - start_store) === 0){
             await Store.findOneAndUpdate(

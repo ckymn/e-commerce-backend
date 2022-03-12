@@ -16,82 +16,22 @@ const route = async (req, res, next) => {
         });
 
         let mail = await sendEmailToVitrin(
-          "cokyamanmuhammet@gmail.com",
+          "vitrininternational@gmail.com",
           ` Vitrin Advertisement Request by : ${userData.id}`,
           `author: http://${req.headers.host}/${userData.id}
            ads_which: ${body.ads_which} 
            ads_time: ${body.ads_time}
            ads_price: ${body.ads_price}
+           email: ${user.email}
            phone: ${body.phone}`
         );
         if(mail != 200)
             return next(new ApiError(mail.message,mail.status));
-        return res.send({ status: 200 , message:"Your advertisement request is success, ", data})
-        // let store = await Store.findOne({ _id: userData.id });
-        // if(!store)
-        //     return next(new ApiError("Store Not Found",404))
-        // if(ads_time === "1d"){
-        //     let data = await Data.create({
-        //         ...body,
-        //         img: body.img,
-        //         author: userData.id,
-        //         banner_story_time: new Date(+new Date()+24*60*60*1000),
-        //         location: {
-        //             coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
-        //         }
-        //     });
-        //     return res.send({ status: 200, message: "Add Advertisement data save success", data})
-        // }
-        // if(ads_time === "5d"){
-        //     let data = await Data.create({
-        //         ...body,
-        //         img: body.img,
-        //         author: userData.id,
-        //         banner_story_time: new Date(+new Date()+5*24*60*60*1000),
-        //         location: {
-        //             coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
-        //         }
-        //     });
-        //     return res.send({ status: 200, message: "Add Advertisement data save success", data})
-        // }
-        // if(ads_time === "1w"){
-        //     let data = await Data.create({
-        //         ...body,
-        //         img: body.img,
-        //         author: userData.id,
-        //         banner_story_time: new Date(+new Date()+7*24*60*60*1000),
-        //         location: {
-        //             coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
-        //         }
-        //     });
-        //     return res.send({ status: 200, message: "Add Advertisement data save success", data})
-        // }
-        // if(ads_time === "2w"){
-
-        //     let data = await Data.create({
-        //         ...body,
-        //         img: body.img,
-        //         author: userData.id,
-        //         banner_story_time: new Date(+new Date()+2*7*24*60*60*1000),
-        //         location: {
-        //             coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
-        //         }
-        //     });
-        //     return res.send({ status: 200, message: "Add Advertisement data save success", data})
-        // }
-        // if(ads_time === "1m"){
-        //     let data = await Data.create({
-        //         ...body,
-        //         img: body.img,
-        //         author: userData.id,
-        //         banner_story_time: new Date(+new Date()+30*24*60*60*1000),
-        //         location: {
-        //             coordinates: [ parseFloat(store.location.coordinates[0]),parseFloat(store.location.coordinates[1]) ]
-        //         }
-        //     });
-        //     return res.send({ status: 200, message: "Add Advertisement data save success", data})
-        // }
-
+        return res.send({
+          status: 200,
+          message: "Your advertisement request is success, ",
+          data,
+        });
     } catch (error) {
         console.log(error)
         if (error.name === "MongoError" && error.code === 11000) {

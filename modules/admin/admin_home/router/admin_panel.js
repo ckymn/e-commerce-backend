@@ -36,25 +36,7 @@ const route = async (req, res, next) => {
       .count()
       .lean()
       .exec();
-
-    let storys = await AdminStoryAds.find({ads_which: "Story"}).lean().exec();
-    let banners = await AdminStoryAds.find({ads_which: "Banner"}).lean().exec();
-    let stores = await Store.find({}).select("-password").lean().exec();
-    let users = await User.find({}).select("-password").lean().exec();
-    let store_ads = await StoreAdvertisement.find({}).lean().exec();
-    let app_ntfc = await AppNotification.find({}).lean().exec();
-    let ads_ntfc = await AdvertisementNotificaiton.find({ is_approved: "wait" })
-      .lean()
-      .exec();
-    let store_ntfc = await StoreNotification.find({ is_approved: "wait" })
-      .lean()
-      .exec();
-    let product_ntfc = await ProductNotification.find({ is_approved: "wait" })
-      .lean()
-      .exec();
-    let income_info = await Payment.find({}).lean().exec();
-
-    return res,send({
+    return res.send({
       status: 200,
       message: "Admin Home Page success",
       data: {
@@ -66,19 +48,10 @@ const route = async (req, res, next) => {
         total_sub_1month,
         total_sub_3month,
         total_sub_1year,
-        storys,
-        banners,
-        stores,
-        users,
-        store_ads,
-        app_ntfc,
-        ads_ntfc,
-        store_ntfc,
-        product_ntfc,
-        income_info
       },
     });
   } catch (error) {
+    console.log(error)
     if (error.name === "MongoError" && error.code === 11000) {
       return next(new ApiError(error?.message, 422));
     }

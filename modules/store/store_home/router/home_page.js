@@ -14,9 +14,9 @@ const route = async (req, res, next) => {
     let store = await Data.findOne({ _id: userData.id }).lean();
 
     let total_followers = await StoreFollow.find({ store_id: userData.id })
-    .count()
-    .lean()
-    .exec();
+      .count()
+      .lean()
+      .exec();
 
     let total_comments = await Store_Comment.find({ store_id: userData.id })
       .count()
@@ -37,31 +37,61 @@ const route = async (req, res, next) => {
     let total_product_point =  p_avg[0] ? p_avg[0].rate : 0
     
     //sells
-    let seller = await Payment.aggregate([
-      {$addFields:{"day":{$dayOfMonth:"$date"}}},
-      {$match:{ day: current_time.getDate()}}
-    ])
-    let total_daily_seller = seller.map(i => i._id);
-    await Data.findOneAndUpdate(
+    let sells_daily = await Payment.aggregate([
       {
-        $and: [
-          { _id: userData.id },
-          { last_sells_weekly: { $nin: [total_daily_seller] } },
-        ],
+        $addFields: {
+          month: { $month: "$date" },
+          day: { $dayOfMonth: "$date" },
+        },
       },
       {
-        $push: {
-          last_sells_weekly: total_daily_seller,
-          last_sells_monthly: total_daily_seller,
+        $match: {
+          $and: [
+            { day: current_time.getDate() },
+            { month: current_time.getMonth()+1 },
+          ],
         },
-      }
-    );
+      },
+    ]);
+    let sells_weekly = await Payment.aggregate([
+      {
+        $addFields: {
+          month: { $month: "$date" },
+          day: { $dayOfMonth: "$date" },
+        },
+      },
+      {
+        $match: {
+          $and: [
+            { day: { $lte: current_time.getDate()+7 } },
+            { month: current_time.getMonth()+1 },
+          ],
+        },
+      },
+    ]);
+    let sells_monthly = await Payment.aggregate([
+      {
+        $addFields: {
+          month: { $month: "$date" },
+          day: { $dayOfMonth: "$date" },
+        },
+      },
+      {
+        $match: {
+          $and: [
+            { day: { $lte: current_time.getDate()+28 } },
+            { month: current_time.getMonth()+1 },
+          ],
+        },
+      },
+    ]);
+
+    //
     if(Math.abs(current_time.getDate() - store.counter_weekly.getDate()) === 7){
       console.log("haftada")
       await Data.findOneAndUpdate({_id: userData.id },{
         $set: {
           "counter_weekly": new Date(+new Date()+7*24*3600*1000), 
-          "last_sells_weekly": [],
           "last_views_weekly": []
         }
       })
@@ -71,27 +101,21 @@ const route = async (req, res, next) => {
       await Data.findOneAndUpdate({_id: userData.id },{
         $set: { 
           "counter_weekly": new Date(+new Date()+30*24*3600*1000),
-          "last_sells_weekly": [],
-          "last_sells_monthly": [],
           "last_views_weekly": [],
           "last_views_monthly": [] 
         }
       })
     }
 
-    let monthly_sells = store.last_sells_monthly.length;
-    let weekly_sells = store.last_sells_weekly.length;
-    let daily_sells = total_daily_seller.length;
-    let last_sells = [monthly_sells,weekly_sells,daily_sells];
-
     let monthly_views = store.last_views_monthly.length;
     let weekly_views = store.last_views_weekly.length;
     let daily_views = store.view.length;
-    let last_views = [ monthly_views,weekly_views,daily_views];
-
+    
     let wp_msg_count = Object.values(store.wp_msg_count);
     let search_count = Object.values(store.search_count);
     let location_search_count = Object.values(store.location_search_count)
+    let last_sells = [sells_monthly.length,sells_weekly.length,sells_daily.length];
+    let last_views = [ monthly_views,weekly_views,daily_views];
 
     return res.send({
       status: 200,
@@ -103,7 +127,7 @@ const route = async (req, res, next) => {
         last_sells,
         last_views,
         total_followers,
-        total_comments,
+        // total_comments,
         total_product_point,
         total_store_point,
       },

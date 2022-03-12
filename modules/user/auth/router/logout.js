@@ -6,10 +6,12 @@ const ApiError = require("../../../../errors/ApiError")
 const route = async (req, res, next) => {
   try {
     let { kuserData } = req;
+    
     await jwt.sign({ id: kuserData.id }, process.env.JWT_ACCESS_SECRET, {
       expiresIn: "1ms",
     });
-    let data = await Active.findOneAndUpdate({ role: { $in: ["admin"] } },
+    // active remove
+    let data = await Active.updateOne({ role: { $in: ["admin"] } },
       {
         $pull: {
           active: kuserData.id,
@@ -24,7 +26,7 @@ const route = async (req, res, next) => {
       next(new ApiError(error?.message, 422));
     }
     if (error.code === 27) {
-      next(new ApiError("We Don't Have Any Data", 500, null));
+      next(new ApiError("We Don't Have Any Data", 204, null));
     }
     next(new ApiError(error?.message))
 }
