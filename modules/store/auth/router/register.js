@@ -1,6 +1,7 @@
 const Data = require("../model")
 const bcrypt  = require("bcryptjs")
 const ApiError = require("../../../../errors/ApiError")
+const { sendEmail } = require("../../../../utils");
 
 const route = async (req, res, next) => {
     try {
@@ -8,7 +9,7 @@ const route = async (req, res, next) => {
         let { email, username, password } = body;
 
         let store = await Data.findOne({ $or: [ { email }, { username }] });
-        if (store)
+        if(store)
           return next(new ApiError("Email or Username already exist", 409,[]));
 
         const hash = await bcrypt.hashSync(password, 10);
@@ -21,10 +22,12 @@ const route = async (req, res, next) => {
           store_close_hour: parseInt(body.store_close_hour),
           password: hash,
         });
+        let _email = await sendEmail(body.email,"Your request has been received and will be returned as soon as possible.");
+        if(_email.status != 200)
+            return next(new ApiError(`Store register success but ${_email.message}`,_email.status,[]))
         return res.send({
           status: 200,
-          message: "user register success",
-          data: [],
+          message: "store register success",
         });
     } catch (error) {
       if (error.name === "MongoError" && error.code === 11000) {

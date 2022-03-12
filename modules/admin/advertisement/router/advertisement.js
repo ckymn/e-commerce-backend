@@ -7,8 +7,8 @@ const route = async (req, res, next) => {
         let { ads_time } = body;
        
         if(!adminData)
-            return next(new ApiError("login",401,[]))
-        console.log(adminData)
+            return next(new ApiError("login authorization error",401,[]))
+            
         if(ads_time === "1d"){
             let data = await Data.create({
                 ...body,
