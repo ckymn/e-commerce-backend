@@ -13,7 +13,7 @@ const {
   errorHandler,
 } = require("../middlewares");
 //utils
-const { country, city, state , singleCity } = require("../utils/getCountry")
+const { country, city} = require("../utils/getCountry")
 //validationss
 const schemas = require("../validations/admin");
 
@@ -67,9 +67,6 @@ router.get(`/admin/search_store`, authJwt ,storePanel.search_store);
 router.get(`/admin/bad_words`, authJwt, bad_words.all_bad_words)
 
 router.get(`/countries`, country)// tum ulkeler ve tekil ulke
-router.get(`/countries/city`, city)// tum iller ve tekil il
-router.get(`/countries/city/district`, state)
-
 
 //admin_post
 router.post(`/admin/register`,login.register)

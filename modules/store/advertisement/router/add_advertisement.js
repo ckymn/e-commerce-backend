@@ -6,7 +6,7 @@ const {sendEmailToVitrin} = require("../../../../utils")
 const route = async (req, res, next) => {
     try {
         let { body , userData ,files} = req;
-
+        
         let user = await Store.findOne({ _id: userData.id }).lean();
         if(!user)
           return next(new ApiError('Store not found',404,null));
@@ -16,9 +16,13 @@ const route = async (req, res, next) => {
         });
 
         let mail = await sendEmailToVitrin(
-          user.email,
-          ` Vitrin Store Advertisement Request  `
-          `author: ${userData.id} - ads_which: ${body.ads_which} - ads_time: ${body.ads_time} - ads_price: ${body.ads_price} - phone: ${body.phone}`
+          "cokyamanmuhammet@gmail.com",
+          ` Vitrin Advertisement Request by : ${userData.id}`,
+          `author: http://${req.headers.host}/${userData.id}
+           ads_which: ${body.ads_which} 
+           ads_time: ${body.ads_time}
+           ads_price: ${body.ads_price}
+           phone: ${body.phone}`
         );
         if(mail != 200)
             return next(new ApiError(mail.message,mail.status));
@@ -94,7 +98,7 @@ const route = async (req, res, next) => {
           next(new ApiError(error?.message, 422));
         }
         if (error.code === 27) {
-          next(new ApiError("We Don't Have Any Data", 204,null));
+          next(new ApiError("We Don't Have Any Data", 204,[]));
         }
         next(new ApiError(error?.message));
     }

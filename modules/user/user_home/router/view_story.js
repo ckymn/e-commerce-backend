@@ -28,15 +28,12 @@ const route = async (req,res,next) => {
                 })
             }
             if(query.type === "store_storie"){
-                await Stories.findOne({ $and: [ {_id: params.id}, { "view.who": { $in : [ kuserData.id ]}}] })
+                await Stories.findOne({ $and: [ {_id: params.id}, { view: { $in : [ kuserData.id ]}}] })
                 .lean().exec(async(err,data) => {
                     if(!data){
                         let data = await Stories.findOneAndUpdate({ _id: params.id }, {
                             $push: { 
-                                view: {
-                                    who: kuserData.id,
-                                    date: new Date()
-                                }
+                                view: kuserData.id
                             }
                         })
                         if(!data)
