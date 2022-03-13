@@ -66,6 +66,7 @@ const products = new mongoose.Schema(
         type: [Number],
       },
     },
+    gender: { type: String, enum: ["Erkek","Kadın"]},
     comments: [{ type: ObjectId, ref: "product_comment" }],
     star: [{ type: ObjectId, ref: "product_star" }],
     favorite: [{ type: ObjectId, ref: "users" }],
