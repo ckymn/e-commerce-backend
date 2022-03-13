@@ -11,6 +11,7 @@ const route = async (req,res,next) => {
               $or: [
                 // { $text: { $search: global } },
                 { storename: { $regex: global, $options: "i" } },
+                { sector_name: { $regex: global, $options: "i" } },
               ],
             },
           },
