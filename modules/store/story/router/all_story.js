@@ -20,19 +20,22 @@ const route = async (req, res, next) => {
             return next(new ApiError("All story not found",400,data))
           return res.send({ status: 200, message: "All advertisement data success", data })
         }
-        if (outdate_stories.length > 0) {
-          for(let i = 0; i < outdate_ads.length; i++){
-            data[i].img.map(async i => {
+        if (outdate_stories.length > 0) {       
+          for(let i = 0; i < outdate_stories.length; i++){
+            let outdate_stories = await Data.find({ story_time: { $lte: current_time }})
+            outdate_stories[i].img.map(async i => {
                 await storage.Delete(i._id);
             })
           }
           await Data.deleteMany({ $and: [{ author: userData.id }, { story_time :{ $lte: current_time } }] });
+          // find stories
           let data = await Data.find({
             $and: [
               { author: userData.id },
               { story_time: { $gte: current_time } },
             ],
           });
+
           if(data.length === 0)
             return next(new ApiError("All story not found",404,data))
           return res.send({ status: 200, message: "All advertisement data success", data })

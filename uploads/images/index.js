@@ -49,7 +49,7 @@ const Delete = async (imgId) => {
   try {
     await bucket.deleteFiles({ prefix: `${imgId}/`})
   } catch (e) {
-    console.log("BUCKET DELETION FAILED",e)
+    console.log("DELETE BUCKET FAILED",e)
   }
 }
 

@@ -218,28 +218,42 @@ const route = async (req,res,next) => {
             },
             {
               $match: {
-                $and: [
+                $or: [
                   {
-                    banner_story_time: { $gte: current_time },
-                  },
-                  { ads_which: "Story" },
-                  {
-                    $or: [
+                    $and: [
+                      {
+                        banner_story_time: { $gte: current_time },
+                      },
+                      { ads_which: "Story" },
                       {
                         "view.who": { $nin: [kuserData.id] },
                       },
+                    ],
+                  },
+                  {
+                    $and: [
                       {
-                        $and: [
-                          { "view.who": { $in: [kuserData.id] } },
-                          {
-                            "view.date": { // 13
-                              $lte: new Date(+new Date() - 24 * 3600 * 1000),//11
-                            },
-                          },
-                        ],
+                        banner_story_time: { $gte: current_time },
+                      },
+                      { ads_which: "Story" },
+                      {
+                        "view.date": {// 13
+                          $gte: new Date(+new Date()-24*3600*1000), //12
+                        },
                       },
                     ],
                   },
+                  // {
+                  //   $and: [
+                  //     { "view.who": { $in: [kuserData.id] } },
+                  //     {
+                  //       "view.date": {
+                  //         // 13
+                  //         $lte: new Date(+new Date()), //14
+                  //       },
+                  //     },
+                  //   ],
+                  // },
                 ],
               },
             },

@@ -24,7 +24,8 @@ const route = async (req, res, next) => {
         if(outdate_ads.length > 0){
 
           for(let i = 0; i < outdate_ads.length; i++){
-            data[i].img.map(async i => {
+            let outdate_ads = await Data.find({banner_story_time:{ $lte: current_time } })
+            outdate_ads[i].img.map(async i => {
                 await storage.Delete(i._id);
             })
           }
