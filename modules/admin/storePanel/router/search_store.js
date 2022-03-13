@@ -12,6 +12,7 @@ const route = async (req,res,next) => {
                 // { $text: { $search: global } },
                 { storename: { $regex: global, $options: "i" } },
                 { sector_name: { $regex: global, $options: "i" } },
+                // adrese gore ve sectore gore siralama [ konum mu oluck ?? yoksa country -city-district  mi olucak]
               ],
             },
           },

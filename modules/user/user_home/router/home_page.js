@@ -152,6 +152,11 @@ const route = async (req,res,next) => {
                 ],
               },
             },
+            {
+              $project: {
+                video: 0,
+              },
+            },
           ]);
           let currency = await doviz();
 
