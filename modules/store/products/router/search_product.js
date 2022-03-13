@@ -18,7 +18,7 @@ const Product = require("../../products/model");
       
       return res.send({
         status: 200,
-        message: "Search Categories success",
+        message: "Search Products success",
         data
       });
     } catch (error) {
