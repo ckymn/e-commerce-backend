@@ -14,7 +14,8 @@ const {
 } = require("../middlewares");
 //validations
 const schemas = require("../validations/admin");
-
+//helpers
+const location = require("../helpers/location")
 //store_get
 const store_home = require("../modules/store/store_home/router")
 const sectorSearch = require("../modules/store/auth/router")
@@ -68,5 +69,7 @@ router.delete(`/store/storie/:id`,idChecker(),authJwt,storeStory.delete_story);
 // image 
 router.post(`/image/upload`,authJwt,uploadImage.array("img"),store_images.uploader);
 router.delete(`/image/delete`,authJwt,store_images.delete_images);
+
+router.get(`/location`, location.Location)
 
 module.exports = router;    

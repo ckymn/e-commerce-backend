@@ -126,29 +126,14 @@ const route = async (req,res,next) => {
               $match: {
                 $or: [
                   {
-                    $and: [
-                      {
-                        banner_story_time: { $gte: current_time },
-                      },
-                      { ads_which: "Story" },
-                      {
-                        "view.who": { $nin: [kuserData.id] },
-                      },
-                    ],
+                    $elemMatch: { "view.who": { $nin: kuserData.id } },
                   },
                   {
-                    $and: [
-                      {
-                        banner_story_time: { $gte: current_time },
-                      },
-                      { ads_which: "Story" },
-                      {
-                        "view.date": {// 13
-                          $gte: new Date(+new Date() - 24 * 3600 * 1000), //12
-                        },
-                      },
-                    ],
-                  }
+                    $elemMatch: { "view.who": { $in: kuserData.id } },
+                    "view.date": { //11
+                      $gte: new Date(+new Date() - 1 * 24 * 60 * 60 * 1000),//12
+                    },
+                  },
                 ],
               },
             },
@@ -238,30 +223,17 @@ const route = async (req,res,next) => {
             {
               $match: {
                 $or: [
+                  // { view: { $elemMatch: { who: { $nin: [kuserData.id] } } } },
                   {
-                    $and: [
-                      {
-                        banner_story_time: { $gte: current_time },
-                      },
-                      { ads_which: "Story" },
-                      {
-                        "view.who": { $nin: [kuserData.id] },
-                      },
-                    ],
-                  },
-                  {
-                    $and: [
-                      {
-                        banner_story_time: { $gte: current_time },
-                      },
-                      { ads_which: "Story" },
-                      {
-                        "view.date": {// 13
-                          $gte: new Date(+new Date() - 24 * 3600 * 1000), //12
+                    view: {
+                      $elemMatch: {
+                        // who: { $in: [kuserData.id] },
+                        date: {//13
+                          $gte: new Date(+new Date() - 1* 24 * 3600 * 10000),//12
                         },
                       },
-                    ],
-                  }
+                    },
+                  },
                 ],
               },
             },
