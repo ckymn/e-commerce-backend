@@ -1,10 +1,10 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const morgan = require("morgan")
-const {admin,store,user} = require("./routes");
+const morgan = require("morgan");
+const { admin, store, user } = require("./routes");
 const { connectDB } = require("./config/database");
-const { errorHandler  } = require("./middlewares")
+const { errorHandler } = require("./middlewares");
 const app = express();
 
 //db
@@ -23,14 +23,14 @@ connectDB();
 
 //mid
 app.use(cors());
-app.use(morgan("dev"))
-app.use(express.static(__dirname + "/uploads/list"))
-app.use('uploads',express.static('uploads'))
+app.use(morgan("dev"));
+app.use(express.static(__dirname + "/uploads/list"));
+app.use("uploads", express.static("uploads"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 //engine
-app.set('view engine', 'ejs');
-app.set('views',__dirname)
+app.set("view engine", "ejs");
+app.set("views", __dirname);
 
 // router
 app.use(admin);
@@ -38,17 +38,16 @@ app.use(store);
 app.use(user);
 
 //! Not Found
-app.use((req,res,next) =>{
+app.use((req, res, next) => {
   let err = new Error("Not Found");
   err.status = 404;
   next(err);
-})
+});
 //! Error Handler
-app.use(errorHandler);   
+app.use(errorHandler);
 
 //run
 let PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
- 
