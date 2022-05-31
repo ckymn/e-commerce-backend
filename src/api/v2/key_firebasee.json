@@ -1,0 +1,13 @@
+{
+    "type": "service_account",
+    "project_id": "famous-hull-332022",
+    "private_key_id": "c2ff85049b6b3a34ba70adeaae43ddae3242c422",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCi4/XnFuInsxk7\nkmZDQBRJsyp8o3loSVySUzIHqexX7AKlzZJp4GAvTWs0O0cvmqX+64m7qtlWXJw4\nRnHA5qiN22tt1AteIZnB4vr0bMqzbyHEZA9rCtIFDMORGEsz3F8eronHVjCGW/MQ\nipvTlujWvRESOvJeQMtVDMzIF8a9I+oFOC4ihFDP7m6zQnmPgubQ+vQOfxUdk3it\n/xpiW1E91P9ofbJ2I5fy3TKNThJsRdDizyGDXgj26oDiaS8cPDRj9fzM1UXw2FAj\nmR86XDTLcXzLTd0sMyw3bVBGL1Y1TrQdq+GpV2HzhtinNz579Sftr/0fDGTeacRr\nermQV5X1AgMBAAECggEAEFQMntUe537fDScwRBaE0hx5KlRSw77y3iIj1jvU2r1o\nSImSXzWkPqmikPJOQPneIO8od9z4+1y+Ni/tkDou9EVl//TtDMsOeC6SHHVZXmJJ\n/r9PAlpr0iDE6+MFCtZQ3Kj/W7GKnLVT6LkURMIQZhI+x1aMXCFfoI9vabFkdSoe\nz2Kp7XYLCMDCxNZH3AYZFAL2sZjaxBdgJyvUbWf/ReyBVYuS5ccRrvmKzfgaCfMK\nexLFfAaOhiF0bN6y/kMhdbMzlO/vvZ2Sl3UGhpk78O7TVS4gnwld8HAX/+OJowU/\n+G7dS1yhV7ewF2Wmm0U1TZToS3j5E+zo0LqPVQaJAwKBgQDiYhxK8PnYsVoTroxY\nwNxawASpKbAEjudsxSCCSA7XsWZY/SiCEcNFYtqRn5+3SJWp6+O9aBKkV1J+1dIT\nkmFiysRubwD6Hg+bUFxsF6H+16ouqb+oMgokexbZyO7kLhN3OSQmB4GeupYSe1QX\nOUeL7C60nVEvW8QEhf6M2tvSqwKBgQC4M2OJj/YeTma0J18a5EeKDh2kZpv2qkt5\ncl5dwiz2U7kWmyZpBLEVylEoXHN+niRMhnK5eU2XwvVBkuNzfZ0uqRYSnk0SCChs\nTftK7jU7JeGFMUzTkgTUdiK8PhpLd5mUY1ucwr8TRL8i6XAAvmOgOPy4E6LpGR9q\n6+FzMtk53wKBgQCRNSc6tqk74j6KA1sIjuSI3UPgEdpSgitVbHg2uOu0VJj2maPD\nEouzVP4njEDROqCtNp6E3l2exlgm/RXb8fe/e5pVz6PLyz5tfDVcLCh/o2wItF84\nDqjMz5tPpH//IsLfpWpXblcpLjuWrT66CsamrJ8kwQfTHcR0tlIZnUSFMwKBgH5n\n1ZDbWDyn9NcAhcWAjo9w7Gqbd8AoUS8Aiz2wOQa5obSfuBYtgBDCDDu0ZhWoFKTn\nRud9FQBma8QaNzhUJX+VzW3tcFpFeugIA8ECA0mZz0+F64DtHZ9niqK/w2+ynZQ1\nMvM6ucFRVhFxPMll3hxfvx3ba9qmwOaxBL/3TxblAoGBAIQf4vFPSlWnnK1jj5O2\nDMbcrJBAk8POrW2KMIatXpLmGQLasaLkLSgWTSJYKAaQ9EhcFZCBlGLeSFR3yw+4\nHLB0PF9HOppimEqvaI7Rxr0chkqVQ06XBES+ZWhWsfXpBh0xXbOigtCveTirsC/2\n+rI+EnVKGMsYrpIc41PynKzk\n-----END PRIVATE KEY-----\n",
+    "client_email": "firebase-adminsdk-bps71@famous-hull-332022.iam.gserviceaccount.com",
+    "client_id": "116386817378244455409",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-bps71%40famous-hull-332022.iam.gserviceaccount.com"
+  }
+  
