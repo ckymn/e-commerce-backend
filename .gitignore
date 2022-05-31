@@ -1,6 +1,6 @@
 node_modules
 .env
 server.config.js
-.DS_Store
 key_firebasee.json
 key.json
+.DS_Store
