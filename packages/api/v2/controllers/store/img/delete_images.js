@@ -8,7 +8,7 @@ const route = async (req, res, next) => {
     for (let i = 0; i < arr.length; i++) {
       await storage.Delete(arr[i]);
     }
-    
+
     return res.send({
       status: 200,
       message: "Delete Images Success",

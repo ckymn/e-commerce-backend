@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/api/index.js"
+    "start": "node packages/api/index.js",
+    "dev": "nodemon packages/api/index.js"
   },
   "author": "ckymn",
   "license": "MIT",

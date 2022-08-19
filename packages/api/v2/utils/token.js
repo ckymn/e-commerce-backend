@@ -1,5 +1,6 @@
 const JWT = require("jsonwebtoken");
 
+
 const generateAccessToken = (user) => {
   return JWT.sign(
     {
@@ -34,5 +35,5 @@ const generateRefreshToken = (user) => {
 
 module.exports = {
   generateAccessToken,
-  generateRefreshToken,
+  generateRefreshToken
 };

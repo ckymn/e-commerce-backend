@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const { admin, store, user } = require("../../routes");
-
+const cors = require("cors");
 module.exports = createServer = () => {
   const app = express();
 
