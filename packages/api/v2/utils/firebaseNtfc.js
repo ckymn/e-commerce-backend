@@ -2,7 +2,12 @@ const admin = require("firebase-admin");
 const serviceAccount = require("../key_firebasee.json");
 
 const admin_firebase = admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert({
+    type: process.env.TYPE,
+    projectId: process.env.PROJECT_ID,
+    clientEmail: process.env.CLIENT_EMAIL,
+    privateKey: process.env.PRIVATE_KEY.replace(/\\n/g, "\n"), // NOW THIS WORKS!!!
+  }),
 });
 
 const route = async (message, registrationTokens) => {
@@ -19,10 +24,10 @@ const route = async (message, registrationTokens) => {
         });
         console.log("List of tokens that caused failures: " + failedTokens);
       }
-      return ({
+      return {
         message: response.successCount + " messages were sent successfully",
-        data: response.responses
-      });
+        data: response.responses,
+      };
     });
 };
-module.exports = route; 
+module.exports = route;

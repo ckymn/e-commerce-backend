@@ -23,6 +23,9 @@ const user_follow = require("../controllers/user/follow/rotuer");
 const user_favorite = require("../controllers/user/favorite/router");
 
 // users_get
+router.get("/", (req, res) => {
+  res.send("User");
+});
 router.get("/user/logout", authJwt, user_auth.logout);
 router.get("/user/home_page", authJwt, active.active, user_home.home_page);
 router.get("/user/user", authJwt, user_home.user);

@@ -36,9 +36,9 @@ module.exports = createServer = () => {
   app.set("views", __dirname);
 
   // router
-  app.use(admin);
-  app.use(store);
-  app.use(user);
+  app.use("/api/v2/", admin);
+  app.use("/api/v2/", store);
+  app.use("/api/v2/", user);
 
   return app;
 };

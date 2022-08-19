@@ -1,0 +1,3009 @@
+{
+	"info": {
+		"_postman_id": "8d5ec102-c40b-462a-9372-d3a49b0af722",
+		"name": "Vitrin Int",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "11937139"
+	},
+	"item": [
+		{
+			"name": "Magazalar",
+			"item": [
+				{
+					"name": "auth",
+					"item": [
+						{
+							"name": "Login[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"ferhat@gmail.com\",\n    \"username\" : \"_ferhat\",\n    \"password\": \"123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{URL}}/login"
+							},
+							"response": []
+						},
+						{
+							"name": "Register[+]",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {}
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "ferhat",
+											"type": "text"
+										},
+										{
+											"key": "surname",
+											"value": "iltas",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "ferhat@gmail.com",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "5454444444",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "_ferhat",
+											"type": "text"
+										},
+										{
+											"key": "img",
+											"type": "file",
+											"src": "/Users/ckymn/Desktop/a5.png"
+										},
+										{
+											"key": "password",
+											"value": "123",
+											"type": "text"
+										},
+										{
+											"key": "storecountry",
+											"value": "Turkey",
+											"type": "text"
+										},
+										{
+											"key": "storecity",
+											"value": "Ankara",
+											"type": "text"
+										},
+										{
+											"key": "storedistrict",
+											"value": "Sariyer",
+											"type": "text"
+										},
+										{
+											"key": "storeneighborhood",
+											"value": "Cumhuriyet Mahallesi",
+											"type": "text"
+										},
+										{
+											"key": "storestreet",
+											"value": "Erdem sokak",
+											"type": "text"
+										},
+										{
+											"key": "storelanguage",
+											"value": "tr",
+											"type": "text"
+										},
+										{
+											"key": "experience",
+											"value": "3",
+											"type": "text"
+										},
+										{
+											"key": "storebuildingnumber",
+											"value": "14",
+											"type": "text"
+										},
+										{
+											"key": "storedoornumber",
+											"value": "4",
+											"type": "text"
+										},
+										{
+											"key": "storename",
+											"value": "Trendyol",
+											"type": "text"
+										},
+										{
+											"key": "instagram",
+											"value": "@vitrin",
+											"type": "text"
+										},
+										{
+											"key": "long",
+											"value": "28.5",
+											"type": "text"
+										},
+										{
+											"key": "lat",
+											"value": "37.1",
+											"type": "text"
+										},
+										{
+											"key": "store_open_hour",
+											"value": "06",
+											"type": "text"
+										},
+										{
+											"key": "store_close_hour",
+											"value": "24",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "stores validation failed: sector_name: Path `sector_name` is required., description: Path `description` is required.stores validation failed: sector_name: Path `sector_name` is required., description: Path `description` is required.stores validation failed: sector_name: Path `sector_name` is required., description: Path `description` is required.stores validation failed: sector_name: Path `sector_name` is required., description: Path `description` is required.",
+											"type": "text"
+										},
+										{
+											"key": "sector_name",
+											"value": "Yasam",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL}}/register",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"register"
+									],
+									"query": [
+										{
+											"key": "productImage",
+											"value": "",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "register[+]",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": "{{URL}}/register"
+							},
+							"response": []
+						},
+						{
+							"name": "login[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{URL}}/login"
+							},
+							"response": []
+						},
+						{
+							"name": "logout[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJfYWxpIiwiaWF0IjoxNjQwMjU2MDUzLCJleHAiOjE2NDI4NDgwNTN9.q_4x5pzq9e35vNm1h-bipBc1jbzIVQZ6z9gTJphSZq4"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{URL}}/logout"
+							},
+							"response": []
+						},
+						{
+							"name": "forgot_password[+]",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"emircandalman28@gmail.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{URL}}/forgot_password"
+							},
+							"response": []
+						},
+						{
+							"name": "update_password[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"old_password\":\"123\",\r\n    \"new_password\":\"1234\",\r\n    \"new_password_again\":\"1234\"\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{URL}}/update_password"
+							},
+							"response": []
+						},
+						{
+							"name": "reset_password[+]",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"cokyamanmuhammet@gmail.com\",\r\n    \"resetLink\": \"4738\",\r\n    \"newPassword\": \"12345\",\r\n    \"newPasswordAgain\": \"12345\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{URL}}/reset_password"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "add product",
+					"item": [
+						{
+							"name": "add_product[+]",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\":\"Kirmizi Gelinlik\",\n    \"description\":\"........................\",\n    \"brand\":\"Motorola\",\n    \"style\":\"123467\",\n    \"categories\":{\n        \"sector\": \"621f85b3f8fc968d8bd0e95e\", \n        \"category_one\":\"621f85b4f8fc968d8bd0e962\",\n        \"category_two\":\"621f85b4f8fc968d8bd0e962\",\n        \"category_three\":\"621f85b5f8fc968d8bd0e978\",\n        \"category_four\":\"621f85b5f8fc968d8bd0e985\",\n        \"category_five\":\"621f85b6f8fc968d8bd0e992\"\n    },\n    \"variants\":[\n        {\n            \"color\": \"Kirmizi\",\n            \"images\":[\n                {\n                    \"kind\":\"catalog\",\n                    \"url\":\"https://storage.googleapis.com/vitrin_images/6227a73792039fc06e93efa4/a1.png\"\n                },\n                {\n                    \"kind\":\"catalog\",\n                    \"url\":\"https://storage.googleapis.com/vitrin_images/6227a73792039fc06e93efa4/a1.png\"\n                }\n            ],\n            \"sizes\":[\n                {\n                    \"size\": \"M\",\n                    \"available\":100,\n                    \"sku\":\"A-z-190-AZ\",\n                    \"price\":200,\n                    \"min_price\":190,\n                    \"currency\":\"$\"\n                }\n            ]\n        },\n        {\n            \"color\": \"Siyah\",\n            \"images\":[\n                {\n                    \"kind\":\"catalog\",\n                    \"url\":\"https://storage.googleapis.com/vitrin_images/6227a73792039fc06e93efa4/a1.png\"\n                },\n                {\n                    \"kind\":\"catalog\",\n                    \"url\":\"https://storage.googleapis.com/vitrin_images/6227a73792039fc06e93efa4/a1.png\"\n                }\n            ],\n            \"sizes\":[\n                {\n                    \"size\": \"M\",\n                    \"available\":100,\n                    \"sku\":\"A-z-190-AZ\",\n                    \"price\":200,\n                    \"min_price\":190,\n                    \"currency\":\"$\"\n                }\n            ]\n        },\n        {\n            \"color\": \"Mavi\",\n            \"images\":[\n                {\n                    \"kind\":\"catalog\",\n                    \"url\":\"https://storage.googleapis.com/vitrin_images/6227a73792039fc06e93efa4/a1.png\"\n                },\n                {\n                    \"kind\":\"catalog\",\n                    \"url\":\"https://storage.googleapis.com/vitrin_images/6227a73792039fc06e93efa4/a1.png\"\n                }\n            ],\n            \"sizes\":[\n                {\n                    \"size\": \"M\",\n                    \"available\":100,\n                    \"sku\":\"A-z-190-AZ\",\n                    \"price\":200,\n                    \"min_price\":190,\n                    \"currency\":\"$\"\n                }\n            ]\n        }\n    ],\n    \"futures\":[\n        { \"key\" : \"Boyu\", \"value\": \"10\" },\n        { \"key\" : \"Agirligi\", \"value\": \"200\" },\n        { \"key\" : \"Kol Boyu\", \"value\": \"100\" },\n        { \"key\" : \"Bedeni\", \"value\": \"L\" },\n        { \"key\" : \"Size\", \"value\": \"XXl\" },\n        { \"key\" : \"Durumu\", \"value\": \"Iyi\" },\n        { \"key\" : \"Turu\", \"value\": \"Deri\" },\n        { \"key\" : \"Kalite\", \"value\": \"Max\" }\n    ],\n    \"long\":39.10,\n    \"lat\":38.42\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{URL}}/products"
+							},
+							"response": []
+						},
+						{
+							"name": "all_product[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{URL}}/products"
+							},
+							"response": []
+						},
+						{
+							"name": "single_product[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{URL}}/product/61f927940df68e6fcda4a638"
+							},
+							"response": []
+						},
+						{
+							"name": "delete_product[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": "{{URL}}/product/61f55cfdba9f48a184f6c60c"
+							},
+							"response": []
+						},
+						{
+							"name": "update_product[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "color",
+											"value": "Green",
+											"type": "text"
+										},
+										{
+											"key": "img",
+											"type": "file",
+											"src": "/Users/ckymn/Documents/pdf/1610314243906.jpeg"
+										},
+										{
+											"key": "price",
+											"value": "100",
+											"type": "text"
+										},
+										{
+											"key": "stock",
+											"value": "100",
+											"type": "text"
+										},
+										{
+											"key": "barkod",
+											"value": "12-NFN",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{URL}}/product/6217f57a6fb38a559266a2fd"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "advertisement",
+					"item": [
+						{
+							"name": "advertisement[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"ads_which\": \"Story\",\n    \"ads_price\": 1000,\n    \"ads_time\": \"1d\",\n    \"ads_description\": \"Resimli Reklam verme isteginde bulunuyorum\",\n    \"link\": \"https://link.com\",\n    \"time\": \"1d\",\n    \"country\": \"Turkey\",\n    \"city\": \"Ankara\",\n    \"district\": \"Pursaklar\",\n    \"language\": \"tr\",\n\n    \"card_price\": 30000,\n    \"card_paid_price\": 30006,\n    \"card_installment\": \"1\",\n    \"card_holder_name\": \"Muhammet Cokyaman\",\n    \"card_number\": \"4766620000000001\",\n    \"card_expire_month\": \"12\",\n    \"card_expire_year\": \"22\",\n    \"card_cvc\": \"123\",\n    \"card_register\": \"1\",\n    \"ship_b_name\":\"Ahmet Cokyaman\",\n    \"ship_b_city\":\"Istanbul\",\n    \"ship_b_country\": \"Turkey\",\n    \"ship_b_address\": \"Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1\",\n    \"buyerName\": \"Muhammet\",\n    \"buyerSurname\":\"Cokyaman\",\n    \"buyerNumber\": \"5555555555\",\n    \"buyerEmail\": \"cokyamanmuhammet@gmail.com\",\n    \"tcNo\": \"57352282318\",\n    \"buyerAddress\": \"Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1\" ,\n    \"buyerCity\": \"Istanbul\",\n    \"buyerCountry\": \"Turkey\",\n    \"authCode\": \"...\",\n    \"product_name\":\"30 Gunluk Kulalici Hesabi\",\n    \"items\":\n        {\n            \"name\": \"3.Paket\",\n            \"category1\": \"120 Gunluk Uyelik\",\n            \"price\": 30000\n        }\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{URL}}/advertisement"
+							},
+							"response": []
+						},
+						{
+							"name": "all_advertisements[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{URL}}/advertisements"
+							},
+							"response": []
+						},
+						{
+							"name": "single_advertisement[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{URL}}/advertisement/6218ada370d2cdb8f07e6fa9"
+							},
+							"response": []
+						},
+						{
+							"name": "delete_advertisement[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": "{{URL}}/advertisement/61ec6002b261125c5bb52b06"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "payment",
+					"item": [
+						{
+							"name": "payment[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"card_price\": 30000,\n    \"card_paid_price\": 30006,\n    \"card_installment\": \"1\",\n    \"card_holder_name\": \"Muhammet Cokyaman\",\n    \"card_number\": \"4766620000000001\",\n    \"card_expire_month\": \"12\",\n    \"card_expire_year\": \"22\",\n    \"card_cvc\": \"123\",\n    \"card_register\": \"1\",\n    \"buyerName\": \"Muhammet\",\n    \"buyerSurname\":\"Cokyaman\",\n    \"buyerNumber\": \"5555555555\",\n    \"buyerEmail\": \"cokyamanmuhammet@gmail.com\",\n    \"tcNo\": \"57352282318\",\n    \"buyerAddress\": \"Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1\" ,\n    \"buyerCity\": \"Istanbul\",\n    \"buyerCountry\": \"Turkey\",\n    \"zipCode\": \"343434\",\n    \"ship_name\": \"Muhammet Cokyaman\",\n    \"ship_city\": \"Istanbul\",\n    \"ship_country\": \"Turkey\",\n    \"ship_address\": \"Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1\",\n    \"ship_b_name\":\"Muhammet Cokyaman\",\n    \"ship_b_city\":\"Istanbul\",\n    \"ship_b_country\": \"Turkey\",\n    \"ship_b_address\": \"Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1\",\n    \"authCode\": \"...\",\n    \"items\":\n        {\n            \"name\": \"3.Paket\",\n            \"category1\": \"120 Gunluk Uyelik\",\n            \"price\": 30000,\n            \"time\": 100\n        }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{URL}}/payment"
+							},
+							"response": []
+						},
+						{
+							"name": "payments[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{URL}}/payments"
+							},
+							"response": []
+						},
+						{
+							"name": "payment_single[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{URL}}/payment/621fc4cd18f0b786f48a8ba6"
+							},
+							"response": []
+						},
+						{
+							"name": "payment_cancel[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{URL}}/payment_cancel/621df721a727a6d4a43669fd"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "sector",
+					"item": [
+						{
+							"name": "sectros[+]",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{URL}}/sectors"
+							},
+							"response": []
+						},
+						{
+							"name": "search_sectros[+]",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"global\": \"m\"\n    \n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{URL}}/search_sector"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "images",
+					"item": [
+						{
+							"name": "images[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "url",
+											"type": "file",
+											"src": [
+												"/Users/ckymn/Desktop/a5.png",
+												"/Users/ckymn/Desktop/aa3.png"
+											]
+										},
+										{
+											"key": "",
+											"type": "file",
+											"src": [],
+											"disabled": true
+										}
+									]
+								},
+								"url": "{{URL}}/images"
+							},
+							"response": []
+						},
+						{
+							"name": "images[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{URL}}/images"
+							},
+							"response": []
+						},
+						{
+							"name": "images_delete[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"arr\":[\n        \"6221d5148e8fc7b1662a1332\"\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{URL}}/images"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "story",
+					"item": [
+						{
+							"name": "story[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "img",
+											"type": "file",
+											"src": "/Users/ckymn/Desktop/a5.png"
+										},
+										{
+											"key": "country",
+											"value": "Turkey",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Ankara",
+											"type": "text"
+										},
+										{
+											"key": "district",
+											"value": "Osman Gazi ",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "tr",
+											"type": "text"
+										},
+										{
+											"key": "lat",
+											"value": "38.10",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "long",
+											"value": "39.40",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": "{{URL}}/storie"
+							},
+							"response": []
+						},
+						{
+							"name": "all_story[+]",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "img",
+											"type": "file",
+											"src": "/Users/ckymn/Desktop/img/6.jpg"
+										},
+										{
+											"key": "country",
+											"value": "Turkey",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Istanbul",
+											"type": "text"
+										},
+										{
+											"key": "district",
+											"value": "Osman Gazi ",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "Turkish",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{URL}}/stories"
+							},
+							"response": []
+						},
+						{
+							"name": "delete_story[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "img",
+											"type": "file",
+											"src": "/Users/ckymn/Desktop/img/6.jpg"
+										},
+										{
+											"key": "country",
+											"value": "Turkey",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Istanbul",
+											"type": "text"
+										},
+										{
+											"key": "district",
+											"value": "Osman Gazi ",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "Turkish",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{URL}}/storie/621db960eb58289b0b874df4"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "profile",
+					"item": [
+						{
+							"name": "get_info",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{URL}}/panel"
+							},
+							"response": []
+						},
+						{
+							"name": "home_page[+]",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "img",
+											"type": "file",
+											"src": "/Users/ckymn/Desktop/img/6.jpg"
+										},
+										{
+											"key": "country",
+											"value": "Turkey",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Istanbul",
+											"type": "text"
+										},
+										{
+											"key": "district",
+											"value": "Osman Gazi ",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "Turkish",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{URL}}/home_page"
+							},
+							"response": []
+						},
+						{
+							"name": "store[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{TOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{URL}}/store"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "auth",
+					"item": [
+						{
+							"name": "Login[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"erdinc@gmail.com\",\n    \"username\": \"_erdinc\",\n    \"password\": \"1234\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/login"
+							},
+							"response": []
+						},
+						{
+							"name": "register[+]",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "civan",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "civan@gmail.com",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123",
+											"type": "text"
+										},
+										{
+											"key": "img",
+											"type": "file",
+											"src": []
+										},
+										{
+											"key": "menu_permission",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{AURL}}/register"
+							},
+							"response": []
+						},
+						{
+							"name": "Logout[+]",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"erdinc@gmail.com\",\n    \"username\": \"_erdinc\",\n    \"password\": \"1234\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/logout"
+							},
+							"response": []
+						},
+						{
+							"name": "add_admin[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"emircan@gmail.com\",\n    \"username\": \"_emircan\",\n    \"password\": \"123\",\n    \"permission\": [\"story\", \"banner\", \"payment\"]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/register_admin"
+							},
+							"response": []
+						},
+						{
+							"name": "all_admin[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{AURL}}/admins"
+							},
+							"response": []
+						},
+						{
+							"name": "delete_admin[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": "{{AURL}}/delete_admin/621f848af8fc968d8bd0e955"
+							},
+							"response": []
+						},
+						{
+							"name": "update_admin[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"_emir\",\n    \"password\": \"1234\",\n    \"menu_permissions\":  [\"story\", \"banner\", \"payment\",\"advertisement\"]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/update_admin/621f848af8fc968d8bd0e955"
+							},
+							"response": []
+						},
+						{
+							"name": "forgot_password[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"cokyamanmuhammet@gmail.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/forgot_password"
+							},
+							"response": []
+						},
+						{
+							"name": "reset_password[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"2d2460a0-db76-4ebe-b603-6591ad2d3cb4\",\r\n    \"new_password\": \"123\",\r\n    \"new_password_again\":\"123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/reset_password"
+							},
+							"response": []
+						},
+						{
+							"name": "password-update[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"old_password\":\"123\",\r\n    \"new_password\":\"1234\",\r\n    \"new_password_again\":\"1234\"\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/update_password"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "sector",
+					"item": [
+						{
+							"name": "createSector[+]",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"sector_name\": \"Araba\",\n    \"category_one\": \"Yaris Aarabasi\",\n    \"category_one_futures\":[\n        { \"key\" : \"Boyu\", \"value\": [\"10\",\"10\"] },\n        { \"key\" : \"Agirligi\", \"value\": [\"200\",\"20\"] },\n        { \"key\" : \"Kol Boyu\", \"value\": [\"100\",\"30\",\"40\"] },\n        { \"key\" : \"Bedeni\", \"value\": [\"S\",\"XS\",\"L\",\"M\",\"XL\"] }\n    ],\n    \"category_two\":\"Ferrari\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/sector"
+							},
+							"response": []
+						},
+						{
+							"name": "get_sector[+]",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/sectors"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "subscribe",
+					"item": [
+						{
+							"name": "add_subscribe[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "sub_name",
+											"value": "1Month",
+											"type": "text"
+										},
+										{
+											"key": "sub_description",
+											"value": "1 aylik abone olmak ",
+											"type": "text"
+										},
+										{
+											"key": "sub_price",
+											"value": "1000",
+											"type": "text"
+										},
+										{
+											"key": "img",
+											"type": "file",
+											"src": "/Users/ckymn/Desktop/Screen Shot 2022-02-24 at 12.55.00.png"
+										}
+									]
+								},
+								"url": "{{AURL}}/subscribe"
+							},
+							"response": []
+						},
+						{
+							"name": "all_subscribe[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{AURL}}/all_subscribe"
+							},
+							"response": []
+						},
+						{
+							"name": "delete_subscribe[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": "{{AURL}}/subscribe/61f885127d9daf81d0bb291e"
+							},
+							"response": []
+						},
+						{
+							"name": "update_subscribe[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "img",
+											"type": "file",
+											"src": "/Users/ckymn/Desktop/img/8.png"
+										},
+										{
+											"key": "sub_name",
+											"value": "1Year",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{AURL}}/update_subscribe/61f885127d9daf81d0bb291e"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "advertisement",
+					"item": [
+						{
+							"name": "advertisement_update[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "is_approved",
+											"value": "no",
+											"type": "text"
+										},
+										{
+											"key": "img",
+											"type": "file",
+											"src": "/Users/ckymn/Desktop/Screen Shot 2022-02-23 at 21.55.22.png"
+										},
+										{
+											"key": "video",
+											"type": "file",
+											"src": [],
+											"disabled": true
+										},
+										{
+											"key": "link",
+											"value": "https://www.instagram.com",
+											"type": "text"
+										},
+										{
+											"key": "banner_story_time",
+											"value": "24",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": "{{AURL}}/notification_advertisement/621df023e9c70ce6f591cf32"
+							},
+							"response": []
+						},
+						{
+							"name": "advertisement[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "ads_which",
+											"value": "Banner",
+											"type": "text"
+										},
+										{
+											"key": "ads_time",
+											"value": "1d",
+											"type": "text"
+										},
+										{
+											"key": "ads_description",
+											"value": "Admin Olarak urun reklami yapiyorum",
+											"type": "text"
+										},
+										{
+											"key": "img",
+											"type": "file",
+											"src": "/Users/ckymn/Desktop/a5.png"
+										},
+										{
+											"key": "link",
+											"value": "https://www.instagram.com",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "Turkey",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Ankara",
+											"type": "text"
+										},
+										{
+											"key": "district",
+											"value": "Mamak",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "tr",
+											"type": "text"
+										},
+										{
+											"key": "lat",
+											"value": "38.68161372490973",
+											"type": "text"
+										},
+										{
+											"key": "long",
+											"value": "39.20685969604613",
+											"type": "text"
+										},
+										{
+											"key": "title",
+											"value": "one cikarilan",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{AURL}}/advertisement"
+							},
+							"response": []
+						},
+						{
+							"name": "all_advertisement[+]",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "ads_which",
+											"value": "Banner",
+											"type": "text"
+										},
+										{
+											"key": "ads_date",
+											"value": "01.02.2022",
+											"type": "text"
+										},
+										{
+											"key": "ads_description",
+											"value": "Admin Olarak urun reklami yapiyorum",
+											"type": "text"
+										},
+										{
+											"key": "img",
+											"type": "file",
+											"src": "/Users/ckymn/Desktop/img/5.jpg"
+										},
+										{
+											"key": "link",
+											"value": "https://www.instagram.com",
+											"type": "text"
+										},
+										{
+											"key": "banner_story_time",
+											"value": "72",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "Turkiye",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Ankara",
+											"type": "text"
+										},
+										{
+											"key": "district",
+											"value": "Mamak",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "English",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{AURL}}/advertisements"
+							},
+							"response": []
+						},
+						{
+							"name": "single_advertisement[+]",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "ads_which",
+											"value": "Banner",
+											"type": "text"
+										},
+										{
+											"key": "ads_date",
+											"value": "01.02.2022",
+											"type": "text"
+										},
+										{
+											"key": "ads_description",
+											"value": "Admin Olarak urun reklami yapiyorum",
+											"type": "text"
+										},
+										{
+											"key": "img",
+											"type": "file",
+											"src": "/Users/ckymn/Desktop/img/5.jpg"
+										},
+										{
+											"key": "link",
+											"value": "https://www.instagram.com",
+											"type": "text"
+										},
+										{
+											"key": "banner_story_time",
+											"value": "72",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "Turkiye",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Ankara",
+											"type": "text"
+										},
+										{
+											"key": "district",
+											"value": "Mamak",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "English",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{AURL}}/advertisement/6225d6153d6d9195e9a2a4e8"
+							},
+							"response": []
+						},
+						{
+							"name": "delete_advertisement[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "ads_which",
+											"value": "Banner",
+											"type": "text"
+										},
+										{
+											"key": "ads_date",
+											"value": "01.02.2022",
+											"type": "text"
+										},
+										{
+											"key": "ads_description",
+											"value": "Admin Olarak urun reklami yapiyorum",
+											"type": "text"
+										},
+										{
+											"key": "img",
+											"type": "file",
+											"src": "/Users/ckymn/Desktop/img/5.jpg"
+										},
+										{
+											"key": "link",
+											"value": "https://www.instagram.com",
+											"type": "text"
+										},
+										{
+											"key": "banner_story_time",
+											"value": "72",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "Turkiye",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Ankara",
+											"type": "text"
+										},
+										{
+											"key": "district",
+											"value": "Mamak",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "English",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{AURL}}/advertisement/6225d5ce3d6d9195e9a2a4e6"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "product ntfc",
+					"item": [
+						{
+							"name": "all_product_notification[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJfZXJkaW5jIiwiaWQiOiI2MWQ1NDNhZGYxZTljZDRmZWQ0OTE0ZjYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2NDE2Mzc5MDIsImV4cCI6MTY0NDIyOTkwMn0.XL8PQzrA_YuuxgvVKq3mHxwbyPnsILFY3HKdbmEfkfE"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{AURL}}/products"
+							},
+							"response": []
+						},
+						{
+							"name": "product_permission[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"is_approved\": \"yes\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/product_permission/621faae89089bda659226ffe"
+							},
+							"response": []
+						},
+						{
+							"name": "single_product_notification[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJfZXJkaW5jIiwiaWQiOiI2MWQ1NDNhZGYxZTljZDRmZWQ0OTE0ZjYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2NDE2Mzc5MDIsImV4cCI6MTY0NDIyOTkwMn0.XL8PQzrA_YuuxgvVKq3mHxwbyPnsILFY3HKdbmEfkfE"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{AURL}}/product/61d96845a64d538c0206e972"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "users",
+					"item": [
+						{
+							"name": "all_user[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{AURL}}/users"
+							},
+							"response": []
+						},
+						{
+							"name": "single_user[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{AURL}}/user/621f748eea040b1df7508346"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "advertisement ntfc",
+					"item": [
+						{
+							"name": "advertisement_notification_all[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{AURL}}/notification_advertisements"
+							},
+							"response": []
+						},
+						{
+							"name": "advertisement_notification_single[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"is_approved\":\"no\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/notification_advertisement/6220cfd464260fbba13b9c19"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "store ntfc",
+					"item": [
+						{
+							"name": "store_notificaions[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{AURL}}/notification_stores"
+							},
+							"response": []
+						},
+						{
+							"name": "store_notificaion_update[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"is_approved\": \"yes\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/notification_store/62175a99fd7adc623dbad40b"
+							},
+							"response": []
+						},
+						{
+							"name": "all_store[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{AURL}}/stores"
+							},
+							"response": []
+						},
+						{
+							"name": "single_store[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{AURL}}/store/61f6c1beea63de963619bdca"
+							},
+							"response": []
+						},
+						{
+							"name": "delete_store[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"city\": \"Ankara\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/store/61efa95010273f530a8ad89"
+							},
+							"response": []
+						},
+						{
+							"name": "update_store[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"suspension_status\": \"wait\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/store/621fa91a9089bda659226ff8"
+							},
+							"response": []
+						},
+						{
+							"name": "New Request",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"global\":\"Vitrint\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/search_store"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "product comment ntfc",
+					"item": [
+						{
+							"name": "delete_product_comment[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"city\": \"Ankara\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/product_comment/621fc6f5fdd326c75ac3f2da"
+							},
+							"response": []
+						},
+						{
+							"name": "all_product_comments[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{AURL}}/product_comments"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "story",
+					"item": [
+						{
+							"name": "story[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "time",
+											"value": "1d",
+											"type": "text"
+										},
+										{
+											"key": "img",
+											"type": "file",
+											"src": [
+												"/Users/ckymn/Desktop/Screen Shot 2022-02-24 at 00.32.56.png",
+												"/Users/ckymn/Desktop/Screen Shot 2022-02-24 at 12.55.00.png",
+												"/Users/ckymn/Desktop/Screen Shot 2022-02-24 at 12.59.53.png"
+											]
+										},
+										{
+											"key": "link",
+											"value": "https://www.github.com/ckymn",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "Turkey",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Ankara",
+											"type": "text"
+										},
+										{
+											"key": "district",
+											"value": "Pursaklar",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "tr",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{AURL}}/storie"
+							},
+							"response": []
+						},
+						{
+							"name": "all_story[+]",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": "{{AURL}}/stories"
+							},
+							"response": []
+						},
+						{
+							"name": "delete_story[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": "{{AURL}}/storie/621dc8913e423d5b657069b8"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "income",
+					"item": [
+						{
+							"name": "income[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{AURL}}/income"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "app ntfc",
+					"item": [
+						{
+							"name": "app_notification[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"HERKESE MERHABALAR\",\n    \"description\":\"HADI GELIN...!\",\n    \"country\": \"Turkey\",\n    \"city\": \"Ankara\",\n    \"district\": \"Pursaklar\",\n    \"language\": \"tr\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/app_notification"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "partner",
+					"item": [
+						{
+							"name": "partner[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"partner_category\": \"Kargocu\",\n    \"partner_sector\": \"Tasimacilik\",\n    \"partner_description\": \"Tasima Sirketimize Hosgeldiniz\",\n    \"partner_phone\": \"4444444444\",\n    \"partner_price\": 1000,\n    \"partner_country\": \"Turkey\",\n    \"partner_city\": \"Istanbul\",\n    \"partner_district\": \"Karsiyaka\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/partner"
+							},
+							"response": []
+						},
+						{
+							"name": "all_partner[+]",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"partner_category\": \"Kargocu\",\n    \"partner_sector\": \"Tasimacilik\",\n    \"partner_description\": \"Tasima Sirketimize Hosgeldiniz\",\n    \"partner_phone\": \"4444444444\",\n    \"partner_price\": 1000,\n    \"partner_country\": \"Turkey\",\n    \"partner_city\": \"Istanbul\",\n    \"partner_district\": \"Karsiyaka\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/partners"
+							},
+							"response": []
+						},
+						{
+							"name": "update_partner[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"partner_price\": 30000,\n    \"partner_description\": \".....................\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/partner/61fc68f5c5bcc6392b1b8797"
+							},
+							"response": []
+						},
+						{
+							"name": "delete_partner[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": "{{AURL}}/partner/61fc66300e8545019c758c1b"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "profile",
+					"item": [
+						{
+							"name": "homePage[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{AURL}}/homePage"
+							},
+							"response": []
+						},
+						{
+							"name": "admin[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{AURL}}/admin"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "bad words",
+					"item": [
+						{
+							"name": "bad_words",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{ATOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"words\": [\n        \"barzo\",\n        \"o.cocugu\"\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{AURL}}/bad_words"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Kullanicilar",
+			"item": [
+				{
+					"name": "auth",
+					"item": [
+						{
+							"name": "register[+]",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "mehmet@gmail.com",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "_mehmet",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "tr",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "Turkey",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Ankara",
+											"type": "text"
+										},
+										{
+											"key": "district",
+											"value": "Kizilay",
+											"type": "text"
+										},
+										{
+											"key": "long",
+											"value": "-122.5",
+											"type": "text"
+										},
+										{
+											"key": "lat",
+											"value": "37.6",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{KURL}}/register"
+							},
+							"response": []
+						},
+						{
+							"name": "login[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"mami@gmail.com\",\n    \"username\": \"_civan\",\n    \"password\": \"123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{KURL}}/login"
+							},
+							"response": []
+						},
+						{
+							"name": "logout[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{KURL}}/logout"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "store comment",
+					"item": [
+						{
+							"name": "store_comment[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"comment\": \"urunu sikit gerizekali\",\n    \"rate\": 4\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{KURL}}/store_comment/6227b2d005a6a5f2c3733025"
+							},
+							"response": []
+						},
+						{
+							"name": "delete_store_comment[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": "{{KURL}}/store_comment/61ed5f9245db706767369311"
+							},
+							"response": []
+						},
+						{
+							"name": "update_store_comment[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"comment\": \"Para lazim Xalo\",\n    \"rate\": 5\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{KURL}}/store_comment/6203a20bb76f79c011a239b2"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "product comment",
+					"item": [
+						{
+							"name": "product_comment[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"comment\": \"`bu urun guzel\",\n    \"rate\": 3\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{KURL}}/product_comment/6227b2d005a6a5f2c3733025"
+							},
+							"response": []
+						},
+						{
+							"name": "delete_product_comment[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": "{{KURL}}/product_comment/6223fb5396a76e60465a406c"
+							},
+							"response": []
+						},
+						{
+							"name": "update_product_comment[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"comment\": \"Cok Guzel Bir Urun Oldugu Kesin . Degilmi @_memet\",\n    \"rate\": 4\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{KURL}}/product_comment/62039f217eca4d390a3ebf74"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "store follow",
+					"item": [
+						{
+							"name": "store_follow[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{KURL}}/store_follow/621fa91a9089bda659226ff8"
+							},
+							"response": []
+						},
+						{
+							"name": "store_unfollow[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\" : \"61e7c45e0cd9389ca3f232e8\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{KURL}}/store_unfollow/61f6c1beea63de963619bdca"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "product favorite",
+					"item": [
+						{
+							"name": "product_favorite[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{KURL}}/product_favorite/621faae89089bda659226ffe"
+							},
+							"response": []
+						},
+						{
+							"name": "all_favorite[+]",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{KURL}}/favorites"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "home page",
+					"item": [
+						{
+							"name": "home_page",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{KURL}}/home_page?long=39.10&lat=38.60&limit=2&skip=0",
+									"host": [
+										"{{KURL}}"
+									],
+									"path": [
+										"home_page"
+									],
+									"query": [
+										{
+											"key": "long",
+											"value": "39.10"
+										},
+										{
+											"key": "lat",
+											"value": "38.60"
+										},
+										{
+											"key": "limit",
+											"value": "2"
+										},
+										{
+											"key": "skip",
+											"value": "0"
+										},
+										{
+											"key": "dst",
+											"value": "900",
+											"disabled": true
+										},
+										{
+											"key": "minPrc",
+											"value": "50",
+											"disabled": true
+										},
+										{
+											"key": "maxPrc",
+											"value": "300",
+											"disabled": true
+										},
+										{
+											"key": "search",
+											"value": "k",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "single_product[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{KURL}}/product/621faae89089bda659226ffe"
+							},
+							"response": []
+						},
+						{
+							"name": "view_storie[+]",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{KURL}}/storie/6222751217af3d73745b5354?type=admin_ads",
+									"host": [
+										"{{KURL}}"
+									],
+									"path": [
+										"storie",
+										"6222751217af3d73745b5354"
+									],
+									"query": [
+										{
+											"key": "type",
+											"value": "admin_ads",
+											"description": "admin_ads || store_ads || store_storie"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "stores",
+					"item": [
+						{
+							"name": "magazalar[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{KURL}}/stores?long=39.10&lat=38.60&limit=2&skip=0",
+									"host": [
+										"{{KURL}}"
+									],
+									"path": [
+										"stores"
+									],
+									"query": [
+										{
+											"key": "long",
+											"value": "39.10"
+										},
+										{
+											"key": "lat",
+											"value": "38.60"
+										},
+										{
+											"key": "limit",
+											"value": "2"
+										},
+										{
+											"key": "skip",
+											"value": "0"
+										},
+										{
+											"key": "hour",
+											"value": "24",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "single_magaza[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{KURL}}/store/62275806f148bf4adcd8d154?long=39.20&lat=38.68",
+									"host": [
+										"{{KURL}}"
+									],
+									"path": [
+										"store",
+										"62275806f148bf4adcd8d154"
+									],
+									"query": [
+										{
+											"key": "long",
+											"value": "39.20"
+										},
+										{
+											"key": "lat",
+											"value": "38.68"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "profile",
+					"item": [
+						{
+							"name": "help[+]",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": ""
+							},
+							"response": []
+						},
+						{
+							"name": "feed_back[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"cokyamanmuhammet@gmail.com\",\n    \"feed_back\": \"first feed back comment. Hello\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{uvitrin}}/feedback"
+							},
+							"response": []
+						},
+						{
+							"name": "user[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{KURL}}/user"
+							},
+							"response": []
+						},
+						{
+							"name": "whatsapp[+]",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{KTOKEN}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{KURL}}/whatsapp/621fa91a9089bda659226ff8"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
